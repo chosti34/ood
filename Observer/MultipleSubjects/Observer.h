@@ -1,25 +1,29 @@
-п»ї#pragma once
+#pragma once
 
 #include <functional>
 #include <set>
+#include <string>
+
+template <typename T>
+class IObservable;
 
 /*
-РЁР°Р±Р»РѕРЅРЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ IObserver. Р•РіРѕ РґРѕР»Р¶РµРЅ СЂРµР°Р»РёР·РѕРІС‹РІР°С‚СЊ РєР»Р°СЃСЃ,
-Р¶РµР»Р°СЋС‰РёР№ РїРѕР»СѓС‡Р°С‚СЊ СѓРІРµРґРѕРјР»РµРЅРёСЏ РѕС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРіРѕ IObservable
-РџР°СЂР°РјРµС‚СЂРѕРј С€Р°Р±Р»РѕРЅР° СЏРІР»СЏРµС‚СЃСЏ С‚РёРї Р°СЂРіСѓРјРµРЅС‚Р°,
-РїРµСЂРµРґР°РІР°РµРјРѕРіРѕ РќР°Р±Р»СЋРґР°С‚РµР»СЋ РІ РјРµС‚РѕРґ Update
+Шаблонный интерфейс IObserver. Его должен реализовывать класс,
+желающий получать уведомления от соответствующего IObservable
+Параметром шаблона является тип аргумента,
+передаваемого Наблюдателю в метод Update
 */
 template <typename T>
 class IObserver
 {
 public:
 	virtual ~IObserver() = default;
-	virtual void Update(const T& data) = 0;
+	virtual void Update(const T& data, IObservable<T>& observable) = 0;
 };
 
 /*
-РЁР°Р±Р»РѕРЅРЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ IObservable. РџРѕР·РІРѕР»СЏРµС‚ РїРѕРґРїРёСЃР°С‚СЊСЃСЏ Рё РѕС‚РїРёСЃР°С‚СЊСЃСЏ РЅР° РѕРїРѕРІРµС‰РµРЅРёСЏ РЅР°Р±Р»СЋРґР°С‚РµР»СЏРј,
-Р° С‚Р°РєР¶Рµ РёРЅРёС†РёРёСЂРѕРІР°С‚СЊ СЂР°СЃСЃС‹Р»РєСѓ СѓРІРµРґРѕРјР»РµРЅРёР№ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Рј РЅР°Р±Р»СЋРґР°С‚РµР»СЏРј.
+Шаблонный интерфейс IObservable. Позволяет подписаться и отписаться на оповещения наблюдателям,
+а также инициировать рассылку уведомлений зарегистрированным наблюдателям.
 */
 template <typename T>
 class IObservable
@@ -29,6 +33,7 @@ public:
 	virtual void RegisterObserver(IObserver<T>& observer) = 0;
 	virtual void RemoveObserver(IObserver<T>& observer) = 0;
 	virtual void NotifyObservers() = 0;
+	virtual std::string GetDescription()const = 0;
 };
 
 template <typename T>
@@ -52,7 +57,7 @@ public:
 		T data = GetChangedData();
 		for (auto& observer : m_observers)
 		{
-			observer->Update(data);
+			observer->Update(data, *this);
 		}
 	}
 
