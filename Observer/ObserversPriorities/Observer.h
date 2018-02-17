@@ -1,15 +1,14 @@
-#pragma once
-
-#include <functional>
+п»ї#pragma once
 #include <map>
-#include <unordered_map>
 #include <cassert>
+#include <functional>
+#include <unordered_map>
 
 /*
-Шаблонный интерфейс IObserver. Его должен реализовывать класс,
-желающий получать уведомления от соответствующего IObservable
-Параметром шаблона является тип аргумента,
-передаваемого Наблюдателю в метод Update
+РЁР°Р±Р»РѕРЅРЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ IObserver. Р•РіРѕ РґРѕР»Р¶РµРЅ СЂРµР°Р»РёР·РѕРІС‹РІР°С‚СЊ РєР»Р°СЃСЃ,
+Р¶РµР»Р°СЋС‰РёР№ РїРѕР»СѓС‡Р°С‚СЊ СѓРІРµРґРѕРјР»РµРЅРёСЏ РѕС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРіРѕ IObservable
+РџР°СЂР°РјРµС‚СЂРѕРј С€Р°Р±Р»РѕРЅР° СЏРІР»СЏРµС‚СЃСЏ С‚РёРї Р°СЂРіСѓРјРµРЅС‚Р°,
+РїРµСЂРµРґР°РІР°РµРјРѕРіРѕ РќР°Р±Р»СЋРґР°С‚РµР»СЋ РІ РјРµС‚РѕРґ Update
 */
 template <typename T>
 class IObserver
@@ -20,8 +19,8 @@ public:
 };
 
 /*
-Шаблонный интерфейс IObservable. Позволяет подписаться и отписаться на оповещения наблюдателям,
-а также инициировать рассылку уведомлений зарегистрированным наблюдателям.
+РЁР°Р±Р»РѕРЅРЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ IObservable. РџРѕР·РІРѕР»СЏРµС‚ РїРѕРґРїРёСЃР°С‚СЊСЃСЏ Рё РѕС‚РїРёСЃР°С‚СЊСЃСЏ РЅР° РѕРїРѕРІРµС‰РµРЅРёСЏ РЅР°Р±Р»СЋРґР°С‚РµР»СЏРј,
+Р° С‚Р°РєР¶Рµ РёРЅРёС†РёРёСЂРѕРІР°С‚СЊ СЂР°СЃСЃС‹Р»РєСѓ СѓРІРµРґРѕРјР»РµРЅРёР№ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Рј РЅР°Р±Р»СЋРґР°С‚РµР»СЏРј.
 */
 template <typename T>
 class IObservable
@@ -41,29 +40,42 @@ public:
 
 	void RegisterObserver(ObserverType& observer, int priority) override
 	{
-		auto found = m_priorities.find(&observer);
-		if (found == m_priorities.end())
+		// РџРѕРґРїРёСЃС‹РІР°РµРј РЅР°Р±Р»СЋРґР°С‚РµР»СЏ С‚РѕР»СЊРєРѕ РІ С‚РѕРј СЃР»СѓС‡Р°Рµ, РµСЃР»Рё РѕРЅ РµС‰С‘ РЅРµ РїРѕРґРїРёСЃР°РЅ
+		//  РЅР° РґР°РЅРЅРѕРіРѕ РёР·РґР°С‚РµР»СЏ
+		auto foundPriority = m_observerToPriorityMap.find(std::addressof(observer));
+		if (foundPriority == m_observerToPriorityMap.end())
 		{
-			m_observers.insert(std::make_pair(priority, &observer));
-			m_priorities.insert(std::make_pair(&observer, priority));
+			auto inserted = m_priorityToObserverMap.emplace(priority, std::addressof(observer));
+			assert(inserted->second);
+			try
+			{
+				// РњРѕР¶РµС‚ Р»Рё РІ СЌС‚РѕР№ СЃС‚СЂРѕРєРµ РІС‹Р±СЂРѕСЃРёС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ?
+				// Р•СЃР»Рё РґР°, С‚Рѕ Р»РѕРІРёРј РµРіРѕ Рё РїСЂРѕРёР·РІРѕРґРёРј rollback Рє РёСЃС…РѕРґРЅРѕРјСѓ СЃРѕСЃС‚РѕСЏРЅРёСЋ
+				m_observerToPriorityMap.emplace(std::addressof(observer), priority);
+			}
+			catch (...)
+			{
+				m_priorityToObserverMap.erase(inserted);
+				throw;
+			}
 		}
 	}
 
 	void RemoveObserver(ObserverType& observer) override
 	{
-		// Класс может содержать разные ссылки с одинаковым приоритетом,
-		//  однако не может содержать одинаковые ссылки.
-		// Первая найденная ссылка (указатель) в коллекции должна быть одна
-		auto found = m_priorities.find(&observer);
-		if (found != m_priorities.end())
+		// РљР»Р°СЃСЃ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ СЂР°Р·РЅС‹Рµ СЃСЃС‹Р»РєРё СЃ РѕРґРёРЅР°РєРѕРІС‹Рј РїСЂРёРѕСЂРёС‚РµС‚РѕРј,
+		//  РѕРґРЅР°РєРѕ РЅРµ РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ РѕРґРёРЅР°РєРѕРІС‹Рµ СЃСЃС‹Р»РєРё.
+		// РџРµСЂРІР°СЏ РЅР°Р№РґРµРЅРЅР°СЏ СЃСЃС‹Р»РєР° (СѓРєР°Р·Р°С‚РµР»СЊ) РІ РєРѕР»Р»РµРєС†РёРё РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РѕРґРЅР°
+		auto found = m_observerToPriorityMap.find(std::addressof(observer));
+		if (found != m_observerToPriorityMap.end())
 		{
-			auto range = m_observers.equal_range(found->second);
+			auto range = m_priorityToObserverMap.equal_range(found->second);
 			for (auto it = range.first; it != range.second; ++it)
 			{
-				if (&observer == it->second)
+				if (std::addressof(observer) == it->second)
 				{
-					m_observers.erase(it->first);
-					m_priorities.erase(&observer);
+					m_priorityToObserverMap.erase(it);
+					m_observerToPriorityMap.erase(std::addressof(observer));
 					return;
 				}
 			}
@@ -74,26 +86,21 @@ public:
 	void NotifyObservers() override
 	{
 		T data = GetChangedData();
-		// Пробегаем по копии коллекции, чтобы позволить подписчикам отписываться внутри метода Update
-		auto observersCopy = m_observers;
+		// РџСЂРѕР±РµРіР°РµРј РїРѕ РєРѕРїРёРё РєРѕР»Р»РµРєС†РёРё, С‡С‚РѕР±С‹ РїРѕР·РІРѕР»РёС‚СЊ РїРѕРґРїРёСЃС‡РёРєР°Рј РѕС‚РїРёСЃС‹РІР°С‚СЊСЃСЏ РІРЅСѓС‚СЂРё РјРµС‚РѕРґР° Update
+		auto observersCopy = m_priorityToObserverMap;
 		for (auto it = observersCopy.rbegin(); it != observersCopy.rend(); ++it)
 		{
 			it->second->Update(data);
 		}
 	}
 
-	size_t GetNotifiersCount()const
-	{
-		return m_observers.size();
-	}
-
 protected:
 	virtual T GetChangedData()const = 0;
 
 private:
-	// Класс подписывает контракт:
-	//  мы можем хранить различные ссылки с одинаковым приоритетом,
-	//  однако запрещаем хранить одинаковые ссылки с любым приоритетом
-	std::multimap<int, ObserverType*> m_observers;
-	std::unordered_map<ObserverType*, int> m_priorities;
+	// РљР»Р°СЃСЃ РїРѕРґРїРёСЃС‹РІР°РµС‚ РєРѕРЅС‚СЂР°РєС‚:
+	//  РјС‹ РјРѕР¶РµРј С…СЂР°РЅРёС‚СЊ СЂР°Р·Р»РёС‡РЅС‹Рµ СЃСЃС‹Р»РєРё СЃ РѕРґРёРЅР°РєРѕРІС‹Рј РїСЂРёРѕСЂРёС‚РµС‚РѕРј,
+	//  РѕРґРЅР°РєРѕ Р·Р°РїСЂРµС‰Р°РµРј С…СЂР°РЅРёС‚СЊ РѕРґРёРЅР°РєРѕРІС‹Рµ СЃСЃС‹Р»РєРё СЃ Р»СЋР±С‹Рј РїСЂРёРѕСЂРёС‚РµС‚РѕРј
+	std::multimap<int, ObserverType*> m_priorityToObserverMap;
+	std::unordered_map<ObserverType*, int> m_observerToPriorityMap;
 };

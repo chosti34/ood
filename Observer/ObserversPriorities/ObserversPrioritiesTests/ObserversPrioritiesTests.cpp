@@ -1,8 +1,9 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 #include "../WeatherData.h"
 #include <vector>
 #include <memory>
 #include <numeric>
+#include <boost/test/output_test_stream.hpp>
 
 namespace
 {
@@ -27,57 +28,80 @@ private:
 class DummyObserver : public IObserver<int>
 {
 public:
-	DummyObserver(DummyObservable& observable, int priority, std::vector<DummyObserver*>* refs = nullptr)
+	DummyObserver(DummyObservable& observable, int priority, const std::string& name,
+		boost::test_tools::output_test_stream& strm)
 		: m_observable(observable)
-		, m_refs(refs)
+		, m_name(name)
+		, m_strm(strm)
 	{
 		m_observable.RegisterObserver(*this, priority);
 	}
 
 	~DummyObserver()
 	{
-		// Не должно вызвать падение программы
+		// РќРµ РґРѕР»Р¶РЅРѕ РІС‹Р·РІР°С‚СЊ РїР°РґРµРЅРёРµ РїСЂРѕРіСЂР°РјРјС‹ РґР°Р¶Рµ РµСЃР»Рё РјС‹ РѕС‚РїРёСЃР°Р»РёСЃСЊ Р·Р°СЂР°РЅРµРµ
 		m_observable.RemoveObserver(*this);
 	}
 
 	void Update(const int& data) override
 	{
-		if (m_refs != nullptr)
-		{
-			m_refs->push_back(this);
-		}
+		(void)data;
+		m_strm << m_name;
 	}
 
 private:
 	DummyObservable& m_observable;
-	std::vector<DummyObserver*>* m_refs;
+	boost::test_tools::output_test_stream& m_strm;
+	std::string m_name;
 };
 }
 
-BOOST_AUTO_TEST_SUITE(ObserversPriorities)
-	BOOST_AUTO_TEST_CASE(notifiers_are_updated_in_order_of_their_priority)
+BOOST_AUTO_TEST_SUITE(ObserversPrioritiesTaskTestSuite)
+	BOOST_AUTO_TEST_CASE(subscribers_cannot_register_to_notifiers_twice_or_more_times)
 	{
+		boost::test_tools::output_test_stream output;
+
 		DummyObservable observable;
-		std::vector<DummyObserver*> refs;
+		DummyObserver observer1(observable, 10, "a", output);
+		DummyObserver observer2(observable, 30, "b", output);
 
+		observable.RegisterObserver(observer1, 10);
+		observable.RegisterObserver(observer2, 30);
+
+		BOOST_CHECK(output.is_empty());
+		observable.SetData(10);
+		BOOST_CHECK(output.is_equal("ba"));
+	}
+
+	BOOST_AUTO_TEST_CASE(subscribers_with_same_priorities_will_be_notified_in_reversed_register_order)
+	{
+		boost::test_tools::output_test_stream output;
+
+		DummyObservable observable;
+		DummyObserver observer1(observable, 10, "a", output);
+		DummyObserver observer2(observable, 10, "b", output);
+		DummyObserver observer3(observable, 10, "c", output);
+
+		BOOST_CHECK(output.is_empty());
+		observable.SetData(100500);
+		// Р’СЃРµ РїРѕРґРїРёСЃС‡РёРєРё СЃ СЂР°РІРЅС‹Рј РїСЂРёРѕСЂРёС‚РµС‚РѕРј Р±СѓРґСѓС‚ РѕРїРѕРІРµС‰РµРЅС‹ РІ РїРѕСЂСЏРґРєРµ, РѕР±СЂР°С‚РЅРѕРј РїРѕСЂСЏРґРєСѓ РїРѕРґРїРёСЃРєРё
+		BOOST_CHECK(output.is_equal("cba"));
+	}
+
+	BOOST_AUTO_TEST_CASE(subscribers_are_updated_in_order_of_their_priority)
+	{
+		boost::test_tools::output_test_stream output;
+
+		DummyObservable observable;
 		std::vector<std::unique_ptr<DummyObserver>> observers;
-		observers.push_back(std::make_unique<DummyObserver>(observable, -100, &refs));
-		observers.push_back(std::make_unique<DummyObserver>(observable, -1, &refs));
-		observers.push_back(std::make_unique<DummyObserver>(observable, 0, &refs));
-		observers.push_back(std::make_unique<DummyObserver>(observable, 1, &refs));
-		observers.push_back(std::make_unique<DummyObserver>(observable, 50, &refs));
-		observers.push_back(std::make_unique<DummyObserver>(observable, std::numeric_limits<int>::max(), &refs));
+		observers.push_back(std::make_unique<DummyObserver>(observable, std::numeric_limits<int>::min(), "o", output));
+		observers.push_back(std::make_unique<DummyObserver>(observable, -10, "l", output));
+		observers.push_back(std::make_unique<DummyObserver>(observable, -5, "l", output));
+		observers.push_back(std::make_unique<DummyObserver>(observable, 100, "e", output));
+		observers.push_back(std::make_unique<DummyObserver>(observable, 1000, "h", output));
 
-		BOOST_CHECK_EQUAL(observable.GetNotifiersCount(), 6);
-		observable.SetData(100);
-		BOOST_CHECK_EQUAL(observable.GetNotifiersCount(), 6);
-		BOOST_CHECK_EQUAL(refs.size(), 6u);
-
-		// В переменной refs лежат ссылки (или указатели) на объекты из массива observers,
-		// в порядке обхода вызова метода Update
-		for (int i = 0; i < refs.size(); ++i)
-		{
-			BOOST_CHECK(refs[i] == observers[refs.size() - i - 1].get());
-		}
+		BOOST_CHECK(output.is_empty());
+		observable.SetData(20);
+		BOOST_CHECK(output.is_equal("hello"));
 	}
 BOOST_AUTO_TEST_SUITE_END()
