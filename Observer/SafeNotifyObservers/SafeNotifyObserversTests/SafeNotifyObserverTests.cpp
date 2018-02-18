@@ -1,4 +1,4 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 #include "../Observer.h"
 #include <boost/test/output_test_stream.hpp>
 
@@ -38,7 +38,7 @@ public:
 
 	~DummyObserver()
 	{
-		// Не должно вызвать падение программы
+		// РќРµ РґРѕР»Р¶РЅРѕ РІС‹Р·РІР°С‚СЊ РїР°РґРµРЅРёРµ РїСЂРѕРіСЂР°РјРјС‹
 		m_observable.RemoveObserver(*this);
 	}
 
@@ -47,7 +47,7 @@ public:
 		m_output << m_name;
 		if (m_eraseOnUpdate)
 		{
-			// Не должно вызвать падение программы
+			// РќРµ РґРѕР»Р¶РЅРѕ РІС‹Р·РІР°С‚СЊ РїР°РґРµРЅРёРµ РїСЂРѕРіСЂР°РјРјС‹
 			m_observable.RemoveObserver(*this);
 		}
 	}
@@ -75,17 +75,21 @@ BOOST_AUTO_TEST_SUITE(WeatherStation)
 		DummyObserver observer2(observable, "b", false, output);
 
 		observable.SetData(123);
-		// Не забываем что порядок обхода наблюдателей никак не гарантирован
-		BOOST_CHECK(output.is_equal("ab") || output.is_equal("ba"));
+		// РќРµ Р·Р°Р±С‹РІР°РµРј С‡С‚Рѕ РїРѕСЂСЏРґРѕРє РѕР±С…РѕРґР° РЅР°Р±Р»СЋРґР°С‚РµР»РµР№ РЅРёРєР°Рє РЅРµ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅ
+		BOOST_CHECK(output.is_equal("ab", false) || output.is_equal("ba", false));
 
-		output.clear();
+		output.flush();
+		BOOST_CHECK(output.is_empty());
+
 		observer2.SetEraseOnUpdate(true);
 		observable.SetData(456);
-		// Наблюдатель с именем "a" удалил себя из подписчиков в прошлом уведомлении
+		// РќР°Р±Р»СЋРґР°С‚РµР»СЊ СЃ РёРјРµРЅРµРј "a" СѓРґР°Р»РёР» СЃРµР±СЏ РёР· РїРѕРґРїРёСЃС‡РёРєРѕРІ РІ РїСЂРѕС€Р»РѕРј СѓРІРµРґРѕРјР»РµРЅРёРё
 		BOOST_CHECK(output.is_equal("b"));
 
-		output.clear();
-		// Наблюдатель с именем "b" удалил себя из подписчиков в прошлом уведомлении
+		output.flush();
+		BOOST_CHECK(output.is_empty());
+
+		// РќР°Р±Р»СЋРґР°С‚РµР»СЊ СЃ РёРјРµРЅРµРј "b" СѓРґР°Р»РёР» СЃРµР±СЏ РёР· РїРѕРґРїРёСЃС‡РёРєРѕРІ РІ РїСЂРѕС€Р»РѕРј СѓРІРµРґРѕРјР»РµРЅРёРё
 		observable.SetData(789);
 		BOOST_CHECK(output.is_empty());
 	}
