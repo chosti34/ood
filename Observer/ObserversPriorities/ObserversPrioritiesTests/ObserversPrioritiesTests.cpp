@@ -84,7 +84,6 @@ BOOST_AUTO_TEST_SUITE(ObserversPrioritiesTaskTestSuite)
 		DummyObserver observer4(observable, 10, "d", output);
 		observable.RemoveObserver(observer4);
 
-		BOOST_CHECK(output.is_empty());
 		observable.SetData(100500);
 		// Все подписчики с равным приоритетом будут оповещены в порядке, обратном порядку подписки
 		BOOST_CHECK(output.is_equal("cba"));
