@@ -62,11 +62,6 @@ public:
 		}
 	}
 
-	size_t GetNotifiersCount()const
-	{
-		return m_observers.size();
-	}
-
 protected:
 	virtual T GetChangedData()const = 0;
 

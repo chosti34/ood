@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "../WeatherData.h"
+#include "../Observer.h"
 #include <vector>
 #include <memory>
 #include <numeric>
@@ -81,6 +81,8 @@ BOOST_AUTO_TEST_SUITE(ObserversPrioritiesTaskTestSuite)
 		DummyObserver observer1(observable, 10, "a", output);
 		DummyObserver observer2(observable, 10, "b", output);
 		DummyObserver observer3(observable, 10, "c", output);
+		DummyObserver observer4(observable, 10, "d", output);
+		observable.RemoveObserver(observer4);
 
 		BOOST_CHECK(output.is_empty());
 		observable.SetData(100500);

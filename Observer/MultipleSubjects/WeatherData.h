@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -15,24 +15,19 @@ struct WeatherInfo
 class WeatherData : public AbstractObservable<WeatherInfo>
 {
 public:
-	WeatherData(const std::string& description)
-		: m_description(description)
-	{
-	}
-
-	// Температура в градусах Цельсия
+	// РўРµРјРїРµСЂР°С‚СѓСЂР° РІ РіСЂР°РґСѓСЃР°С… Р¦РµР»СЊСЃРёСЏ
 	double GetTemperature()const
 	{
 		return m_temperature;
 	}
 
-	// Относительная влажность (0...100)
+	// РћС‚РЅРѕСЃРёС‚РµР»СЊРЅР°СЏ РІР»Р°Р¶РЅРѕСЃС‚СЊ (0...100)
 	double GetHumidity()const
 	{
 		return m_humidity;
 	}
 
-	// Атмосферное давление (в мм.рт.ст)
+	// РђС‚РјРѕСЃС„РµСЂРЅРѕРµ РґР°РІР»РµРЅРёРµ (РІ РјРј.СЂС‚.СЃС‚)
 	double GetPressure()const
 	{
 		return m_pressure;
@@ -46,11 +41,6 @@ public:
 		NotifyObservers();
 	}
 
-	std::string GetDescription()const override
-	{
-		return m_description;
-	}
-
 protected:
 	WeatherInfo GetChangedData()const override
 	{
@@ -58,18 +48,60 @@ protected:
 	}
 
 private:
-	std::string m_description;
 	double m_temperature = 0.0;
 	double m_humidity = 0.0;
 	double m_pressure = 760.0;
 };
 
-class SimpleDisplay : public IObserver<WeatherInfo>
+class InOutSensorDisplay : public IObserver<WeatherInfo>
 {
+public:
+	InOutSensorDisplay(WeatherData& in, WeatherData& out)
+		: m_inSensor(in)
+		, m_outSensor(out)
+	{
+		m_inSensor.RegisterObserver(*this);
+		m_outSensor.RegisterObserver(*this);
+	}
+
+	virtual ~InOutSensorDisplay()
+	{
+		m_inSensor.RemoveObserver(*this);
+		m_outSensor.RemoveObserver(*this);
+	}
+
+protected:
+	void Update(const WeatherInfo& data, IObservable<WeatherInfo> & sensor)override
+	{
+		if (std::addressof(sensor) == std::addressof(m_inSensor))
+		{
+			// signal from inside sensor
+		}
+		else if (std::addressof(sensor) == std::addressof(m_outSensor))
+		{
+			// signal from outside sensor
+		}
+		else
+		{
+			// signal from unknown sensor
+		}
+	}
+
+	WeatherData & m_inSensor;
+	WeatherData & m_outSensor;
+};
+
+class SimpleDisplay : public InOutSensorDisplay
+{
+public:
+	SimpleDisplay(WeatherData& in, WeatherData& out)
+		: InOutSensorDisplay(in, out)
+	{
+	}
+
 protected:
 	void Update(const WeatherInfo& data, IObservable<WeatherInfo>& observable) override
 	{
-		std::cout << "Notify from " << observable.GetDescription() << " subject:" << std::endl;
 		std::cout << "Current Temperature " << data.temperature << std::endl;
 		std::cout << "Current Humidity " << data.humidity << std::endl;
 		std::cout << "Current Pressure " << data.pressure << std::endl;
@@ -77,8 +109,14 @@ protected:
 	}
 };
 
-class StatisticsDisplay : public IObserver<WeatherInfo>
+class StatisticsDisplay : public InOutSensorDisplay
 {
+public:
+	StatisticsDisplay(WeatherData& in, WeatherData& out)
+		: InOutSensorDisplay(in, out)
+	{
+	}
+
 protected:
 	void Update(const WeatherInfo& data, IObservable<WeatherInfo>& observable) override
 	{
@@ -93,13 +131,13 @@ protected:
 		m_accumulatedTemperature += data.temperature;
 		++m_accumulationsCount;
 
-		std::cout << "Notify from " << observable.GetDescription() << " subject:" << std::endl;
 		std::cout << "Max Temperature: " << m_maxTemperature << std::endl;
 		std::cout << "Min Temperature: " << m_minTemperature << std::endl;
 		std::cout << "Average Temperature " << (m_accumulatedTemperature / m_accumulationsCount) << std::endl;
 		std::cout << "----------------" << std::endl;
 	}
 
+private:
 	double m_minTemperature = std::numeric_limits<double>::infinity();
 	double m_maxTemperature = -std::numeric_limits<double>::infinity();
 	double m_accumulatedTemperature = 0;

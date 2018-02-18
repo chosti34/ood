@@ -46,7 +46,6 @@ public:
 		if (foundPriority == m_observerToPriorityMap.end())
 		{
 			auto inserted = m_priorityToObserverMap.emplace(priority, std::addressof(observer));
-			assert(inserted->second);
 			try
 			{
 				// Может ли в этой строке выбросится исключение?
@@ -55,7 +54,9 @@ public:
 			}
 			catch (...)
 			{
-				m_priorityToObserverMap.erase(inserted);
+				auto it = FindIteratorByObserverWithPriority(observer, priority);
+				assert(it != m_priorityToObserverMap.end());
+				m_priorityToObserverMap.erase(it);
 				throw;
 			}
 		}
@@ -66,20 +67,13 @@ public:
 		// Класс может содержать разные ссылки с одинаковым приоритетом,
 		//  однако не может содержать одинаковые ссылки.
 		// Первая найденная ссылка (указатель) в коллекции должна быть одна
-		auto found = m_observerToPriorityMap.find(std::addressof(observer));
-		if (found != m_observerToPriorityMap.end())
+		auto foundPriority = m_observerToPriorityMap.find(std::addressof(observer));
+		if (foundPriority != m_observerToPriorityMap.end())
 		{
-			auto range = m_priorityToObserverMap.equal_range(found->second);
-			for (auto it = range.first; it != range.second; ++it)
-			{
-				if (std::addressof(observer) == it->second)
-				{
-					m_priorityToObserverMap.erase(it);
-					m_observerToPriorityMap.erase(std::addressof(observer));
-					return;
-				}
-			}
-			assert(false);
+			auto it = FindIteratorByObserverWithPriority(observer, foundPriority->second);
+			assert(it != m_priorityToObserverMap.end());
+			m_priorityToObserverMap.erase(it);
+			m_observerToPriorityMap.erase(std::addressof(observer));
 		}
 	}
 
@@ -98,9 +92,23 @@ protected:
 	virtual T GetChangedData()const = 0;
 
 private:
+	decltype(auto) FindIteratorByObserverWithPriority(ObserverType& observer, int priority)
+	{
+		auto range = m_priorityToObserverMap.equal_range(priority);
+		for (auto it = range.first; it != range.second; ++it)
+		{
+			if (std::addressof(observer) == it->second)
+			{
+				return it;
+			}
+		}
+		return m_priorityToObserverMap.end();
+	}
+
 	// Класс подписывает контракт:
 	//  мы можем хранить различные ссылки с одинаковым приоритетом,
 	//  однако запрещаем хранить одинаковые ссылки с любым приоритетом
+	// (можно хранить много дублирующихся ключей, но все значения должны быть уникальны)
 	std::multimap<int, ObserverType*> m_priorityToObserverMap;
 	std::unordered_map<ObserverType*, int> m_observerToPriorityMap;
 };

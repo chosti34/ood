@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -17,116 +17,89 @@ class SimpleDisplay : public IObserver<WeatherInfo>
 {
 private:
 	/*
-	Метод Update сделан приватным, чтобы ограничить возможность его вызова напрямую
-	Классу CObservable он будет доступен все равно, т.к. в интерфейсе IObserver он
-	остается публичным
+	РњРµС‚РѕРґ Update СЃРґРµР»Р°РЅ РїСЂРёРІР°С‚РЅС‹Рј, С‡С‚РѕР±С‹ РѕРіСЂР°РЅРёС‡РёС‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РµРіРѕ РІС‹Р·РѕРІР° РЅР°РїСЂСЏРјСѓСЋ
+	РљР»Р°СЃСЃСѓ CObservable РѕРЅ Р±СѓРґРµС‚ РґРѕСЃС‚СѓРїРµРЅ РІСЃРµ СЂР°РІРЅРѕ, С‚.Рє. РІ РёРЅС‚РµСЂС„РµР№СЃРµ IObserver РѕРЅ
+	РѕСЃС‚Р°РµС‚СЃСЏ РїСѓР±Р»РёС‡РЅС‹Рј
 	*/
-	void Update(const WeatherInfo& data) override
-	{
-		std::cout << "Current Temperature " << data.temperature << std::endl;
-		std::cout << "Current Humidity " << data.humidity << std::endl;
-		std::cout << "Current Pressure " << data.pressure << std::endl;
-		std::cout << "----------------" << std::endl;
-	}
+	void Update(const WeatherInfo& data) override;
 };
 
-struct MinMax
+template <typename T>
+class ValueStatistics
 {
-	double min = std::numeric_limits<double>::infinity();
-	double max = std::numeric_limits<double>::infinity();
-	double accumulated;
+public:
+	ValueStatistics()
+		: m_minValue(std::numeric_limits<T>::infinity())
+		, m_maxValue(-std::numeric_limits<T>::infinity())
+		, m_accumulated(T(0))
+		, m_accumulationsCount(0u)
+	{
+	}
+
+	void OnValueChange(T newValue)
+	{
+		if (newValue < m_minValue)
+		{
+			m_minValue = newValue;
+		}
+		if (newValue > m_maxValue)
+		{
+			m_maxValue = newValue;
+		}
+		m_accumulated += newValue;
+		++m_accumulationsCount;
+	}
+
+	T GetMinValue()const
+	{
+		return m_minValue;
+	}
+
+	T GetMaxValue()const
+	{
+		return m_maxValue;
+	}
+
+	T GetAverage()const
+	{
+		// Р•СЃР»Рё Р·РЅР°С‡РµРЅРёРµ РЅРµ Р±С‹Р»Рѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РЅРё СЂР°Р·Сѓ, Р·РґРµСЃСЊ Р±СѓРґРµС‚ РґРµР»РµРЅРёРµ РЅР° РЅРѕР»СЊ
+		return m_accumulated / m_accumulationsCount;
+	}
+
+private:
+	T m_minValue;
+	T m_maxValue;
+	T m_accumulated;
+
+	// РњРѕР¶РЅРѕ Р±С‹Р»Рѕ Р±С‹ С…СЂР°РЅРёС‚СЊ СЃСЃС‹Р»РєСѓ СЃРѕРІРјРµСЃС‚РЅРѕ СЃРѕ РІСЃРµРјРё РѕР±СЉРµРєС‚Р°РјРё РґР°РЅРЅРѕРіРѕ РєР»Р°СЃСЃР°,
+	//  С‡С‚РѕР±С‹ СЃСЌРєРѕРЅРѕРјРёС‚СЊ РЅРµРјРЅРѕРіРѕ РїР°РјСЏС‚Рё (РЅР°РїСЂРёРјРµСЂ: std::shared_ptr<unsigned>)
+	unsigned m_accumulationsCount;
 };
 
 class StatisticsDisplay : public IObserver<WeatherInfo>
 {
 private:
-	void Update(const WeatherInfo& data) override
-	{
-		m_minTemperature = std::min(m_minTemperature, data.temperature);
-		m_maxTemperature = std::max(m_maxTemperature, data.temperature);
-		m_accumulatedTemperature += data.temperature;
+	void PrintStatistics(const ValueStatistics<double>& statistics, const std::string& name);
+	void Update(const WeatherInfo& data) override;
 
-		m_minHumidity = std::min(m_minHumidity, data.humidity);
-		m_maxHumidity = std::max(m_maxHumidity, data.humidity);
-		m_accumulatedHumidity += data.humidity;
-
-		m_minPressure = std::min(m_minPressure, data.pressure);
-		m_maxPressure = std::max(m_maxPressure, data.pressure);
-		m_accumulatedPressure += data.pressure;
-
-		++m_accumulationsCount;
-
-		static const auto printStats = [&m_accumulationsCount](const std::string& statsName, const MinMax& stats) {
-			std::cout << "Max " << statsName << ": " << stats.max << std::endl;
-			std::cout << "Min " << statsName << ": " << stats.min << std::endl;
-			std::cout << "Average Temperature " << (stats.accumulated / m_accumulationsCount) << std::endl;
-		};
-
-		
-
-		std::cout << "Max Temperature: " << m_maxTemperature << std::endl;
-		std::cout << "Min Temperature: " << m_minTemperature << std::endl;
-		std::cout << "Average Temperature " << (m_accumulatedTemperature / m_accumulationsCount) << std::endl;
-
-		std::cout << "Max Humidity: " << m_maxHumidity << std::endl;
-		std::cout << "Min Humidity: " << m_minHumidity << std::endl;
-		std::cout << "Average Humidity " << (m_accumulatedHumidity / m_accumulationsCount) << std::endl;
-
-		std::cout << "Max Pressure: " << m_maxPressure << std::endl;
-		std::cout << "Min Pressure: " << m_minPressure << std::endl;
-		std::cout << "Average Pressure " << (m_accumulatedPressure / m_accumulationsCount) << std::endl;
-		std::cout << "----------------" << std::endl;
-	}
-
-	double m_minTemperature = std::numeric_limits<double>::infinity();
-	double m_maxTemperature = -std::numeric_limits<double>::infinity();
-	double m_accumulatedTemperature = 0;
-
-	double m_minHumidity = std::numeric_limits<double>::infinity();
-	double m_maxHumidity = -std::numeric_limits<double>::infinity();
-	double m_accumulatedHumidity = 0;
-
-	double m_minPressure = std::numeric_limits<double>::infinity();
-	double m_maxPressure = -std::numeric_limits<double>::infinity();
-	double m_accumulatedPressure = 0;
-
-	unsigned m_accumulationsCount = 0;
+	ValueStatistics<double> m_temperatureStatistics;
+	ValueStatistics<double> m_humidityStatistics;
+	ValueStatistics<double> m_pressureStatistics;
 };
 
 class WeatherData : public AbstractObservable<WeatherInfo>
 {
 public:
-	// Температура в градусах Цельсия
-	double GetTemperature()const
-	{
-		return m_temperature;
-	}
-
-	// Относительная влажность (0...100)
-	double GetHumidity()const
-	{
-		return m_humidity;
-	}
-
-	// Атмосферное давление (в мм.рт.ст)
-	double GetPressure()const
-	{
-		return m_pressure;
-	}
-
-	void SetMeasurements(double temperature, double humidity, double pressure)
-	{
-		m_temperature = temperature;
-		m_humidity = humidity;
-		m_pressure = pressure;
-		NotifyObservers();
-	}
+	// РўРµРјРїРµСЂР°С‚СѓСЂР° РІ РіСЂР°РґСѓСЃР°С… Р¦РµР»СЊСЃРёСЏ
+	double GetTemperature()const;
+	// РћС‚РЅРѕСЃРёС‚РµР»СЊРЅР°СЏ РІР»Р°Р¶РЅРѕСЃС‚СЊ (0...100)
+	double GetHumidity()const;
+	// РђС‚РјРѕСЃС„РµСЂРЅРѕРµ РґР°РІР»РµРЅРёРµ (РІ РјРј.СЂС‚.СЃС‚)
+	double GetPressure()const;
+	void SetMeasurements(double temperature, double humidity, double pressure);
 
 protected:
-	WeatherInfo GetChangedData()const override
-	{
-		return { m_temperature, m_humidity, m_pressure };
-	}
+	WeatherInfo GetChangedData()const override;
 
 private:
 	double m_temperature = 0.0;

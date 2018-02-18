@@ -1,5 +1,6 @@
 #include "stdafx.h"
-#include "../WeatherData.h"
+#include "../Observer.h"
+#include <boost/test/output_test_stream.hpp>
 
 namespace
 {
@@ -24,9 +25,13 @@ private:
 class DummyObserver : public IObserver<int>
 {
 public:
-	DummyObserver(DummyObservable& observable, bool eraseOnUpdate)
+	DummyObserver(DummyObservable& observable, const std::string& name,
+		bool eraseOnUpdate,
+		boost::test_tools::output_test_stream& output)
 		: m_observable(observable)
+		, m_name(name)
 		, m_eraseOnUpdate(eraseOnUpdate)
+		, m_output(output)
 	{
 		m_observable.RegisterObserver(*this);
 	}
@@ -39,6 +44,7 @@ public:
 
 	void Update(const int& data) override
 	{
+		m_output << m_name;
 		if (m_eraseOnUpdate)
 		{
 			// Не должно вызвать падение программы
@@ -53,20 +59,34 @@ public:
 
 private:
 	DummyObservable& m_observable;
+	boost::test_tools::output_test_stream& m_output;
+	std::string m_name;
 	bool m_eraseOnUpdate;
 };
 }
 
 BOOST_AUTO_TEST_SUITE(WeatherStation)
-	BOOST_AUTO_TEST_CASE(notifiers_can_remove_themselves_from_observables_list_safely)
+	BOOST_AUTO_TEST_CASE(subsribers_can_remove_themselves_from_list_safely)
 	{
+		boost::test_tools::output_test_stream output;
+
 		DummyObservable observable;
-		DummyObserver observer1(observable, true);
-		DummyObserver observer2(observable, false);
+		DummyObserver observer1(observable, "a", true, output);
+		DummyObserver observer2(observable, "b", false, output);
+
 		observable.SetData(123);
-		BOOST_CHECK_EQUAL(observable.GetNotifiersCount(), 1);
+		// Не забываем что порядок обхода наблюдателей никак не гарантирован
+		BOOST_CHECK(output.is_equal("ab") || output.is_equal("ba"));
+
+		output.clear();
 		observer2.SetEraseOnUpdate(true);
 		observable.SetData(456);
-		BOOST_CHECK_EQUAL(observable.GetNotifiersCount(), 0);
+		// Наблюдатель с именем "a" удалил себя из подписчиков в прошлом уведомлении
+		BOOST_CHECK(output.is_equal("b"));
+
+		output.clear();
+		// Наблюдатель с именем "b" удалил себя из подписчиков в прошлом уведомлении
+		observable.SetData(789);
+		BOOST_CHECK(output.is_empty());
 	}
 BOOST_AUTO_TEST_SUITE_END()
