@@ -1,46 +1,66 @@
-#include "stdafx.h"
-#include "../WeatherData.h"
+ï»¿#include "stdafx.h"
+#include "../Observer.h"
+
 #include <vector>
 #include <string>
 #include <boost/test/output_test_stream.hpp>
 
 namespace
 {
-class AdvancedDisplay : public IObserver<WeatherInfo>
+class Observable : public AbstractObservable<int>
 {
 public:
-	AdvancedDisplay(WeatherData& innerStation, WeatherData& outerStation, const std::string& name,
+	void SetData(int data)
+	{
+		m_data = data;
+		NotifyObservers();
+	}
+
+private:
+	// Inherited via AbstractObservable
+	virtual int GetChangedData() const override
+	{
+		return m_data;
+	}
+
+	int m_data = 0;
+};
+
+class Observer : public IObserver<int>
+{
+public:
+	Observer(Observable& first, Observable& second, const std::string& name,
 		boost::test_tools::output_test_stream& output)
-		: m_innerStation(innerStation)
-		, m_outerStation(outerStation)
+		: m_first(first)
+		, m_second(second)
 		, m_name(name)
 		, m_output(output)
 	{
-		m_innerStation.RegisterObserver(*this);
-		m_outerStation.RegisterObserver(*this);
+		m_first.RegisterObserver(*this);
+		m_second.RegisterObserver(*this);
 	}
 
-	~AdvancedDisplay()
+	~Observer()
 	{
-		m_innerStation.RemoveObserver(*this);
-		m_outerStation.RemoveObserver(*this);
+		m_first.RemoveObserver(*this);
+		m_second.RemoveObserver(*this);
 	}
 
-	void Update(const WeatherInfo& data, IObservable<WeatherInfo> & sensor) override
+	void Update(const int& data, IObservable<int> & observable) override
 	{
-		if (std::addressof(sensor) == std::addressof(m_innerStation))
+		if (std::addressof(observable) == std::addressof(m_first))
 		{
-			m_output << "[in_" << m_name << "]";
+			m_output << "[first_" << m_name << "]";
 		}
-		else if (std::addressof(sensor) == std::addressof(m_outerStation))
+		else if (std::addressof(observable) == std::addressof(m_second))
 		{
-			m_output << "[out_" << m_name << "]";
+			m_output << "[second_" << m_name << "]";
 		}
 	}
 
 private:
-	WeatherData & m_innerStation;
-	WeatherData & m_outerStation;
+	Observable & m_first;
+	Observable & m_second;
 
 	std::string m_name;
 	boost::test_tools::output_test_stream& m_output;
@@ -52,27 +72,29 @@ BOOST_AUTO_TEST_SUITE(MultipleSubjects)
 	{
 		boost::test_tools::output_test_stream output;
 
-		WeatherData innerStation;
-		WeatherData outerStation;
+		Observable first;
+		Observable second;
 
-		AdvancedDisplay display1(innerStation, outerStation, "a", output);
-		innerStation.SetMeasurements(10, 0.5, 600);
-		BOOST_CHECK(output.is_equal("[in_a]", true));
+		Observer observer1(first, second, "a", output);
+		first.SetData(100500);
+		BOOST_CHECK(output.is_equal("[first_a]", true));
 
-		AdvancedDisplay display2(innerStation, outerStation, "b", output);
-		outerStation.SetMeasurements(15, 0.6, 800);
-		// Íå çàáûâàåì, ÷òî ïîðÿäîê îáõîäà íàáëþäàòåëåé íèêàê íå ãàðàíòèðîâàí
-		BOOST_CHECK(output.is_equal("[out_a][out_b]", false) || output.is_equal("[out_a][out_b]", false));
+		Observer observer2(first, second, "b", output);
+		second.SetData(100500);
+		// ÐÐµ Ð·Ð°Ð±Ñ‹Ð²Ð°ÐµÐ¼, Ñ‡Ñ‚Ð¾ Ð¿Ð¾Ñ€ÑÐ´Ð¾Ðº Ð¾Ð±Ñ…Ð¾Ð´Ð° Ð½Ð°Ð±Ð»ÑŽÐ´Ð°Ñ‚ÐµÐ»ÐµÐ¹ Ð½Ð¸ÐºÐ°Ðº Ð½Ðµ Ð³Ð°Ñ€Ð°Ð½Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½
+		BOOST_CHECK(output.is_equal("[second_a][second_b]", false) ||
+			output.is_equal("[second_a][second_b]", false));
 
 		output.flush();
 		BOOST_CHECK(output.is_empty());
 
-		WeatherData otherStation;
-		otherStation.RegisterObserver(display2);
-		otherStation.SetMeasurements(15, 0.5, 500);
+		Observable other;
+		other.RegisterObserver(observer2);
+		other.SetData(100500);
 		BOOST_CHECK(output.is_empty());
 
-		innerStation.SetMeasurements(20, 0.8, 700);
-		BOOST_CHECK(output.is_equal("[in_a][in_b]", false) || output.is_equal("[in_b][in_a]", false));
+		first.SetData(100500);
+		BOOST_CHECK(output.is_equal("[first_a][first_b]", false) ||
+			output.is_equal("[first_b][first_a]", false));
 	}
 BOOST_AUTO_TEST_SUITE_END()
