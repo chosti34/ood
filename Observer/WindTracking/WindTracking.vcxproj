@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Math.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="SimpleDisplay.h" />
     <ClInclude Include="StatisticsDisplay.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="WeatherData.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Math.cpp" />
     <ClCompile Include="SimpleDisplay.cpp" />
     <ClCompile Include="StatisticsDisplay.cpp" />
     <ClCompile Include="stdafx.cpp">

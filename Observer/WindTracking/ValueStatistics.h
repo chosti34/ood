@@ -1,6 +1,6 @@
 #pragma once
 #include <climits>
-#include <cmath>
+#include "Math.h"
 
 template <typename T>
 class IValueStatistics
@@ -88,8 +88,8 @@ public:
 		{
 			m_maxValue = newValue;
 		}
-		m_x += std::cos(newValue * 3.14159265 / 180.0);
-		m_y += std::sin(newValue * 3.14159265 / 180.0);
+		m_x += std::cos(DegreesToRadians(newValue));
+		m_y += std::sin(DegreesToRadians(newValue));
 		++m_accumulationsCount;
 	}
 
@@ -105,13 +105,8 @@ public:
 
 	T GetAverage()const override
 	{
-		double ret = std::atan2(m_y / m_accumulationsCount, m_x / m_accumulationsCount) * 180.0 / 3.1459265;
-		ret = round(ret);
-		if (ret < -0.0)
-		{
-			ret = 360.0 + ret;
-		}
-		return std::fmod(ret, 360.0);
+		double average = round(RadiansToDegrees(std::atan2(m_y / m_accumulationsCount, m_x / m_accumulationsCount)));
+		return average < 0.0 ? 360 + average : average;
 	}
 
 private:
