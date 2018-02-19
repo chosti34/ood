@@ -3,50 +3,66 @@
 
 namespace
 {
-void PrintStatistics(const IValueStatistics<double> & statistics, const std::string& name)
+void PrintStatisticsValue(const IValueStatistics<double> & statistics, const std::string& name)
 {
 	std::cout << "Max " << name << ": " << statistics.GetMaxValue() << std::endl;
 	std::cout << "Min " << name << ": " << statistics.GetMinValue() << std::endl;
 	std::cout << "Average " << name << ": " << statistics.GetAverage() << std::endl;
 }
+
+void PrintStatistics(const HomeWeatherStatistics& statistics)
+{
+	std::cout << "Signal from inner weather station:" << std::endl;
+	PrintStatisticsValue(statistics.temperature, "Temperature");
+	PrintStatisticsValue(statistics.humidity, "Humidity");
+	PrintStatisticsValue(statistics.pressure, "Pressure");
+	std::cout << "----------------" << std::endl;
 }
 
-StatisticsDisplay::StatisticsDisplay(WeatherData& innerStation, WeatherData& outerStation)
-	: m_innerStation(innerStation)
-	, m_outerStation(outerStation)
+void PrintStatistics(const StreetWeatherStatistics& statistics)
 {
-	m_innerStation.RegisterObserver(*this);
-	m_outerStation.RegisterObserver(*this);
+	std::cout << "Signal from outer weather station:" << std::endl;
+	PrintStatisticsValue(statistics.temperature, "Temperature");
+	PrintStatisticsValue(statistics.humidity, "Humidity");
+	PrintStatisticsValue(statistics.pressure, "Pressure");
+	PrintStatisticsValue(statistics.windSpeed, "Wind Speed");
+	PrintStatisticsValue(statistics.windDirection, "Wind Direction");
+	std::cout << "----------------" << std::endl;
+}
+}
+
+StatisticsDisplay::StatisticsDisplay(WeatherData& inner, WeatherData& outer)
+	: m_inner(inner)
+	, m_outer(outer)
+{
+	m_inner.RegisterObserver(*this);
+	m_outer.RegisterObserver(*this);
 }
 
 StatisticsDisplay::~StatisticsDisplay()
 {
-	m_innerStation.RemoveObserver(*this);
-	m_outerStation.RemoveObserver(*this);
+	m_inner.RemoveObserver(*this);
+	m_outer.RemoveObserver(*this);
 }
 
-void StatisticsDisplay::Update(const WeatherInfoPro& data, IObservable<WeatherInfoPro>& observable)
+void StatisticsDisplay::Update(const WeatherInfo& data, IObservable<WeatherInfo>& observable)
 {
-	if (std::addressof(observable) == std::addressof(m_innerStation))
+	if (std::addressof(observable) == std::addressof(m_inner))
 	{
-		std::cout << "Notification from inner station" << std::endl;
+		// ѕредполагаетс€, что метеостанци€, след€ща€ за погодой внутри,
+		//  не предоставл€ет информации о скорости и направлении ветра
+		m_homeStatistics.temperature.OnValueChange(data.temperature);
+		m_homeStatistics.humidity.OnValueChange(data.humidity);
+		m_homeStatistics.pressure.OnValueChange(data.pressure);
+		PrintStatistics(m_homeStatistics);
 	}
-	else if (std::addressof(observable) == std::addressof(m_outerStation))
+	else if (std::addressof(observable) == std::addressof(m_outer))
 	{
-		std::cout << "Notification from outer station" << std::endl;
+		m_streetStatistics.temperature.OnValueChange(data.temperature);
+		m_streetStatistics.humidity.OnValueChange(data.humidity);
+		m_streetStatistics.pressure.OnValueChange(data.pressure);
+		m_streetStatistics.windSpeed.OnValueChange(data.windSpeed);
+		m_streetStatistics.windDirection.OnValueChange(data.windDirection);
+		PrintStatistics(m_streetStatistics);
 	}
-
-	m_temperatureStatistics.OnValueChange(data.temperature);
-	m_humidityStatistics.OnValueChange(data.humidity);
-	m_pressureStatistics.OnValueChange(data.pressure);
-	m_windSpeedStatistics.OnValueChange(data.windSpeed);
-	m_windDirectionStatistics.OnValueChange(data.windDirection);
-
-	std::cout << "Statistics display update:" << std::endl;
-	PrintStatistics(m_temperatureStatistics, "Temperature");
-	PrintStatistics(m_humidityStatistics, "Humidity");
-	PrintStatistics(m_pressureStatistics, "Pressure");
-	PrintStatistics(m_windSpeedStatistics, "Wind Speed");
-	PrintStatistics(m_windDirectionStatistics, "Wind Direction");
-	std::cout << "----------------" << std::endl;
 }
