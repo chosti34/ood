@@ -1,17 +1,27 @@
-#pragma once
+п»ї#pragma once
 
-#include <functional>
+#include <map>
 #include <set>
 #include <string>
+#include <functional>
+
+// РўРёРї СЃРѕР±С‹С‚РёСЏ:
+//  1 - РёР·РјРµРЅРёР»РѕСЃСЊ Р·РЅР°С‡РµРЅРёРµ С‚РµРјРїРµСЂР°С‚СѓСЂС‹ РёР»Рё Р°С‚РјРѕСЃС„РµСЂРЅРѕРіРѕ РґР°РІР»РµРЅРёСЏ
+//  2 - РёР·РјРµРЅРёР»РѕСЃСЊ Р»СЋР±РѕРµ Р·РЅР°С‡РµРЅРёРµ
+enum class EventType
+{
+	TemperatureOrPressureChange,
+	AnyChange
+};
 
 template <typename T>
 class IObservable;
 
 /*
-Шаблонный интерфейс IObserver. Его должен реализовывать класс,
-желающий получать уведомления от соответствующего IObservable
-Параметром шаблона является тип аргумента,
-передаваемого Наблюдателю в метод Update
+РЁР°Р±Р»РѕРЅРЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ IObserver. Р•РіРѕ РґРѕР»Р¶РµРЅ СЂРµР°Р»РёР·РѕРІС‹РІР°С‚СЊ РєР»Р°СЃСЃ,
+Р¶РµР»Р°СЋС‰РёР№ РїРѕР»СѓС‡Р°С‚СЊ СѓРІРµРґРѕРјР»РµРЅРёСЏ РѕС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРіРѕ IObservable
+РџР°СЂР°РјРµС‚СЂРѕРј С€Р°Р±Р»РѕРЅР° СЏРІР»СЏРµС‚СЃСЏ С‚РёРї Р°СЂРіСѓРјРµРЅС‚Р°,
+РїРµСЂРµРґР°РІР°РµРјРѕРіРѕ РќР°Р±Р»СЋРґР°С‚РµР»СЋ РІ РјРµС‚РѕРґ Update
 */
 template <typename T>
 class IObserver
@@ -22,17 +32,17 @@ public:
 };
 
 /*
-Шаблонный интерфейс IObservable. Позволяет подписаться и отписаться на оповещения наблюдателям,
-а также инициировать рассылку уведомлений зарегистрированным наблюдателям.
+РЁР°Р±Р»РѕРЅРЅС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ IObservable. РџРѕР·РІРѕР»СЏРµС‚ РїРѕРґРїРёСЃР°С‚СЊСЃСЏ Рё РѕС‚РїРёСЃР°С‚СЊСЃСЏ РЅР° РѕРїРѕРІРµС‰РµРЅРёСЏ РЅР°Р±Р»СЋРґР°С‚РµР»СЏРј,
+Р° С‚Р°РєР¶Рµ РёРЅРёС†РёРёСЂРѕРІР°С‚СЊ СЂР°СЃСЃС‹Р»РєСѓ СѓРІРµРґРѕРјР»РµРЅРёР№ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Рј РЅР°Р±Р»СЋРґР°С‚РµР»СЏРј.
 */
 template <typename T>
 class IObservable
 {
 public:
 	virtual ~IObservable() = default;
-	virtual void RegisterObserver(IObserver<T>& observer) = 0;
-	virtual void RemoveObserver(IObserver<T>& observer) = 0;
-	virtual void NotifyObservers() = 0;
+	virtual void RegisterObserver(EventType event, IObserver<T>& observer) = 0;
+	virtual void RemoveObserver(EventType event, IObserver<T>& observer) = 0;
+	virtual void NotifyObservers(EventType event) = 0;
 };
 
 template <typename T>
@@ -41,24 +51,43 @@ class AbstractObservable : public IObservable<T>
 public:
 	using ObserverType = IObserver<T>;
 
-	void RegisterObserver(ObserverType& observer) override
+	void RegisterObserver(EventType event, ObserverType& observer) override
 	{
-		m_observers.insert(std::addressof(observer));
+		auto found = m_observersMap.find(event);
+		if (found != m_observersMap.end())
+		{
+			found->second.insert(std::addressof(observer));
+		}
+		else
+		{
+			std::set<ObserverType*> observers;
+			observers.insert(std::addressof(observer));
+			m_observersMap.emplace(event, observers);
+		}
 	}
 
-	void RemoveObserver(ObserverType& observer) override
+	void RemoveObserver(EventType event, ObserverType& observer) override
 	{
-		m_observers.erase(std::addressof(observer));
+		auto found = m_observersMap.find(event);
+		if (found != m_observersMap.end())
+		{
+			auto& observers = found->second;
+			observers.erase(std::addressof(observer));
+		}
 	}
 
-	void NotifyObservers() override
+	void NotifyObservers(EventType event) override
 	{
 		T data = GetChangedData();
-		// Пробегаем по копии коллекции, чтобы позволить подписчикам отписываться внутри метода Update
-		auto observersCopy = m_observers;
-		for (auto& observer : observersCopy)
+		auto found = m_observersMap.find(event);
+		if (found != m_observersMap.end())
 		{
-			observer->Update(data, *this);
+			// РџСЂРѕР±РµРіР°РµРј РїРѕ РєРѕРїРёРё РєРѕР»Р»РµРєС†РёРё, С‡С‚РѕР±С‹ РїРѕР·РІРѕР»РёС‚СЊ РїРѕРґРїРёСЃС‡РёРєР°Рј РѕС‚РїРёСЃС‹РІР°С‚СЊСЃСЏ РІРЅСѓС‚СЂРё РјРµС‚РѕРґР° Update
+			auto observers = found->second;
+			for (auto& pObserver : observers)
+			{
+				pObserver->Update(data, *this);
+			}
 		}
 	}
 
@@ -66,5 +95,5 @@ protected:
 	virtual T GetChangedData()const = 0;
 
 private:
-	std::set<ObserverType*> m_observers;
+	std::map<EventType, std::set<ObserverType*>> m_observersMap;
 };

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 #include "StatisticsDisplay.h"
 
 namespace
@@ -35,22 +35,22 @@ StatisticsDisplay::StatisticsDisplay(WeatherData& inner, WeatherData& outer)
 	: m_inner(inner)
 	, m_outer(outer)
 {
-	m_inner.RegisterObserver(*this);
-	m_outer.RegisterObserver(*this);
+	m_inner.RegisterObserver(EventType::AnyChange, *this);
+	m_outer.RegisterObserver(EventType::AnyChange, *this);
 }
 
 StatisticsDisplay::~StatisticsDisplay()
 {
-	m_inner.RemoveObserver(*this);
-	m_outer.RemoveObserver(*this);
+	m_inner.RemoveObserver(EventType::AnyChange, *this);
+	m_outer.RemoveObserver(EventType::AnyChange, *this);
 }
 
 void StatisticsDisplay::Update(const WeatherInfo& data, IObservable<WeatherInfo>& observable)
 {
 	if (std::addressof(observable) == std::addressof(m_inner))
 	{
-		// Предполагается, что метеостанция, следящая за погодой внутри,
-		//  не предоставляет информации о скорости и направлении ветра
+		// РџСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ РјРµС‚РµРѕСЃС‚Р°РЅС†РёСЏ, СЃР»РµРґСЏС‰Р°СЏ Р·Р° РїРѕРіРѕРґРѕР№ РІРЅСѓС‚СЂРё,
+		//  РЅРµ РїСЂРµРґРѕСЃС‚Р°РІР»СЏРµС‚ РёРЅС„РѕСЂРјР°С†РёРё Рѕ СЃРєРѕСЂРѕСЃС‚Рё Рё РЅР°РїСЂР°РІР»РµРЅРёРё РІРµС‚СЂР°
 		m_homeStatistics.temperature.OnValueChange(data.temperature);
 		m_homeStatistics.humidity.OnValueChange(data.humidity);
 		m_homeStatistics.pressure.OnValueChange(data.pressure);
