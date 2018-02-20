@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_SUITE(MultipleSubjects)
 		second.SetData(100500);
 		// Не забываем, что порядок обхода наблюдателей никак не гарантирован
 		BOOST_CHECK(output.is_equal("[second_a][second_b]", false) ||
-			output.is_equal("[second_a][second_b]", false));
+			output.is_equal("[second_b][second_a]", false));
 
 		output.flush();
 		BOOST_CHECK(output.is_empty());

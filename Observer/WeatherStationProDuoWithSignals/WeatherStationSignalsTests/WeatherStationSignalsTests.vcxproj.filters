@@ -21,24 +21,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IObserver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AbstractObservable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WeatherData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StatisticsDisplay.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ValueStatistics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Math.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -47,13 +29,10 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WeatherData.cpp">
+    <ClCompile Include="WeatherStationSignalsTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StatisticsDisplay.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Math.cpp">
+    <ClCompile Include="..\WeatherData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
