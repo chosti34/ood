@@ -84,7 +84,7 @@ public:
 		return false;
 	}
 
-	std::multimap<KeyType, ValueType> GetKeyToValueMap()
+	std::multimap<KeyType, ValueType> GetKeyToValueMapCopy()
 	{
 		return m_keyToValue;
 	}
@@ -113,7 +113,7 @@ public:
 	void NotifyObservers() override
 	{
 		T data = GetChangedData();
-		auto copy = m_observersMap.GetKeyToValueMap();
+		auto copy = m_observersMap.GetKeyToValueMapCopy();
 		for (auto it = copy.rbegin(); it != copy.rend(); ++it)
 		{
 			ObserverType* observer = it->second;
