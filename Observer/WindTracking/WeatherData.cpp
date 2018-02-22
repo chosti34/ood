@@ -17,8 +17,9 @@ void WeatherData::SetMeasurements(const WeatherInfo& info)
 	if (temperatureOrPressureChanged)
 	{
 		NotifyObservers(EventType::TemperatureOrPressureChange);
+		NotifyObservers(EventType::AnyChange);
 	}
-	if (anythingChanged)
+	else if (anythingChanged)
 	{
 		NotifyObservers(EventType::AnyChange);
 	}
