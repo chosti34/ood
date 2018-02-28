@@ -84,6 +84,7 @@ public:
 		return false;
 	}
 
+	// использовать итераторы?
 	std::multimap<KeyType, ValueType> GetKeyToValueMapCopy()
 	{
 		return m_keyToValue;
