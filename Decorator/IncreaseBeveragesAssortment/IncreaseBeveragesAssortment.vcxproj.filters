@@ -24,10 +24,19 @@
     <ClInclude Include="IBeverage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Beverages.h">
+    <ClInclude Include="Condiments.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Condiments.h">
+    <ClInclude Include="Coffee.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractBeverage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tea.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Milkshake.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

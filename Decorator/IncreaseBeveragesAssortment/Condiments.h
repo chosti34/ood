@@ -2,7 +2,7 @@
 #include "IBeverage.h"
 
 // Базовый декоратор "Добавка к напитку". Также является напитком.
-class CondimentDecorator : public IBeverage
+class AbstractCondimentDecorator : public IBeverage
 {
 public:
 	std::string GetDescription()const override
@@ -18,7 +18,7 @@ public:
 	}
 
 protected:
-	CondimentDecorator(IBeveragePtr&& beverage)
+	AbstractCondimentDecorator(IBeveragePtr&& beverage)
 		: m_beverage(std::move(beverage))
 	{
 	}
@@ -32,11 +32,11 @@ private:
 };
 
 // Добавка из корицы
-class Cinnamon : public CondimentDecorator
+class CinnamonCondiment : public AbstractCondimentDecorator
 {
 public:
-	Cinnamon(IBeveragePtr&& beverage)
-		: CondimentDecorator(std::move(beverage))
+	CinnamonCondiment(IBeveragePtr&& beverage)
+		: AbstractCondimentDecorator(std::move(beverage))
 	{
 	}
 
@@ -53,11 +53,11 @@ protected:
 };
 
 // Лимонная добавка
-class Lemon : public CondimentDecorator
+class LemonCondiment : public AbstractCondimentDecorator
 {
 public:
-	Lemon(IBeveragePtr&& beverage, unsigned quantity = 1)
-		: CondimentDecorator(std::move(beverage))
+	LemonCondiment(IBeveragePtr&& beverage, unsigned quantity = 1)
+		: AbstractCondimentDecorator(std::move(beverage))
 		, m_quantity(quantity)
 	{
 	}
@@ -85,11 +85,11 @@ enum class IceCubeType
 
 // Добавка "Кубики льда". Определяется типом и количеством кубиков, что
 //  влияет на стоимость и описание
-class IceCubes : public CondimentDecorator
+class IceCubesCondiment : public AbstractCondimentDecorator
 {
 public:
-	IceCubes(IBeveragePtr&& beverage, unsigned quantity, IceCubeType type = IceCubeType::Water)
-		: CondimentDecorator(std::move(beverage))
+	IceCubesCondiment(IBeveragePtr&& beverage, unsigned quantity, IceCubeType type = IceCubeType::Water)
+		: AbstractCondimentDecorator(std::move(beverage))
 		, m_quantity(quantity)
 		, m_type(type)
 	{
@@ -118,11 +118,11 @@ enum class SyrupType
 	Maple
 };
 
-class Syrup : public CondimentDecorator
+class SyrupCondiment : public AbstractCondimentDecorator
 {
 public:
-	Syrup(IBeveragePtr&& beverage, SyrupType type)
-		: CondimentDecorator(std::move(beverage))
+	SyrupCondiment(IBeveragePtr&& beverage, SyrupType type)
+		: AbstractCondimentDecorator(std::move(beverage))
 		, m_type(type)
 	{
 	}
@@ -144,11 +144,11 @@ private:
 };
 
 // Шоколадня стружка
-class ChocolateCrumbs : public CondimentDecorator
+class ChocolateCrumbsCondiment : public AbstractCondimentDecorator
 {
 public:
-	ChocolateCrumbs(IBeveragePtr&& beverage, unsigned mass)
-		: CondimentDecorator(std::move(beverage))
+	ChocolateCrumbsCondiment(IBeveragePtr&& beverage, unsigned mass)
+		: AbstractCondimentDecorator(std::move(beverage))
 		, m_mass(mass)
 	{
 	}
@@ -169,11 +169,11 @@ private:
 };
 
 // Кокосовая стружка
-class CoconutFlakes : public CondimentDecorator
+class CoconutFlakesCondiment : public AbstractCondimentDecorator
 {
 public:
-	CoconutFlakes(IBeveragePtr&& beverage, unsigned mass)
-		: CondimentDecorator(std::move(beverage))
+	CoconutFlakesCondiment(IBeveragePtr&& beverage, unsigned mass)
+		: AbstractCondimentDecorator(std::move(beverage))
 		, m_mass(mass)
 	{
 	}
