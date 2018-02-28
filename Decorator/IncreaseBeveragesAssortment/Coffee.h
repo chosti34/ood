@@ -57,7 +57,8 @@ public:
 			return 120.0;
 		default:
 			assert(false);
-			throw std::logic_error("Cappuccino::GetCost(): default switch branch should be unreachable");
+			throw std::logic_error("Cappuccino::GetCost(): default "
+				"switch branch should be unreachable");
 		}
 	}
 
@@ -84,7 +85,8 @@ public:
 			return 130.0;
 		default:
 			assert(false);
-			throw std::logic_error("Latte::GetCost(): default switch branch should be unreachable");
+			throw std::logic_error("Latte::GetCost(): default "
+				"switch branch should be unreachable");
 		}
 	}
 

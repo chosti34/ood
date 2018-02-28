@@ -22,7 +22,8 @@ std::string ToString(MilkshakePortionSize portionSize)
 		return "Large";
 	default:
 		assert(false);
-		throw std::logic_error("ToString(MilkshakePortionSize): default switch branch should be unreachable");
+		throw std::logic_error("ToString(MilkshakePortionSize): "
+			"default switch branch should be unreachable");
 	}
 }
 
@@ -47,7 +48,8 @@ public:
 			return 80.0;
 		default:
 			assert(false);
-			throw std::logic_error("Milkshake::GetCost(): default switch branch should be unreachable");
+			throw std::logic_error("Milkshake::GetCost(): default "
+				"switch branch should be unreachable");
 		}
 	}
 

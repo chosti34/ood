@@ -1,19 +1,21 @@
-#pragma once
+п»ї#pragma once
+#include <cassert>
+#include <algorithm>
 #include "IBeverage.h"
 
-// Базовый декоратор "Добавка к напитку". Также является напитком.
+// Р‘Р°Р·РѕРІС‹Р№ РґРµРєРѕСЂР°С‚РѕСЂ "Р”РѕР±Р°РІРєР° Рє РЅР°РїРёС‚РєСѓ". РўР°РєР¶Рµ СЏРІР»СЏРµС‚СЃСЏ РЅР°РїРёС‚РєРѕРј.
 class AbstractCondimentDecorator : public IBeverage
 {
 public:
 	std::string GetDescription()const override
 	{
-		// Описание декорированного напитка добавляется к описанию оборачиваемого напитка
+		// РћРїРёСЃР°РЅРёРµ РґРµРєРѕСЂРёСЂРѕРІР°РЅРЅРѕРіРѕ РЅР°РїРёС‚РєР° РґРѕР±Р°РІР»СЏРµС‚СЃСЏ Рє РѕРїРёСЃР°РЅРёСЋ РѕР±РѕСЂР°С‡РёРІР°РµРјРѕРіРѕ РЅР°РїРёС‚РєР°
 		return m_beverage->GetDescription() + ", " + GetCondimentDescription();
 	}
 
 	double GetCost()const override
 	{
-		// Стоимость складывается из стоимости добавки и стоимости оборачиваемого напитка
+		// РЎС‚РѕРёРјРѕСЃС‚СЊ СЃРєР»Р°РґС‹РІР°РµС‚СЃСЏ РёР· СЃС‚РѕРёРјРѕСЃС‚Рё РґРѕР±Р°РІРєРё Рё СЃС‚РѕРёРјРѕСЃС‚Рё РѕР±РѕСЂР°С‡РёРІР°РµРјРѕРіРѕ РЅР°РїРёС‚РєР°
 		return m_beverage->GetCost() + GetCondimentCost();
 	}
 
@@ -23,7 +25,7 @@ protected:
 	{
 	}
 
-	// Стоимость и описание добавки вычисляется в классах конкретных декораторов
+	// РЎС‚РѕРёРјРѕСЃС‚СЊ Рё РѕРїРёСЃР°РЅРёРµ РґРѕР±Р°РІРєРё РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ РІ РєР»Р°СЃСЃР°С… РєРѕРЅРєСЂРµС‚РЅС‹С… РґРµРєРѕСЂР°С‚РѕСЂРѕРІ
 	virtual std::string GetCondimentDescription()const = 0;
 	virtual double GetCondimentCost()const = 0;
 
@@ -31,7 +33,7 @@ private:
 	IBeveragePtr m_beverage;
 };
 
-// Добавка из корицы
+// Р”РѕР±Р°РІРєР° РёР· РєРѕСЂРёС†С‹
 class CinnamonCondiment : public AbstractCondimentDecorator
 {
 public:
@@ -52,7 +54,7 @@ protected:
 	}
 };
 
-// Лимонная добавка
+// Р›РёРјРѕРЅРЅР°СЏ РґРѕР±Р°РІРєР°
 class LemonCondiment : public AbstractCondimentDecorator
 {
 public:
@@ -79,12 +81,12 @@ private:
 
 enum class IceCubeType
 {
-	Dry,	// Сухой лёд (для суровых сибирских мужиков)
-	Water	// Обычные кубики из воды
+	Dry,	// РЎСѓС…РѕР№ Р»С‘Рґ (РґР»СЏ СЃСѓСЂРѕРІС‹С… СЃРёР±РёСЂСЃРєРёС… РјСѓР¶РёРєРѕРІ)
+	Water	// РћР±С‹С‡РЅС‹Рµ РєСѓР±РёРєРё РёР· РІРѕРґС‹
 };
 
-// Добавка "Кубики льда". Определяется типом и количеством кубиков, что
-//  влияет на стоимость и описание
+// Р”РѕР±Р°РІРєР° "РљСѓР±РёРєРё Р»СЊРґР°". РћРїСЂРµРґРµР»СЏРµС‚СЃСЏ С‚РёРїРѕРј Рё РєРѕР»РёС‡РµСЃС‚РІРѕРј РєСѓР±РёРєРѕРІ, С‡С‚Рѕ
+//  РІР»РёСЏРµС‚ РЅР° СЃС‚РѕРёРјРѕСЃС‚СЊ Рё РѕРїРёСЃР°РЅРёРµ
 class IceCubesCondiment : public AbstractCondimentDecorator
 {
 public:
@@ -143,7 +145,7 @@ private:
 	SyrupType m_type;
 };
 
-// Шоколадня стружка
+// РЁРѕРєРѕР»Р°РґРЅР°СЏ СЃС‚СЂСѓР¶РєР°
 class ChocolateCrumbsCondiment : public AbstractCondimentDecorator
 {
 public:
@@ -168,7 +170,7 @@ private:
 	unsigned m_mass;
 };
 
-// Кокосовая стружка
+// РљРѕРєРѕСЃРѕРІР°СЏ СЃС‚СЂСѓР¶РєР°
 class CoconutFlakesCondiment : public AbstractCondimentDecorator
 {
 public:
@@ -191,4 +193,88 @@ protected:
 
 private:
 	unsigned m_mass;
+};
+
+class CreamCondiment : public AbstractCondimentDecorator
+{
+public:
+	CreamCondiment(IBeveragePtr&& beverage)
+		: AbstractCondimentDecorator(std::move(beverage))
+	{
+	}
+
+protected:
+	std::string GetCondimentDescription()const override
+	{
+		return "Cream";
+	}
+
+	double GetCondimentCost()const override
+	{
+		return 25.0;
+	}
+};
+
+class ChocolateSlicesCondiment : public AbstractCondimentDecorator
+{
+public:
+	ChocolateSlicesCondiment(IBeveragePtr&& beverage, unsigned quantity)
+		: AbstractCondimentDecorator(std::move(beverage))
+		, m_quantity(std::min(quantity, 5u)) // РЅРµ Р±РѕР»СЊС€Рµ 5 РґРѕР»РµРє
+	{
+	}
+
+protected:
+	std::string GetCondimentDescription()const override
+	{
+		return "Chocolate slices x" + std::to_string(m_quantity);
+	}
+
+	double GetCondimentCost()const override
+	{
+		return 10 * m_quantity;
+	}
+
+private:
+	unsigned m_quantity;
+};
+
+enum class LiquorType
+{
+	Chocolate,
+	Walnut
+};
+
+class LiquorCondiment : public AbstractCondimentDecorator
+{
+public:
+	LiquorCondiment(IBeveragePtr&& beverage, LiquorType type)
+		: AbstractCondimentDecorator(std::move(beverage))
+		, m_type(type)
+	{
+	}
+
+protected:
+	std::string GetCondimentDescription()const override
+	{
+		switch (m_type)
+		{
+		case LiquorType::Chocolate:
+			return "ChocolateLiquor";
+		case LiquorType::Walnut:
+			return "WalnutLiquor";
+		default:
+			assert(false);
+			throw std::logic_error("LiquorCondiment::GetCondimentDescription(): "
+				"default switch branch should be unreachable");
+		}
+	}
+
+	double GetCondimentCost()const override
+	{
+		return 50.0;
+	}
+
+private:
+	LiquorType m_type;
 };
