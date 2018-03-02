@@ -13,7 +13,7 @@ public:
 	{
 	}
 
-	void OnValueChange(T newValue)
+	void OnValueChange(const T& newValue)
 	{
 		if (newValue < m_minValue)
 		{
