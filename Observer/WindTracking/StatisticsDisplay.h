@@ -18,7 +18,9 @@ struct StreetWeatherStatistics
 	WindStatistics<double> windDirection;
 };
 
-class StatisticsDisplay : public IObserver<WeatherInfo>
+class StatisticsDisplay
+	: public IObserver<WeatherInfo>
+	, public IObserver<WeatherInfoPro>
 {
 public:
 	StatisticsDisplay(WeatherData& inner, WeatherData& outer);
@@ -26,6 +28,7 @@ public:
 
 private:
 	void Update(const WeatherInfo& data, IObservable<WeatherInfo>& observable) override;
+	void Update(const WeatherInfoPro& data, IObservable<WeatherInfoPro>& observable) override;
 
 	HomeWeatherStatistics m_homeStatistics;
 	StreetWeatherStatistics m_streetStatistics;

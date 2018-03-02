@@ -47,22 +47,28 @@ StatisticsDisplay::~StatisticsDisplay()
 
 void StatisticsDisplay::Update(const WeatherInfo& data, IObservable<WeatherInfo>& observable)
 {
-	if (std::addressof(observable) == std::addressof(m_inner))
-	{
-		// Предполагается, что метеостанция, следящая за погодой внутри,
-		//  не предоставляет информации о скорости и направлении ветра
-		m_homeStatistics.temperature.OnValueChange(data.temperature);
-		m_homeStatistics.humidity.OnValueChange(data.humidity);
-		m_homeStatistics.pressure.OnValueChange(data.pressure);
-		PrintStatistics(m_homeStatistics);
-	}
-	else if (std::addressof(observable) == std::addressof(m_outer))
-	{
-		m_streetStatistics.temperature.OnValueChange(data.temperature);
-		m_streetStatistics.humidity.OnValueChange(data.humidity);
-		m_streetStatistics.pressure.OnValueChange(data.pressure);
-		m_streetStatistics.windSpeed.OnValueChange(data.windSpeed);
-		m_streetStatistics.windDirection.OnValueChange(data.windDirection);
-		PrintStatistics(m_streetStatistics);
-	}
+	//if (std::addressof(observable) == std::addressof(m_inner))
+	//{
+	//	// Предполагается, что метеостанция, следящая за погодой внутри,
+	//	//  не предоставляет информации о скорости и направлении ветра
+	//	m_homeStatistics.temperature.OnValueChange(data.temperature);
+	//	m_homeStatistics.humidity.OnValueChange(data.humidity);
+	//	m_homeStatistics.pressure.OnValueChange(data.pressure);
+	//	PrintStatistics(m_homeStatistics);
+	//}
+	//else if (std::addressof(observable) == std::addressof(m_outer))
+	//{
+	//	m_streetStatistics.temperature.OnValueChange(data.temperature);
+	//	m_streetStatistics.humidity.OnValueChange(data.humidity);
+	//	m_streetStatistics.pressure.OnValueChange(data.pressure);
+	//	m_streetStatistics.windSpeed.OnValueChange(data.windSpeed);
+	//	m_streetStatistics.windDirection.OnValueChange(data.windDirection);
+	//	PrintStatistics(m_streetStatistics);
+	//}
+	std::cout << "Singal from inner station" << std::endl;
+}
+
+void StatisticsDisplay::Update(const WeatherInfoPro& data, IObservable<WeatherInfoPro>& observable)
+{
+	std::cout << "Singal from outer station" << std::endl;
 }

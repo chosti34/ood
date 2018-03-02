@@ -13,7 +13,7 @@ public:
 	{
 	}
 
-	void OnValueChange(const T& newValue)
+	void Accumulate(const T& newValue)
 	{
 		if (newValue < m_minValue)
 		{

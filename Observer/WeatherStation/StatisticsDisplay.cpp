@@ -10,9 +10,9 @@ void StatisticsDisplay::PrintStatistics(const ValueStatistics<double>& statistic
 
 void StatisticsDisplay::Update(const WeatherInfo& data)
 {
-	m_temperatureStatistics.OnValueChange(data.temperature);
-	m_humidityStatistics.OnValueChange(data.humidity);
-	m_pressureStatistics.OnValueChange(data.pressure);
+	m_temperatureStatistics.Accumulate(data.temperature);
+	m_humidityStatistics.Accumulate(data.humidity);
+	m_pressureStatistics.Accumulate(data.pressure);
 
 	std::cout << "Statistics display update:" << std::endl;
 	PrintStatistics(m_temperatureStatistics, "Temperature");
