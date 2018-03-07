@@ -20,16 +20,16 @@ struct OuterWeatherStationStatistics
 
 // Дисплей, который следит сразу за двумя станциями и ведёт погодную статистику
 class StatisticsDisplayDuo
-	: public IObserver<WeatherInfo>
-	, public IObserver<WeatherInfoPro>
+	: public IObserver<WeatherEvent, WeatherInfo>
+	, public IObserver<WeatherEvent, WeatherInfoPro>
 {
 public:
 	StatisticsDisplayDuo(InnerWeatherStation& inner, OuterWeatherStation& outer);
 	~StatisticsDisplayDuo();
 
 private:
-	void Update(const WeatherInfo& data, const IObservable<WeatherInfo>& observable) override;
-	void Update(const WeatherInfoPro& data, const IObservable<WeatherInfoPro>& observable) override;
+	void Update(const WeatherInfo& data, const IObservable<WeatherEvent, WeatherInfo>& observable) override;
+	void Update(const WeatherInfoPro& data, const IObservable<WeatherEvent, WeatherInfoPro>& observable) override;
 
 	InnerWeatherStationStatistics m_innerStatistics;
 	OuterWeatherStationStatistics m_outerStatistics;
