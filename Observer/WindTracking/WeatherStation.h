@@ -8,45 +8,105 @@
 enum class WeatherEvent
 {
 	AnythingChanged,
-	TemperatureOrPressureChanged
+	TemperatureOrPressureChanged,
+	WindDirectionChanged
 };
 
 struct WeatherInfo
 {
-	double temperature = 0.0;
-	double humidity = 0.0;
-	double pressure = 0.0;
+	WeatherInfo(
+		double temperature = .0,
+		double humidity = .0,
+		double pressure = .0)
+		: temperature(temperature)
+		, humidity(humidity)
+		, pressure(pressure)
+	{
+	}
+
+	double temperature;
+	double humidity;
+	double pressure;
 };
 
-// Намеренно не использовал наследование от WeatherInfo
-struct WeatherInfoPro
+// Можно было обойтись без наследования
+struct WeatherInfoPro : WeatherInfo
 {
-	double temperature = 0.0;
-	double humidity = 0.0;
-	double pressure = 0.0;
-	double windSpeed = 0.0;
-	double windDirection = 0.0;
+	WeatherInfoPro(
+		double temperature = .0,
+		double humidity = .0,
+		double pressure = .0,
+		double windSpeed = .0,
+		double windDirection = .0)
+		: WeatherInfo(temperature, humidity, pressure)
+		, windSpeed(windSpeed)
+		, windDirection(windDirection)
+	{
+	}
+
+	double windSpeed;
+	double windDirection;
 };
+
+inline std::set<WeatherEvent> GetWeatherInfoEvents(const WeatherInfo& was, const WeatherInfo& now)
+{
+	std::set<WeatherEvent> changes;
+	// Если не произошло никаких изменений в данных, возвращаем пустое множество
+	if (was.temperature == now.temperature &&
+		was.humidity == now.humidity &&
+		was.pressure == now.pressure)
+	{
+		return changes;
+	}
+	// Что-то всё-таки произошло
+	changes.insert(WeatherEvent::AnythingChanged);
+	if (was.temperature != now.temperature ||
+		was.pressure != now.pressure)
+	{
+		// Изменились температура либо атмосферное давление
+		changes.insert(WeatherEvent::TemperatureOrPressureChanged);
+	}
+	return changes;
+}
+
+inline std::set<WeatherEvent> GetWeatherInfoEvents(const WeatherInfoPro& was, const WeatherInfoPro& now)
+{
+	auto changes = GetWeatherInfoEvents(static_cast<WeatherInfo>(was), static_cast<WeatherInfo>(now));
+	if (was.windDirection == now.windDirection &&
+		was.windSpeed == now.windSpeed)
+	{
+		// Данные о ветре не изменились
+		return changes;
+	}
+	if (was.windDirection != now.windDirection ||
+		was.windSpeed != now.windSpeed)
+	{
+		// Функция обрабатывающая базовую WeatherInfo могла и не вернуть
+		//  WeatherEvent::AnythingChanged, однако данные о ветре изменились
+		changes.insert(WeatherEvent::AnythingChanged);
+	}
+	if (was.windDirection != now.windDirection)
+	{
+		changes.insert(WeatherEvent::WindDirectionChanged);
+	}
+	return changes;
+}
 
 template <typename WeatherInfoType>
 class WeatherStation : public AbstractObservable<WeatherEvent, WeatherInfoType>
 {
-	using Base = AbstractObservable<WeatherEvent, WeatherInfoType>;
-
 public:
-	virtual void SetMeasurements(const WeatherInfoType& info)
+	void SetMeasurements(const WeatherInfoType& info)
 	{
 		auto was = m_info;
 		m_info = info;
-		std::set<WeatherEvent> events = GetEvents(was, m_info);
-		for (const auto& event : events)
+		for (const auto& event : GetWeatherInfoEvents(was, m_info))
 		{
-			Base::NotifyObservers(event);
+			// Приходиться писать имя базового класса здесь, так как компилятор
+			//  не может найти метод NotifyObservers из-за использования шаблонного наследования
+			AbstractObservable<WeatherEvent, WeatherInfoType>::NotifyObservers(event);
 		}
 	}
-
-protected:
-	virtual std::set<WeatherEvent> GetEvents(const WeatherInfoType& was, const WeatherInfoType& now)const = 0;
 
 private:
 	WeatherInfoType GetChangedData()const override
@@ -57,48 +117,5 @@ private:
 	WeatherInfoType m_info;
 };
 
-class InnerWeatherStation : public WeatherStation<WeatherInfo>
-{
-protected:
-	std::set<WeatherEvent> GetEvents(const WeatherInfo& was, const WeatherInfo& now)const override
-	{
-		std::set<WeatherEvent> events;
-		if (was.temperature == now.temperature &&
-			was.pressure == now.pressure &&
-			was.humidity == now.pressure)
-		{
-			return events;
-		}
-		events.insert(WeatherEvent::AnythingChanged);
-		if (was.temperature != now.temperature ||
-			was.pressure != now.pressure)
-		{
-			events.insert(WeatherEvent::TemperatureOrPressureChanged);
-		}
-		return events;
-	}
-};
-
-class OuterWeatherStation : public WeatherStation<WeatherInfoPro>
-{
-protected:
-	std::set<WeatherEvent> GetEvents(const WeatherInfoPro& was, const WeatherInfoPro& now)const override
-	{
-		std::set<WeatherEvent> events;
-		if (was.temperature == now.temperature &&
-			was.pressure == now.pressure &&
-			was.humidity == now.humidity &&
-			was.windDirection == now.windDirection &&
-			was.windSpeed == now.windSpeed)
-		{
-			return events;
-		}
-		events.insert(WeatherEvent::AnythingChanged);
-		if (was.temperature != now.temperature ||
-			was.pressure != now.pressure)
-		{
-			events.insert(WeatherEvent::TemperatureOrPressureChanged);
-		}
-		return events;
-	}
-};
+using InnerWeatherStation = WeatherStation<WeatherInfo>;
+using OuterWeatherStation = WeatherStation<WeatherInfoPro>;

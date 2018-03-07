@@ -48,7 +48,7 @@ void StatisticsDisplayDuo::Update(const WeatherInfo& data, const IObservable<Wea
 		m_innerStatistics.temperature.Accumulate(data.temperature);
 		m_innerStatistics.humidity.Accumulate(data.humidity);
 		m_innerStatistics.pressure.Accumulate(data.pressure);
-		std::cout << "StatisticsDisplayDuo - signal from inner weather station\n";
+		std::cout << "StatisticsDisplayDuo - signal from inner weather station:\n";
 		PrintStatistics(m_innerStatistics);
 		std::cout << "------------------" << std::endl;
 	}
@@ -63,7 +63,7 @@ void StatisticsDisplayDuo::Update(const WeatherInfoPro& data, const IObservable<
 		m_outerStatistics.pressure.Accumulate(data.pressure);
 		m_outerStatistics.windDirection.Accumulate(data.windDirection);
 		m_outerStatistics.windSpeed.Accumulate(data.windSpeed);
-		std::cout << "StatisticsDisplayDuo - signal from outer weather station\n";
+		std::cout << "StatisticsDisplayDuo - signal from outer weather station:\n";
 		PrintStatistics(m_outerStatistics);
 		std::cout << "------------------" << std::endl;
 	}
