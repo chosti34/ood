@@ -6,7 +6,7 @@ template <typename T>
 class IValueStatistics
 {
 public:
-	virtual void OnValueChange(T newValue) = 0;
+	virtual void Accumulate(const T& newValue) = 0;
 	virtual T GetMinValue()const = 0;
 	virtual T GetMaxValue()const = 0;
 	virtual T GetAverage()const = 0;
@@ -24,7 +24,7 @@ public:
 	{
 	}
 
-	void OnValueChange(T newValue)override
+	void Accumulate(const T& newValue)override
 	{
 		if (newValue < m_minValue)
 		{
@@ -78,7 +78,7 @@ public:
 	{
 	}
 
-	void OnValueChange(T newValue)override
+	void Accumulate(const T& newValue)override
 	{
 		if (m_minValue > newValue)
 		{
