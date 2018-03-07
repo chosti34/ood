@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include <map>
 #include <set>
 #include <string>
@@ -28,7 +27,7 @@ class IObserver
 {
 public:
 	virtual ~IObserver() = default;
-	virtual void Update(const T& data, IObservable<T>& observable) = 0;
+	virtual void Update(const T& data, const IObservable<T>& observable) = 0;
 };
 
 /*
