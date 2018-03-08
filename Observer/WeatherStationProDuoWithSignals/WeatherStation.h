@@ -4,38 +4,18 @@
 
 struct WeatherInfo
 {
-	WeatherInfo(
-		double temperature = .0,
-		double humidity = .0,
-		double pressure = .0)
-		: temperature(temperature)
-		, humidity(humidity)
-		, pressure(pressure)
-	{
-	}
-
-	double temperature;
-	double humidity;
-	double pressure;
+	double temperature = .0;
+	double humidity = .0;
+	double pressure = .0;
 };
 
-// ћожно было обойтись без наследовани€
-struct WeatherInfoPro : WeatherInfo
+struct WeatherInfoPro
 {
-	WeatherInfoPro(
-		double temperature = .0,
-		double humidity = .0,
-		double pressure = .0,
-		double windSpeed = .0,
-		double windDirection = .0)
-		: WeatherInfo(temperature, humidity, pressure)
-		, windSpeed(windSpeed)
-		, windDirection(windDirection)
-	{
-	}
-
-	double windSpeed;
-	double windDirection;
+	double temperature = .0;
+	double humidity = .0;
+	double pressure = .0;
+	double windSpeed = .0;
+	double windDirection = .0;
 };
 
 template <typename WeatherInfoType>

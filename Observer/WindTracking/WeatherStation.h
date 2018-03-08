@@ -14,38 +14,18 @@ enum class WeatherEvent
 
 struct WeatherInfo
 {
-	WeatherInfo(
-		double temperature = .0,
-		double humidity = .0,
-		double pressure = .0)
-		: temperature(temperature)
-		, humidity(humidity)
-		, pressure(pressure)
-	{
-	}
-
-	double temperature;
-	double humidity;
-	double pressure;
+	double temperature = .0;
+	double humidity = .0;
+	double pressure = .0;
 };
 
-// Можно было обойтись без наследования
-struct WeatherInfoPro : WeatherInfo
+struct WeatherInfoPro
 {
-	WeatherInfoPro(
-		double temperature = .0,
-		double humidity = .0,
-		double pressure = .0,
-		double windSpeed = .0,
-		double windDirection = .0)
-		: WeatherInfo(temperature, humidity, pressure)
-		, windSpeed(windSpeed)
-		, windDirection(windDirection)
-	{
-	}
-
-	double windSpeed;
-	double windDirection;
+	double temperature = .0;
+	double humidity = .0;
+	double pressure = .0;
+	double windSpeed = .0;
+	double windDirection = .0;
 };
 
 inline std::set<WeatherEvent> GetWeatherInfoEvents(const WeatherInfo& oldData, const WeatherInfo& newData)
@@ -71,7 +51,10 @@ inline std::set<WeatherEvent> GetWeatherInfoEvents(const WeatherInfo& oldData, c
 
 inline std::set<WeatherEvent> GetWeatherInfoEvents(const WeatherInfoPro& oldData, const WeatherInfoPro& newData)
 {
-	auto changes = GetWeatherInfoEvents(static_cast<WeatherInfo>(oldData), static_cast<WeatherInfo>(newData));
+	auto changes = GetWeatherInfoEvents(
+		WeatherInfo{ oldData.temperature, oldData.humidity, oldData.pressure },
+		WeatherInfo{ newData.temperature, newData.humidity, newData.pressure }
+	);
 	if (oldData.windDirection == newData.windDirection &&
 		oldData.windSpeed == newData.windSpeed)
 	{
