@@ -33,6 +33,12 @@
     <ClInclude Include="WeatherStation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SignallingValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WeatherInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -152,10 +152,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Math.h" />
+    <ClInclude Include="SignallingValue.h" />
     <ClInclude Include="StatisticsDisplay.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ValueStatistics.h" />
+    <ClInclude Include="WeatherInfo.h" />
     <ClInclude Include="WeatherStation.h" />
   </ItemGroup>
   <ItemGroup>

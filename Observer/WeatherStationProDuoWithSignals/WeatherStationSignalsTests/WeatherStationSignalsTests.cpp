@@ -127,4 +127,20 @@ BOOST_AUTO_TEST_SUITE(WeatherStationProDuoWithSignalsTaskTests)
 		observable.SetMeasurements({ 10, 0.3, 700 });
 		BOOST_CHECK(strm.is_equal("ba"));
 	}
+
+	BOOST_AUTO_TEST_CASE(notifier_does_not_sending_signal_when_data_is_not_changed)
+	{
+		boost::test_tools::output_test_stream strm;
+
+		WeatherStation<WeatherInfo> observable;
+		DummyObserver<WeatherInfo> observer1(observable, strm, "a");
+
+		WeatherInfo measurements = { 10, 0.7, 500 };
+		observable.SetMeasurements(measurements);
+
+		BOOST_CHECK(strm.is_equal("a")); // stream is flushed
+
+		observable.SetMeasurements(measurements);
+		BOOST_CHECK(strm.is_empty());
+	}
 BOOST_AUTO_TEST_SUITE_END()

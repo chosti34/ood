@@ -1,6 +1,7 @@
 #pragma once
 #include "WeatherStation.h"
 #include "ValueStatistics.h"
+#include <boost/noncopyable.hpp>
 
 struct InnerWeatherStatistics
 {
