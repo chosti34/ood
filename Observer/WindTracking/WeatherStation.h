@@ -48,20 +48,20 @@ struct WeatherInfoPro : WeatherInfo
 	double windDirection;
 };
 
-inline std::set<WeatherEvent> GetWeatherInfoEvents(const WeatherInfo& was, const WeatherInfo& now)
+inline std::set<WeatherEvent> GetWeatherInfoEvents(const WeatherInfo& oldData, const WeatherInfo& newData)
 {
 	std::set<WeatherEvent> changes;
 	// Если не произошло никаких изменений в данных, возвращаем пустое множество
-	if (was.temperature == now.temperature &&
-		was.humidity == now.humidity &&
-		was.pressure == now.pressure)
+	if (oldData.temperature == newData.temperature &&
+		oldData.humidity == newData.humidity &&
+		oldData.pressure == newData.pressure)
 	{
 		return changes;
 	}
 	// Что-то всё-таки произошло
 	changes.insert(WeatherEvent::AnythingChanged);
-	if (was.temperature != now.temperature ||
-		was.pressure != now.pressure)
+	if (oldData.temperature != newData.temperature ||
+		oldData.pressure != newData.pressure)
 	{
 		// Изменились температура либо атмосферное давление
 		changes.insert(WeatherEvent::TemperatureOrPressureChanged);
@@ -69,23 +69,23 @@ inline std::set<WeatherEvent> GetWeatherInfoEvents(const WeatherInfo& was, const
 	return changes;
 }
 
-inline std::set<WeatherEvent> GetWeatherInfoEvents(const WeatherInfoPro& was, const WeatherInfoPro& now)
+inline std::set<WeatherEvent> GetWeatherInfoEvents(const WeatherInfoPro& oldData, const WeatherInfoPro& newData)
 {
-	auto changes = GetWeatherInfoEvents(static_cast<WeatherInfo>(was), static_cast<WeatherInfo>(now));
-	if (was.windDirection == now.windDirection &&
-		was.windSpeed == now.windSpeed)
+	auto changes = GetWeatherInfoEvents(static_cast<WeatherInfo>(oldData), static_cast<WeatherInfo>(newData));
+	if (oldData.windDirection == newData.windDirection &&
+		oldData.windSpeed == newData.windSpeed)
 	{
 		// Данные о ветре не изменились
 		return changes;
 	}
-	if (was.windDirection != now.windDirection ||
-		was.windSpeed != now.windSpeed)
+	if (oldData.windDirection != newData.windDirection ||
+		oldData.windSpeed != newData.windSpeed)
 	{
 		// Функция обрабатывающая базовую WeatherInfo могла и не вернуть
 		//  WeatherEvent::AnythingChanged, однако данные о ветре изменились
 		changes.insert(WeatherEvent::AnythingChanged);
 	}
-	if (was.windDirection != now.windDirection)
+	if (oldData.windDirection != newData.windDirection)
 	{
 		changes.insert(WeatherEvent::WindDirectionChanged);
 	}
@@ -98,9 +98,9 @@ class WeatherStation : public AbstractObservable<WeatherEvent, WeatherInfoType>
 public:
 	void SetMeasurements(const WeatherInfoType& info)
 	{
-		auto was = m_info;
+		auto oldData = m_info;
 		m_info = info;
-		for (const auto& event : GetWeatherInfoEvents(was, m_info))
+		for (const auto& event : GetWeatherInfoEvents(oldData, m_info))
 		{
 			// Приходиться писать имя базового класса здесь, так как компилятор
 			//  не может найти метод NotifyObservers из-за использования шаблонного наследования
