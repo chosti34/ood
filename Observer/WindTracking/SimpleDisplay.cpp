@@ -1,19 +1,25 @@
 #include "stdafx.h"
 #include "SimpleDisplay.h"
 
-SimpleDisplay::SimpleDisplay()
+SimpleDisplay::SimpleDisplay(InnerWeatherStation& station)
+	: m_station(station)
 {
+	m_station.RegisterObserver(WeatherEvent::TemperatureOrPressureChanged, *this);
 }
 
 SimpleDisplay::~SimpleDisplay()
 {
+	m_station.RemoveObserver(WeatherEvent::TemperatureOrPressureChanged, *this);
 }
 
-void SimpleDisplay::Update(const WeatherInfo& data, IObservable<WeatherInfo>& observable)
+void SimpleDisplay::Update(const WeatherInfo& info, const IObservable<WeatherEvent, WeatherInfo>& observable)
 {
-	// Следим только за температурой и атмосферным давлением
-	std::cout << "Simple display update:" << std::endl;
-	std::cout << "Current Temperature " << data.temperature << std::endl;
-	std::cout << "Current Pressure " << data.pressure << std::endl;
-	std::cout << "----------------" << std::endl;
+	if (std::addressof(observable) == std::addressof(m_station))
+	{
+		std::cout << "SimpleDisplay - temperature or pressure changed:\n"
+			<< "Temperature: " << info.temperature << "\n"
+			<< "Humidity: " << info.humidity << "\n"
+			<< "Pressure: " << info.pressure << "\n"
+			<< "------------------" << std::endl;
+	}
 }

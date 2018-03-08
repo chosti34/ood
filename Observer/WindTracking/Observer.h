@@ -1,57 +1,35 @@
 ﻿#pragma once
-
 #include <map>
 #include <set>
 #include <string>
 #include <functional>
 
-// Тип события:
-//  1 - изменилось значение температуры или атмосферного давления
-//  2 - изменилось любое значение
-enum class EventType
-{
-	TemperatureOrPressureChange,
-	AnyChange
-};
-
-template <typename T>
+template <typename EventType, typename DataType>
 class IObservable;
 
-/*
-Шаблонный интерфейс IObserver. Его должен реализовывать класс,
-желающий получать уведомления от соответствующего IObservable
-Параметром шаблона является тип аргумента,
-передаваемого Наблюдателю в метод Update
-*/
-template <typename T>
+template <typename EventType, typename DataType>
 class IObserver
 {
 public:
 	virtual ~IObserver() = default;
-	virtual void Update(const T& data, IObservable<T>& observable) = 0;
+	virtual void Update(const DataType& data, const IObservable<EventType, DataType>& observable) = 0;
 };
 
-/*
-Шаблонный интерфейс IObservable. Позволяет подписаться и отписаться на оповещения наблюдателям,
-а также инициировать рассылку уведомлений зарегистрированным наблюдателям.
-*/
-template <typename T>
+template <typename EventType, typename DataType>
 class IObservable
 {
 public:
 	virtual ~IObservable() = default;
-	virtual void RegisterObserver(EventType event, IObserver<T>& observer) = 0;
-	virtual void RemoveObserver(EventType event, IObserver<T>& observer) = 0;
-	virtual void NotifyObservers(EventType event) = 0;
+	virtual void RegisterObserver(const EventType& event, IObserver<EventType, DataType>& observer) = 0;
+	virtual void RemoveObserver(const EventType& event, IObserver<EventType, DataType>& observer) = 0;
+	virtual void NotifyObservers(const EventType& event) = 0;
 };
 
-template <typename T>
-class AbstractObservable : public IObservable<T>
+template <typename EventType, typename DataType>
+class AbstractObservable : public IObservable<EventType, DataType>
 {
 public:
-	using ObserverType = IObserver<T>;
-
-	void RegisterObserver(EventType event, ObserverType& observer) override
+	void RegisterObserver(const EventType& event, IObserver<EventType, DataType>& observer) override
 	{
 		auto found = m_observersMap.find(event);
 		if (found != m_observersMap.end())
@@ -60,13 +38,13 @@ public:
 		}
 		else
 		{
-			std::set<ObserverType*> observers;
+			std::set<IObserver<EventType, DataType>*> observers;
 			observers.insert(std::addressof(observer));
 			m_observersMap.emplace(event, observers);
 		}
 	}
 
-	void RemoveObserver(EventType event, ObserverType& observer) override
+	void RemoveObserver(const EventType& event, IObserver<EventType, DataType>& observer) override
 	{
 		auto found = m_observersMap.find(event);
 		if (found != m_observersMap.end())
@@ -76,9 +54,9 @@ public:
 		}
 	}
 
-	void NotifyObservers(EventType event) override
+	void NotifyObservers(const EventType& event) override
 	{
-		T data = GetChangedData();
+		DataType data = GetChangedData();
 		auto found = m_observersMap.find(event);
 		if (found != m_observersMap.end())
 		{
@@ -92,8 +70,8 @@ public:
 	}
 
 protected:
-	virtual T GetChangedData()const = 0;
+	virtual DataType GetChangedData()const = 0;
 
 private:
-	std::map<EventType, std::set<ObserverType*>> m_observersMap;
+	std::map<EventType, std::set<IObserver<EventType, DataType>*>> m_observersMap;
 };

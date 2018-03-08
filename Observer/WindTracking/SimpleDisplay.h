@@ -1,12 +1,16 @@
 #pragma once
-#include "WeatherData.h"
+#include "WeatherStation.h"
 
-class SimpleDisplay : public IObserver<WeatherInfo>
+// Обычный дисплей, выводит показатели в поток вывода
+//  при получении уведомления об изменении данных на погодной станции
+class SimpleDisplay : public IObserver<WeatherEvent, WeatherInfo>
 {
 public:
-	SimpleDisplay();
+	SimpleDisplay(InnerWeatherStation& station);
 	~SimpleDisplay();
 
 private:
-	void Update(const WeatherInfo& data, IObservable<WeatherInfo>& observable) override;
+	void Update(const WeatherInfo& info, const IObservable<WeatherEvent, WeatherInfo>& observable) override;
+
+	InnerWeatherStation& m_station;
 };

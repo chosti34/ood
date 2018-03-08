@@ -1,15 +1,16 @@
 #pragma once
-#include "WeatherData.h"
+#include "WeatherStation.h"
 #include "ValueStatistics.h"
+#include <boost/noncopyable.hpp>
 
-struct HomeWeatherStatistics
+struct InnerWeatherStatistics
 {
 	SimpleStatistics<double> temperature;
 	SimpleStatistics<double> humidity;
 	SimpleStatistics<double> pressure;
 };
 
-struct StreetWeatherStatistics
+struct OuterWeatherStatistics
 {
 	SimpleStatistics<double> temperature;
 	SimpleStatistics<double> humidity;
@@ -18,19 +19,18 @@ struct StreetWeatherStatistics
 	WindStatistics<double> windDirection;
 };
 
-class StatisticsDisplay : public IObserver<WeatherInfo>
+class StatisticsDisplay : private boost::noncopyable
 {
 public:
-	StatisticsDisplay(WeatherData& inner, WeatherData& outer);
-	void Update(const WeatherInfo& data, const IObservable<WeatherInfo>& observable) override;
+	StatisticsDisplay(InnerWeatherStation& inner, OuterWeatherStation& outer);
 
 private:
-	WeatherData & m_inner;
-	WeatherData & m_outer;
+	void OnInnerWeatherInfoChange(const WeatherInfo& info);
+	void OnOuterWeatherInfoChange(const WeatherInfoPro& info);
 
-	HomeWeatherStatistics m_homeStatistics;
-	StreetWeatherStatistics m_streetStatistics;
+	boost::signals2::scoped_connection m_innerConnection;
+	boost::signals2::scoped_connection m_outerConnection;
 
-	boost::signals2::scoped_connection m_inConnection;
-	boost::signals2::scoped_connection m_outConnection;
+	InnerWeatherStatistics m_innerStatistics;
+	OuterWeatherStatistics m_outerStatistics;
 };

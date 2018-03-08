@@ -32,8 +32,5 @@
     <ClCompile Include="WeatherStationSignalsTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\WeatherData.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
