@@ -10,23 +10,6 @@ enum class MilkshakePortionSize
 	Large
 };
 
-std::string ToString(MilkshakePortionSize portionSize)
-{
-	switch (portionSize)
-	{
-	case MilkshakePortionSize::Small:
-		return "Small";
-	case MilkshakePortionSize::Medium:
-		return "Medium";
-	case MilkshakePortionSize::Large:
-		return "Large";
-	default:
-		assert(false);
-		throw std::logic_error("ToString(MilkshakePortionSize): "
-			"default switch branch should be unreachable");
-	}
-}
-
 class Milkshake : public AbstractBeverage
 {
 public:
@@ -54,5 +37,22 @@ public:
 	}
 
 private:
+	static std::string ToString(MilkshakePortionSize portionSize)
+	{
+		switch (portionSize)
+		{
+		case MilkshakePortionSize::Small:
+			return "Small";
+		case MilkshakePortionSize::Medium:
+			return "Medium";
+		case MilkshakePortionSize::Large:
+			return "Large";
+		default:
+			assert(false);
+			throw std::logic_error("ToString(MilkshakePortionSize): "
+				"default switch branch should be unreachable");
+		}
+	}
+
 	MilkshakePortionSize m_portionSize;
 };

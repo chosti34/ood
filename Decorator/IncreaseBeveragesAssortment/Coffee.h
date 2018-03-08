@@ -10,20 +10,6 @@ enum class CoffeePortionSize
 	Double
 };
 
-std::string ToString(CoffeePortionSize portionSize)
-{
-	switch (portionSize)
-	{
-	case CoffeePortionSize::Standard:
-		return "Standard";
-	case CoffeePortionSize::Double:
-		return "Double";
-	default:
-		assert(false);
-		throw std::logic_error("ToString(CoffeePortionSize): default switch branch should be unreachable");
-	}
-}
-
 class Coffee : public AbstractBeverage
 {
 public:
@@ -35,6 +21,20 @@ public:
 	double GetCost()const
 	{
 		return 60.0;
+	}
+
+	static std::string ToString(CoffeePortionSize portionSize)
+	{
+		switch (portionSize)
+		{
+		case CoffeePortionSize::Standard:
+			return "Standard";
+		case CoffeePortionSize::Double:
+			return "Double";
+		default:
+			assert(false);
+			throw std::logic_error("ToString(CoffeePortionSize): default switch branch should be unreachable");
+		}
 	}
 };
 
