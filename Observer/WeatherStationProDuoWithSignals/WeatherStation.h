@@ -1,5 +1,6 @@
 #pragma once
 #include <boost/signals2.hpp>
+#include <boost/noncopyable.hpp>
 
 struct WeatherInfo
 {
@@ -41,20 +42,22 @@ template <typename WeatherInfoType>
 class WeatherStation
 {
 public:
+	using WeatherSignal = boost::signals2::signal<void(const WeatherInfoType& newData)>;
+
 	void SetMeasurements(const WeatherInfoType& measurements)
 	{
 		m_measurements = measurements;
 		m_signal(m_measurements);
 	}
 
-	boost::signals2::connection DoOnWeatherChange(typename const boost::signals2::signal<void(const WeatherInfoType& newData)>::slot_type& slot)
+	boost::signals2::connection DoOnWeatherChange(typename const WeatherSignal::slot_type& slot)
 	{
 		return m_signal.connect(slot);
 	}
 
 private:
 	WeatherInfoType m_measurements;
-	boost::signals2::signal<void(const WeatherInfoType& newData)> m_signal;
+	WeatherSignal m_signal;
 };
 
 using InnerWeatherStation = WeatherStation<WeatherInfo>;

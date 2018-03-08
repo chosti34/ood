@@ -1,43 +1,28 @@
 #include "stdafx.h"
-#include "../WeatherData.h"
+#include "../WeatherStation.h"
 #include <boost/test/tools/output_test_stream.hpp>
 
 namespace
 {
-class DummyObserver : public IObserver<WeatherInfo>
+class DummyObserver
 {
 public:
-	DummyObserver(WeatherData& wd, boost::test_tools::output_test_stream& strm,
-		bool erase, const std::string& message)
-		: m_wd(wd)
-		, m_strm(strm)
-		, m_erase(erase)
-		, m_message(message)
+	DummyObserver(boost::test_tools::output_test_stream& strm)
+		: m_strm(strm)
 		, m_connection()
 	{
-		m_wd.RegisterObserver(*this, m_connection);
 	}
 
-	void Update(const WeatherInfo& data, const IObservable<WeatherInfo>& observable) override
+	void Update(const WeatherInfo& data)
 	{
-		if (m_erase)
-		{
-			m_wd.RemoveObserver(*this);
-		}
-		m_strm << m_message;
 	}
 
-	void SetErase(bool erase)
+	void UnsubscribeOnNotification()
 	{
-		m_erase = erase;
 	}
 
 private:
-	WeatherData & m_wd;
 	boost::test_tools::output_test_stream& m_strm;
-	bool m_erase;
-	std::string m_message;
-
 	boost::signals2::scoped_connection m_connection;
 };
 }

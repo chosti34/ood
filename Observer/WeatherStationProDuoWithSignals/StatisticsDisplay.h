@@ -18,7 +18,7 @@ struct OuterWeatherStatistics
 	WindStatistics<double> windDirection;
 };
 
-class StatisticsDisplay
+class StatisticsDisplay : private boost::noncopyable
 {
 public:
 	StatisticsDisplay(InnerWeatherStation& inner, OuterWeatherStation& outer);
