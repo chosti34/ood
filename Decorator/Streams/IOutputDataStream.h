@@ -13,5 +13,5 @@ public:
 	// Записывает в поток блок данных размером size байт,
 	// располагающийся по адресу srcData,
 	// В случае ошибки выбрасывает исключение std::ios_base::failure
-	virtual void WriteBlock(const void * srcData, std::streamsize size) = 0;
+	virtual void WriteBlock(const void* srcData, std::streamsize size) = 0;
 };
