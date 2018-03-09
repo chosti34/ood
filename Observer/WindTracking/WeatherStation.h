@@ -4,86 +4,37 @@
 #include <algorithm>
 
 #include "Observer.h"
+#include "WeatherInfo.h"
 
 enum class WeatherEvent
 {
-	AnythingChanged,
-	TemperatureOrPressureChanged,
-	WindDirectionChanged
+	AnyParameterChanged,
+	TemperatureOrPressureChanged // для рыбаков
 };
 
-struct WeatherInfo
+template <typename WeatherInfoType>
+inline std::set<WeatherEvent> GetEvents(const WeatherInfoType& oldData, const WeatherInfoType& newData)
 {
-	double temperature = .0;
-	double humidity = .0;
-	double pressure = .0;
-};
-
-struct WeatherInfoPro
-{
-	double temperature = .0;
-	double humidity = .0;
-	double pressure = .0;
-	double windSpeed = .0;
-	double windDirection = .0;
-};
-
-inline std::set<WeatherEvent> GetWeatherInfoEvents(const WeatherInfo& oldData, const WeatherInfo& newData)
-{
-	std::set<WeatherEvent> changes;
-	// Если не произошло никаких изменений в данных, возвращаем пустое множество
-	if (oldData.temperature == newData.temperature &&
-		oldData.humidity == newData.humidity &&
-		oldData.pressure == newData.pressure)
+	std::set<WeatherEvent> events;
+	if (AnyParameterChanged(oldData, newData))
 	{
-		return changes;
+		events.insert(WeatherEvent::AnyParameterChanged);
 	}
-	// Что-то всё-таки произошло
-	changes.insert(WeatherEvent::AnythingChanged);
-	if (oldData.temperature != newData.temperature ||
-		oldData.pressure != newData.pressure)
+	if (TemperatureOrPressureChanged(oldData, newData))
 	{
-		// Изменились температура либо атмосферное давление
-		changes.insert(WeatherEvent::TemperatureOrPressureChanged);
+		events.insert(WeatherEvent::TemperatureOrPressureChanged);
 	}
-	return changes;
-}
-
-inline std::set<WeatherEvent> GetWeatherInfoEvents(const WeatherInfoPro& oldData, const WeatherInfoPro& newData)
-{
-	auto changes = GetWeatherInfoEvents(
-		WeatherInfo{ oldData.temperature, oldData.humidity, oldData.pressure },
-		WeatherInfo{ newData.temperature, newData.humidity, newData.pressure }
-	);
-	if (oldData.windDirection == newData.windDirection &&
-		oldData.windSpeed == newData.windSpeed)
-	{
-		// Данные о ветре не изменились
-		return changes;
-	}
-	if (oldData.windDirection != newData.windDirection ||
-		oldData.windSpeed != newData.windSpeed)
-	{
-		// Функция обрабатывающая базовую WeatherInfo могла и не вернуть
-		//  WeatherEvent::AnythingChanged, однако данные о ветре изменились
-		changes.insert(WeatherEvent::AnythingChanged);
-	}
-	if (oldData.windDirection != newData.windDirection)
-	{
-		changes.insert(WeatherEvent::WindDirectionChanged);
-	}
-	return changes;
+	return events;
 }
 
 template <typename WeatherInfoType>
 class WeatherStation : public AbstractObservable<WeatherEvent, WeatherInfoType>
 {
 public:
-	void SetMeasurements(const WeatherInfoType& info)
+	void SetMeasurements(WeatherInfoType info)
 	{
-		auto oldData = m_info;
-		m_info = info;
-		for (const auto& event : GetWeatherInfoEvents(oldData, m_info))
+		std::swap(info, m_info);
+		for (const auto& event : GetEvents(info, m_info))
 		{
 			// Приходиться писать имя базового класса здесь, так как компилятор
 			//  не может найти метод NotifyObservers из-за использования шаблонного наследования

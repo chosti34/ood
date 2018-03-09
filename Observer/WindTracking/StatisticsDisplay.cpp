@@ -31,14 +31,14 @@ StatisticsDisplayDuo::StatisticsDisplayDuo(InnerWeatherStation& inner, OuterWeat
 	: m_inner(inner)
 	, m_outer(outer)
 {
-	m_inner.RegisterObserver(WeatherEvent::AnythingChanged, *this);
-	m_outer.RegisterObserver(WeatherEvent::AnythingChanged, *this);
+	m_inner.RegisterObserver(WeatherEvent::AnyParameterChanged, *this);
+	m_outer.RegisterObserver(WeatherEvent::AnyParameterChanged, *this);
 }
 
 StatisticsDisplayDuo::~StatisticsDisplayDuo()
 {
-	m_inner.RemoveObserver(WeatherEvent::AnythingChanged, *this);
-	m_outer.RemoveObserver(WeatherEvent::AnythingChanged, *this);
+	m_inner.RemoveObserver(WeatherEvent::AnyParameterChanged, *this);
+	m_outer.RemoveObserver(WeatherEvent::AnyParameterChanged, *this);
 }
 
 void StatisticsDisplayDuo::Update(const WeatherInfo& data, const IObservable<WeatherEvent, WeatherInfo>& observable)
