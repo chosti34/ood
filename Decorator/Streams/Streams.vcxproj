@@ -144,7 +144,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DecryptInputDataStreamDecorator.h" />
-    <ClInclude Include="EncryptInputDataStreamDecorator.h" />
     <ClInclude Include="EncryptOutputDataStreamDecorator.h" />
     <ClInclude Include="FileInputStream.h" />
     <ClInclude Include="FileOutputStream.h" />

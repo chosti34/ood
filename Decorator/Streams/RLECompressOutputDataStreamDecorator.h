@@ -1,11 +1,12 @@
 #pragma once
 #include "IOutputDataStream.h"
 #include <memory>
+#include <vector>
 #include <boost/optional.hpp>
 
 class RLECompressOutputDataStreamDecorator : public IOutputDataStream
 {
-	struct ByteChunk
+	struct Chunk
 	{
 		uint8_t count;
 		uint8_t byte;
@@ -17,39 +18,37 @@ public:
 	{
 	}
 
+	~RLECompressOutputDataStreamDecorator()
+	{
+		m_output->WriteBlock(m_cache.data(), sizeof(Chunk) * m_cache.size());
+	}
+
 	void WriteByte(uint8_t data) override
 	{
-		WriteBlock(&data, 1);
+		if (m_cache.empty())
+		{
+			m_cache.push_back({ 1u, data });
+		}
+		else if (m_cache.back().byte == data && m_cache.back().count < 0xFF)
+		{
+			++m_cache.back().count;
+		}
+		else
+		{
+			m_cache.push_back({ 1u, data });
+		}
 	}
 
 	void WriteBlock(const void* srcData, std::streamsize size) override
 	{
-		boost::optional<ByteChunk> chunk = boost::none;
 		const uint8_t* source = reinterpret_cast<const uint8_t*>(srcData);
-		for (std::streamsize i = 0u; i < size; ++i)
+		for (std::streamsize i = 0; i < size; ++i)
 		{
-			uint8_t byte = *source++;
-			if (!chunk)
-			{
-				chunk = ByteChunk{ 1u, byte };
-			}
-			else if (chunk->byte == byte && chunk->count < 0xFF)
-			{
-				++chunk->count;
-			}
-			else
-			{
-				m_output->WriteBlock(chunk.get_ptr(), 2u);
-				chunk = ByteChunk{ 1u, byte };
-			}
-		}
-		// We can have unhandled byte chunk at the end
-		if (chunk)
-		{
-			m_output->WriteBlock(chunk.get_ptr(), 2u);
+			WriteByte(*source++);
 		}
 	}
 
 private:
 	std::unique_ptr<IOutputDataStream> m_output;
+	std::vector<Chunk> m_cache;
 };

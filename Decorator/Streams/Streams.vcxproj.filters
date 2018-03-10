@@ -45,9 +45,6 @@
     <ClInclude Include="DecryptInputDataStreamDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EncryptInputDataStreamDecorator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RLECompressOutputDataStreamDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>

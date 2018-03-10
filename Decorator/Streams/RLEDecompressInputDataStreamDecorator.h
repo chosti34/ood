@@ -5,7 +5,7 @@
 
 class RLEDecompressInputDataStreamDecorator : public IInputDataStream
 {
-	struct ByteChunk
+	struct Chunk
 	{
 		uint8_t count;
 		uint8_t byte;
@@ -36,7 +36,7 @@ public:
 	{
 		while (m_decompressed.size() < size_t(size))
 		{
-			ByteChunk chunk;
+			Chunk chunk;
 			auto bytesReadCount = m_input->ReadBlock(&chunk, 2u);
 			if (bytesReadCount == 0u && m_input->IsEOF())
 			{
