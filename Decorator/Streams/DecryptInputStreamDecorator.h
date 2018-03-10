@@ -3,10 +3,10 @@
 #include "ByteEncodingTable.h"
 #include <memory>
 
-class DecryptInputDataStreamDecorator : public IInputDataStream
+class DecryptInputStreamDecorator : public IInputDataStream
 {
 public:
-	DecryptInputDataStreamDecorator(std::unique_ptr<IInputDataStream> && input, unsigned seed)
+	DecryptInputStreamDecorator(std::unique_ptr<IInputDataStream> && input, unsigned seed)
 		: m_input(std::move(input))
 		, m_encodingTable(seed)
 	{

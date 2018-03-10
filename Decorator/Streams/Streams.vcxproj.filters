@@ -42,16 +42,16 @@
     <ClInclude Include="ByteEncodingTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DecryptInputDataStreamDecorator.h">
+    <ClInclude Include="DecompressInputStreamDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RLECompressOutputDataStreamDecorator.h">
+    <ClInclude Include="CompressOutputStreamDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RLEDecompressInputDataStreamDecorator.h">
+    <ClInclude Include="DecryptInputStreamDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EncryptOutputDataStreamDecorator.h">
+    <ClInclude Include="EncryptOutputStreamDecorator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -143,8 +143,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="DecryptInputDataStreamDecorator.h" />
-    <ClInclude Include="EncryptOutputDataStreamDecorator.h" />
+    <ClInclude Include="DecryptInputStreamDecorator.h" />
+    <ClInclude Include="EncryptOutputStreamDecorator.h" />
     <ClInclude Include="FileInputStream.h" />
     <ClInclude Include="FileOutputStream.h" />
     <ClInclude Include="IInputDataStream.h" />
@@ -152,8 +152,8 @@
     <ClInclude Include="MemoryInputStream.h" />
     <ClInclude Include="MemoryOutputStream.h" />
     <ClInclude Include="ByteEncodingTable.h" />
-    <ClInclude Include="RLECompressOutputDataStreamDecorator.h" />
-    <ClInclude Include="RLEDecompressInputDataStreamDecorator.h" />
+    <ClInclude Include="CompressOutputStreamDecorator.h" />
+    <ClInclude Include="DecompressInputStreamDecorator.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

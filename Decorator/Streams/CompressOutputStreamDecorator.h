@@ -1,10 +1,14 @@
 #pragma once
 #include "IOutputDataStream.h"
+
 #include <memory>
 #include <vector>
 #include <boost/optional.hpp>
 
-class RLECompressOutputDataStreamDecorator : public IOutputDataStream
+// ƒекоратор дл€ выходного потока, тоже €вл€ющийс€ выходным потоком.
+// —начала он производит компрессию данных простейшей вариацией RLE-алгоритма,
+// затем записывает эти данные в выходной поток.
+class CompressOutputStreamDecorator : public IOutputDataStream
 {
 	struct Chunk
 	{
@@ -13,21 +17,21 @@ class RLECompressOutputDataStreamDecorator : public IOutputDataStream
 	};
 
 public:
-	RLECompressOutputDataStreamDecorator(std::unique_ptr<IOutputDataStream> && output)
+	CompressOutputStreamDecorator(std::unique_ptr<IOutputDataStream> && output)
 		: m_output(std::move(output))
 	{
 	}
 
-	~RLECompressOutputDataStreamDecorator()
+	~CompressOutputStreamDecorator()
 	{
-		m_output->WriteBlock(m_cache.data(), sizeof(Chunk) * m_cache.size());
+		Flush();
 	}
 
 	void WriteByte(uint8_t data) override
 	{
 		if (m_cache.empty())
 		{
-			m_cache.push_back({ 1u, data });
+			m_cache.push_back(Chunk{ 1u, data });
 		}
 		else if (m_cache.back().byte == data && m_cache.back().count < 0xFF)
 		{
@@ -35,7 +39,11 @@ public:
 		}
 		else
 		{
-			m_cache.push_back({ 1u, data });
+			if (m_cache.size() == MAX_CACHE_SIZE)
+			{
+				Flush();
+			}
+			m_cache.push_back(Chunk{ 1u, data });
 		}
 	}
 
@@ -49,6 +57,13 @@ public:
 	}
 
 private:
+	void Flush()
+	{
+		m_output->WriteBlock(m_cache.data(), sizeof(Chunk) * m_cache.size());
+		m_cache.clear();
+	}
+
+	static const unsigned MAX_CACHE_SIZE = 10u;
 	std::unique_ptr<IOutputDataStream> m_output;
 	std::vector<Chunk> m_cache;
 };

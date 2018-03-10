@@ -3,10 +3,10 @@
 #include "ByteEncodingTable.h"
 #include <memory>
 
-class EncryptOutputDataStreamDecorator : public IOutputDataStream
+class EncryptOutputStreamDecorator : public IOutputDataStream
 {
 public:
-	EncryptOutputDataStreamDecorator(std::unique_ptr<IOutputDataStream> && output, unsigned seed)
+	EncryptOutputStreamDecorator(std::unique_ptr<IOutputDataStream> && output, unsigned seed)
 		: m_output(std::move(output))
 		, m_encodingTable(seed)
 	{
