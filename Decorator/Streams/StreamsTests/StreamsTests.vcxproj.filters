@@ -29,7 +29,10 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Tests.cpp">
+    <ClCompile Include="ByteEncodingTableTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ByteEncodingTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
