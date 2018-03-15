@@ -6,25 +6,10 @@
 class EncryptOutputStreamDecorator : public IOutputDataStream
 {
 public:
-	EncryptOutputStreamDecorator(std::unique_ptr<IOutputDataStream> && output, unsigned seed)
-		: m_output(std::move(output))
-		, m_encodingTable(seed)
-	{
-	}
+	EncryptOutputStreamDecorator(std::unique_ptr<IOutputDataStream> && output, unsigned seed);
 
-	virtual void WriteByte(uint8_t data) override
-	{
-		m_output->WriteByte(m_encodingTable.EncodeByte(data));
-	}
-
-	virtual void WriteBlock(const void* srcData, std::streamsize size) override
-	{
-		const uint8_t* source = reinterpret_cast<const uint8_t*>(srcData);
-		for (std::streamsize i = 0; i < size; ++i)
-		{
-			WriteByte(*source++);
-		}
-	}
+	void WriteByte(uint8_t data) override;
+	void WriteBlock(const void* srcData, std::streamsize size) override;
 
 private:
 	std::unique_ptr<IOutputDataStream> m_output;

@@ -9,7 +9,7 @@ ByteEncodingTable::ByteEncodingTable(unsigned seed)
 	: m_table(256u)
 	, m_reversedTable(256u)
 {
-	std::iota(m_table.begin(), m_table.end(), 0u);
+	std::iota(m_table.begin(), m_table.end(), uint8_t(0u));
 	std::shuffle(m_table.begin(), m_table.end(), std::mt19937(seed));
 	for (size_t i = 0; i < m_table.size(); ++i)
 	{

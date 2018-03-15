@@ -5,29 +5,11 @@
 class MemoryOutputStream : public IOutputDataStream
 {
 public:
-	MemoryOutputStream()
-		: m_memory()
-	{
-	}
+	MemoryOutputStream();
+	MemoryOutputStream(std::vector<uint8_t> && memory);
 
-	MemoryOutputStream(std::vector<uint8_t> && memory)
-		: m_memory(std::move(memory))
-	{
-	}
-
-	void WriteByte(uint8_t data) override
-	{
-		WriteBlock(std::addressof(data), 1u);
-	}
-
-	void WriteBlock(const void* srcData, std::streamsize size) override
-	{
-		const uint8_t* source = reinterpret_cast<const uint8_t*>(srcData);
-		for (std::streamsize i = 0u; i < size; ++i)
-		{
-			m_memory.push_back(*source++);
-		}
-	}
+	void WriteByte(uint8_t data) override;
+	void WriteBlock(const void* srcData, std::streamsize size) override;
 
 private:
 	std::vector<uint8_t> m_memory;

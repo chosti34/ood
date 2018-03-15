@@ -159,6 +159,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ByteEncodingTable.cpp" />
+    <ClCompile Include="CompressOutputStreamDecorator.cpp" />
+    <ClCompile Include="DecompressInputStreamDecorator.cpp" />
+    <ClCompile Include="DecryptInputStreamDecorator.cpp" />
+    <ClCompile Include="EncryptOutputStreamDecorator.cpp" />
+    <ClCompile Include="FileInputStream.cpp" />
+    <ClCompile Include="FileOutputStream.cpp" />
+    <ClCompile Include="MemoryInputStream.cpp" />
+    <ClCompile Include="MemoryOutputStream.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
