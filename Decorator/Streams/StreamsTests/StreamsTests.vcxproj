@@ -161,7 +161,9 @@
   <ItemGroup>
     <ClCompile Include="..\ByteEncodingTable.cpp" />
     <ClCompile Include="..\FileInputStream.cpp" />
+    <ClCompile Include="..\FileOutputStream.cpp" />
     <ClCompile Include="FileInputStreamTests.cpp" />
+    <ClCompile Include="FileOutputStreamTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
