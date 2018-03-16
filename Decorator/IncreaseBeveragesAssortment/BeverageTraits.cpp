@@ -48,6 +48,7 @@ std::string ToString(TeaKind kind)
 		return "Oolong";
 	default:
 		assert(false);
-		throw std::logic_error("Tea::ToString(Kind): default switch branch should be unreachable");
+		throw std::logic_error("Tea::ToString(Kind): "
+			"default switch branch should be unreachable");
 	}
 }
