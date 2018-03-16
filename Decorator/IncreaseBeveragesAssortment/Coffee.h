@@ -1,7 +1,7 @@
 #pragma once
 #include <cassert>
 #include "AbstractBeverage.h"
-#include "PortionSize.h"
+#include "BeverageTraits.h"
 
 class Coffee : public AbstractBeverage
 {

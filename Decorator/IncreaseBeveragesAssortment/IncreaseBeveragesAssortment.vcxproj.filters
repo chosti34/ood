@@ -39,7 +39,7 @@
     <ClInclude Include="Milkshake.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PortionSize.h">
+    <ClInclude Include="BeverageTraits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,7 +50,7 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PortionSize.cpp">
+    <ClCompile Include="BeverageTraits.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
