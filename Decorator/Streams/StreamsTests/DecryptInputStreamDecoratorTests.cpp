@@ -21,11 +21,10 @@ BOOST_AUTO_TEST_SUITE(DecryptInputStreamDecoratorTests)
 				std::make_unique<FileInputStream>("some-file.txt"), seed);
 			BOOST_CHECK(!input->IsEOF());
 
-			std::vector<uint8_t> decrypted;
-			decrypted.reserve(data.size());
+			std::vector<uint8_t> decrypted(data.size());
 			for (size_t i = 0; i < 3; ++i)
 			{
-				decrypted.push_back(input->ReadByte());
+				decrypted[i] = input->ReadByte();
 			}
 			auto read = input->ReadBlock(decrypted.data() + 3u, 3u);
 			BOOST_CHECK_EQUAL(read, 3u);
