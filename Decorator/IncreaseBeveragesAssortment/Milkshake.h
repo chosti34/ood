@@ -1,14 +1,7 @@
 #pragma once
 #include <cassert>
 #include "AbstractBeverage.h"
-
-// Можно было бы ввести подклассы
-enum class MilkshakePortionSize
-{
-	Small,
-	Medium,
-	Large
-};
+#include "PortionSize.h"
 
 class Milkshake : public AbstractBeverage
 {
@@ -37,22 +30,5 @@ public:
 	}
 
 private:
-	static std::string ToString(MilkshakePortionSize portionSize)
-	{
-		switch (portionSize)
-		{
-		case MilkshakePortionSize::Small:
-			return "Small";
-		case MilkshakePortionSize::Medium:
-			return "Medium";
-		case MilkshakePortionSize::Large:
-			return "Large";
-		default:
-			assert(false);
-			throw std::logic_error("ToString(MilkshakePortionSize): "
-				"default switch branch should be unreachable");
-		}
-	}
-
 	MilkshakePortionSize m_portionSize;
 };

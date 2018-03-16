@@ -1,14 +1,7 @@
 #pragma once
 #include <cassert>
 #include "AbstractBeverage.h"
-
-// ¬вели стандартную и двойную порцию дл€ латте и капучино.
-//  ¬место enum'а можно было бы создать подклассы.
-enum class CoffeePortionSize
-{
-	Standard,
-	Double
-};
+#include "PortionSize.h"
 
 class Coffee : public AbstractBeverage
 {
@@ -21,20 +14,6 @@ public:
 	double GetCost()const
 	{
 		return 60.0;
-	}
-
-	static std::string ToString(CoffeePortionSize portionSize)
-	{
-		switch (portionSize)
-		{
-		case CoffeePortionSize::Standard:
-			return "Standard";
-		case CoffeePortionSize::Double:
-			return "Double";
-		default:
-			assert(false);
-			throw std::logic_error("ToString(CoffeePortionSize): default switch branch should be unreachable");
-		}
 	}
 };
 
