@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PortionSize.h"
+#include <cassert>
 
 std::string ToString(CoffeePortionSize portionSize)
 {
