@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "IInputDataStream.h"
+#include "ByteChunk.h"
 
 #include <deque>
 #include <memory>
@@ -11,12 +12,6 @@
 //  производит компрессию данных простейшей вариацией RLE-алгоритма.
 class DecompressInputStreamDecorator : public IInputDataStream
 {
-	struct Chunk
-	{
-		uint8_t count;
-		uint8_t byte;
-	};
-
 public:
 	DecompressInputStreamDecorator(std::unique_ptr<IInputDataStream> && input);
 
@@ -28,7 +23,7 @@ private:
 	// Пытается распаковать size байт в исходное состояние и записать их в буфер.
 	// Возвращает реальное количество распакованных байт.
 	std::streamsize UnpackDataFromStreamAndFillBuffer(std::streamsize size);
-	boost::optional<Chunk> TryReadNextChunk();
+	boost::optional<ByteChunk> TryReadNextChunk();
 
 	std::unique_ptr<IInputDataStream> m_input;
 	std::deque<uint8_t> m_decompressedBuffer;

@@ -1,5 +1,6 @@
 #pragma once
 #include "IOutputDataStream.h"
+#include "ByteChunk.h"
 
 #include <memory>
 #include <vector>
@@ -10,12 +11,6 @@
 // затем записывает эти данные в выходной поток.
 class CompressOutputStreamDecorator : public IOutputDataStream
 {
-	struct Chunk
-	{
-		uint8_t count;
-		uint8_t byte;
-	};
-
 public:
 	CompressOutputStreamDecorator(std::unique_ptr<IOutputDataStream> && output);
 
@@ -29,5 +24,5 @@ private:
 
 	static const unsigned MAX_CACHE_SIZE;
 	std::unique_ptr<IOutputDataStream> m_output;
-	std::vector<Chunk> m_cache;
+	std::vector<ByteChunk> m_cache;
 };

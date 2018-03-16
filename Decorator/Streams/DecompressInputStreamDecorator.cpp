@@ -51,18 +51,15 @@ std::streamsize DecompressInputStreamDecorator::UnpackDataFromStreamAndFillBuffe
 		{
 			break;
 		}
-		for (uint8_t i = 0; i < chunk->count; ++i)
-		{
-			m_decompressedBuffer.push_back(chunk->byte);
-			++unpacked;
-		}
+		m_decompressedBuffer.insert(m_decompressedBuffer.end(), chunk->count, chunk->byte);
+		unpacked += chunk->count;
 	}
 	return unpacked;
 }
 
-boost::optional<DecompressInputStreamDecorator::Chunk> DecompressInputStreamDecorator::TryReadNextChunk()
+boost::optional<ByteChunk> DecompressInputStreamDecorator::TryReadNextChunk()
 {
-	Chunk chunk;
+	ByteChunk chunk;
 	auto read = m_input->ReadBlock(&chunk, 2u);
 	if (read == 0)
 	{

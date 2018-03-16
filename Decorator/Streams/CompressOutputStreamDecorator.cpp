@@ -10,14 +10,21 @@ CompressOutputStreamDecorator::CompressOutputStreamDecorator(std::unique_ptr<IOu
 
 CompressOutputStreamDecorator::~CompressOutputStreamDecorator()
 {
-	Flush();
+	try
+	{
+		Flush();
+	}
+	catch (...)
+	{
+		// do nothing here?
+	}
 }
 
 void CompressOutputStreamDecorator::WriteByte(uint8_t data)
 {
 	if (m_cache.empty())
 	{
-		m_cache.push_back(Chunk{ 1u, data });
+		m_cache.push_back(ByteChunk{ 1u, data });
 	}
 	else if (m_cache.back().byte == data && m_cache.back().count < 0xFF)
 	{
@@ -29,7 +36,7 @@ void CompressOutputStreamDecorator::WriteByte(uint8_t data)
 		{
 			Flush();
 		}
-		m_cache.push_back(Chunk{ 1u, data });
+		m_cache.push_back(ByteChunk{ 1u, data });
 	}
 }
 
@@ -44,6 +51,6 @@ void CompressOutputStreamDecorator::WriteBlock(const void* srcData, std::streams
 
 void CompressOutputStreamDecorator::Flush()
 {
-	m_output->WriteBlock(m_cache.data(), sizeof(Chunk) * m_cache.size());
+	m_output->WriteBlock(m_cache.data(), sizeof(ByteChunk) * m_cache.size());
 	m_cache.clear();
 }

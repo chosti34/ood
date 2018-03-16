@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ByteChunk.h" />
     <ClInclude Include="DecryptInputStreamDecorator.h" />
     <ClInclude Include="EncryptOutputStreamDecorator.h" />
     <ClInclude Include="FileInputStream.h" />
