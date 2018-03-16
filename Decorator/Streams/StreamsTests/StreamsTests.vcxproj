@@ -167,6 +167,8 @@
     <ClCompile Include="..\EncryptOutputStreamDecorator.cpp" />
     <ClCompile Include="..\FileInputStream.cpp" />
     <ClCompile Include="..\FileOutputStream.cpp" />
+    <ClCompile Include="..\MemoryInputStream.cpp" />
+    <ClCompile Include="..\MemoryOutputStream.cpp" />
     <ClCompile Include="CompressOutputStreamDecoratorTests.cpp" />
     <ClCompile Include="DecompressInputStreamDecoratorTests.cpp" />
     <ClCompile Include="DecryptInputStreamDecoratorTests.cpp" />

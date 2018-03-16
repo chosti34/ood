@@ -1,13 +1,8 @@
 #include "stdafx.h"
 #include "MemoryOutputStream.h"
 
-MemoryOutputStream::MemoryOutputStream()
-	: m_memory()
-{
-}
-
-MemoryOutputStream::MemoryOutputStream(std::vector<uint8_t> && memory)
-	: m_memory(std::move(memory))
+MemoryOutputStream::MemoryOutputStream(std::vector<uint8_t>& memory)
+	: m_memory(memory)
 {
 }
 
