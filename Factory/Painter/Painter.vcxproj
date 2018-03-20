@@ -152,6 +152,7 @@
     <ClInclude Include="PictureDraft.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Rectangle.h" />
+    <ClInclude Include="RegularPolygon.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -159,9 +160,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Designer.cpp" />
+    <ClCompile Include="Ellipse.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PictureDraft.cpp" />
     <ClCompile Include="Rectangle.cpp" />
+    <ClCompile Include="RegularPolygon.cpp" />
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

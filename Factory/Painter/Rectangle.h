@@ -9,6 +9,9 @@ public:
 
 	void Draw(ICanvas& canvas)const override;
 
+	Point GetLeftTop()const;
+	Point GetRightBottom()const;
+
 private:
 	Point m_leftTop;
 	Point m_rightBottom;

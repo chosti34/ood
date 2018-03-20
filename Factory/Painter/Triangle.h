@@ -9,6 +9,10 @@ public:
 
 	void Draw(ICanvas& canvas)const override;
 
+	Point GetVertex1()const;
+	Point GetVertex2()const;
+	Point GetVertex3()const;
+
 private:
 	Point m_p1;
 	Point m_p2;
