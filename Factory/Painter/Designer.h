@@ -6,7 +6,7 @@ class Designer : public IDesigner
 {
 public:
 	Designer(IShapeFactory& factory);
-	PictureDraft CreateDraft(std::istream & strm) override;
+	PictureDraft CreateDraft(std::istream& strm) override;
 
 private:
 	IShapeFactory & m_factory;

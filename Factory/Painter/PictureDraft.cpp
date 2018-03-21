@@ -2,7 +2,7 @@
 #include "PictureDraft.h"
 #include "Shape.h"
 
-bool PictureDraft::IsEmpty() const
+bool PictureDraft::IsEmpty()const
 {
 	return m_shapes.empty();
 }
