@@ -47,7 +47,6 @@ unique_ptr<Rectangle> ParseAndCreateRectangle(istream& strm)
 	}
 	throw runtime_error("bad rectangle arguments");
 }
-
 unique_ptr<Ellipse> ParseAndCreateEllipse(istream& strm)
 {
 	Point center;
@@ -64,7 +63,6 @@ unique_ptr<Ellipse> ParseAndCreateEllipse(istream& strm)
 	}
 	throw runtime_error("bad ellipse arguments");
 }
-
 unique_ptr<Triangle> ParseAndCreateTriangle(istream& strm)
 {
 	Point p1;
@@ -83,7 +81,6 @@ unique_ptr<Triangle> ParseAndCreateTriangle(istream& strm)
 	}
 	throw runtime_error("bad triangle arguments");
 }
-
 unique_ptr<RegularPolygon> ParseAndCreateRegularPolygon(istream& strm)
 {
 	Point center;

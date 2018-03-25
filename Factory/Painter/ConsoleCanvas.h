@@ -1,5 +1,5 @@
 #pragma once
-#include "ICanvas.h"
+#include "../libpainter/ICanvas.h"
 
 class ConsoleCanvas : public ICanvas
 {
