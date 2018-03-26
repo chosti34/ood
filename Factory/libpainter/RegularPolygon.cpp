@@ -27,6 +27,7 @@ RegularPolygon::RegularPolygon(const Point& center, float radius, unsigned verte
 void RegularPolygon::Draw(ICanvas& canvas)const
 {
 	const auto points = GetRegularPolygonPoints(m_center, m_radius, m_vertexCount);
+	canvas.SetColor(GetColor());
 	for (size_t i = 0; i < points.size() - 1; ++i)
 	{
 		canvas.DrawLine(points[i], points[i + 1]);

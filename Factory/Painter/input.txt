@@ -1,0 +1,4 @@
+Rectangle 400 400 600 500 pink
+Triangle 100 100 300 300 100 500 ff0000
+Ellipse 500 230 150 100 0000ff
+RegularPolygon 270 150 70 7 green

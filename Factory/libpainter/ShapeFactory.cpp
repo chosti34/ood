@@ -10,10 +10,27 @@ using namespace std;
 
 namespace
 {
+const std::unordered_map<std::string, Color> REGULAR_COLORS_MAP = {
+	{ "green", GREEN_COLOR },
+	{ "red", RED_COLOR },
+	{ "blue", BLUE_COLOR },
+	{ "yellow", YELLOW_COLOR },
+	{ "pink", PINK_COLOR },
+	{ "black", BLACK_COLOR }
+};
+
 bool ParseColor(istream& strm, Color& color)
 {
 	string buffer;
 	strm >> buffer;
+
+	auto found = REGULAR_COLORS_MAP.find(buffer);
+	if (found != REGULAR_COLORS_MAP.end())
+	{
+		color = found->second;
+		return true;
+	}
+
 	if (buffer.length() == 6u)
 	{
 		Color copy = color;

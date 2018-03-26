@@ -162,6 +162,7 @@
     <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Color.cpp" />
     <ClCompile Include="Designer.cpp" />
     <ClCompile Include="Ellipse.cpp" />
     <ClCompile Include="Painter.cpp" />
