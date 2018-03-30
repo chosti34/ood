@@ -9,4 +9,5 @@ struct Color
 	uint8_t b;
 };
 
+bool operator ==(const Color& lhs, const Color& rhs);
 std::string ToString(const Color& color);

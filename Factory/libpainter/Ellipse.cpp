@@ -7,7 +7,7 @@ Ellipse::Ellipse(const Point2D &center, float horizontalRadius, float verticalRa
 	, m_verticalRadius(verticalRadius)
 	, Shape(color)
 {
-	if (m_horizontalRadius < 0 || m_verticalRadius < 0)
+	if (m_horizontalRadius <= 0 || m_verticalRadius <= 0)
 	{
 		throw std::invalid_argument("can't construct ellipse");
 	}

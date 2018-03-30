@@ -2,6 +2,11 @@
 #include "Color.h"
 #include <iomanip>
 
+bool operator==(const Color & lhs, const Color & rhs)
+{
+	return lhs.r == rhs.r && lhs.g == rhs.g && lhs.b == rhs.b;
+}
+
 std::string ToString(const Color& color)
 {
 	std::ostringstream strm;

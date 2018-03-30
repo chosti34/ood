@@ -58,7 +58,7 @@ unique_ptr<Rectangle> ParseAndCreateRectangle(istream& strm)
 	{
 		return make_unique<Rectangle>(leftTop, rightBottom, color);
 	}
-	throw runtime_error("bad rectangle arguments");
+	throw invalid_argument("bad rectangle arguments");
 }
 unique_ptr<Ellipse> ParseAndCreateEllipse(istream& strm)
 {
@@ -73,7 +73,7 @@ unique_ptr<Ellipse> ParseAndCreateEllipse(istream& strm)
 	{
 		return make_unique<Ellipse>(center, horizontalRadius, verticalRadius, color);
 	}
-	throw runtime_error("bad ellipse arguments");
+	throw invalid_argument("bad ellipse arguments");
 }
 unique_ptr<Triangle> ParseAndCreateTriangle(istream& strm)
 {
@@ -91,7 +91,7 @@ unique_ptr<Triangle> ParseAndCreateTriangle(istream& strm)
 	{
 		return std::make_unique<Triangle>(p1, p2, p3, color);
 	}
-	throw runtime_error("bad triangle arguments");
+	throw invalid_argument("bad triangle arguments");
 }
 unique_ptr<RegularPolygon> ParseAndCreateRegularPolygon(istream& strm)
 {
@@ -106,7 +106,7 @@ unique_ptr<RegularPolygon> ParseAndCreateRegularPolygon(istream& strm)
 	{
 		return make_unique<RegularPolygon>(center, radius, vertexCount, color);
 	}
-	throw runtime_error("bad regular polygon arguments");
+	throw invalid_argument("bad regular polygon arguments");
 }
 
 const unordered_map<string, function<unique_ptr<Shape>(istream& strm)>> DISPATCH_MAP = {
@@ -128,5 +128,5 @@ unique_ptr<Shape> ShapeFactory::CreateShape(const string& description)
 		auto& fn = found->second;
 		return fn(strm);
 	}
-	throw runtime_error("unknown shape name");
+	throw invalid_argument("unknown shape name");
 }

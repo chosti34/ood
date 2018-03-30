@@ -21,7 +21,7 @@ RegularPolygon::RegularPolygon(const Point2D& center, float radius, unsigned ver
 	, m_vertexCount(vertexCount)
 	, Shape(color)
 {
-	if (radius < 0 || vertexCount < 3u)
+	if (radius <= 0 || vertexCount < 3u)
 	{
 		throw std::invalid_argument("can't construct regular polygon");
 	}
