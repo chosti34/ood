@@ -51,14 +51,10 @@ bool ParseColor(istream& strm, Color& color)
 
 unique_ptr<Rectangle> ParseAndCreateRectangle(istream& strm)
 {
-	Point leftTop;
-	Point rightBottom;
+	Point2D leftTop;
+	Point2D rightBottom;
 	Color color;
-	if (strm >> leftTop.x &&
-		strm >> leftTop.y &&
-		strm >> rightBottom.x &&
-		strm >> rightBottom.y &&
-		ParseColor(strm, color))
+	if (strm >> leftTop && strm >> rightBottom && ParseColor(strm, color))
 	{
 		return make_unique<Rectangle>(leftTop, rightBottom, color);
 	}
@@ -66,12 +62,11 @@ unique_ptr<Rectangle> ParseAndCreateRectangle(istream& strm)
 }
 unique_ptr<Ellipse> ParseAndCreateEllipse(istream& strm)
 {
-	Point center;
+	Point2D center;
 	float horizontalRadius;
 	float verticalRadius;
 	Color color;
-	if (strm >> center.x &&
-		strm >> center.y &&
+	if (strm >> center &&
 		strm >> horizontalRadius &&
 		strm >> verticalRadius &&
 		ParseColor(strm, color))
@@ -82,9 +77,9 @@ unique_ptr<Ellipse> ParseAndCreateEllipse(istream& strm)
 }
 unique_ptr<Triangle> ParseAndCreateTriangle(istream& strm)
 {
-	Point p1;
-	Point p2;
-	Point p3;
+	Point2D p1;
+	Point2D p2;
+	Point2D p3;
 	Color color;
 	if (strm >> p1.x &&
 		strm >> p1.y &&
@@ -100,12 +95,11 @@ unique_ptr<Triangle> ParseAndCreateTriangle(istream& strm)
 }
 unique_ptr<RegularPolygon> ParseAndCreateRegularPolygon(istream& strm)
 {
-	Point center;
+	Point2D center;
 	float radius;
 	unsigned vertexCount;
 	Color color;
-	if (strm >> center.x &&
-		strm >> center.y &&
+	if (strm >> center &&
 		strm >> radius &&
 		strm >> vertexCount &&
 		ParseColor(strm, color))

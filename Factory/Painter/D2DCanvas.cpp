@@ -86,7 +86,7 @@ void D2DCanvas::SetColor(const Color& color)
 	m_brush->SetColor(GetNormalizedColor(color));
 }
 
-void D2DCanvas::DrawLine(const Point& from, const Point& to)
+void D2DCanvas::DrawLine(const Point2D& from, const Point2D& to)
 {
 	m_renderTarget->DrawLine(
 		D2D1::Point2F(from.x, from.y),
@@ -94,7 +94,7 @@ void D2DCanvas::DrawLine(const Point& from, const Point& to)
 		m_brush, STROKE_WIDTH);
 }
 
-void D2DCanvas::DrawEllipse(const Point& center, float horizontalRadius, float verticalRadius)
+void D2DCanvas::DrawEllipse(const Point2D& center, float horizontalRadius, float verticalRadius)
 {
 	m_renderTarget->DrawEllipse(D2D1::Ellipse(
 		D2D1::Point2F(center.x, center.y),

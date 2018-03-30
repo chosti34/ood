@@ -6,13 +6,13 @@ void ConsoleCanvas::SetColor(const Color& color)
 	std::cout << "Color set to #" << color.ToString() << std::endl;
 }
 
-void ConsoleCanvas::DrawLine(const Point& from, const Point& to)
+void ConsoleCanvas::DrawLine(const Point2D& from, const Point2D& to)
 {
 	std::cout << "Draw line from (" << from.x << ", " << from.y << ") " <<
 		"to (" << to.x << ", " << to.y << ")" << std::endl;
 }
 
-void ConsoleCanvas::DrawEllipse(const Point& center, float horizontalRadius, float verticalRadius)
+void ConsoleCanvas::DrawEllipse(const Point2D& center, float horizontalRadius, float verticalRadius)
 {
 	std::cout << "Draw ellipse at (" << center.x << ", " << center.y << ") " <<
 		"with a = " << horizontalRadius << ", b = " << verticalRadius << std::endl;

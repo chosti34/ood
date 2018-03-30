@@ -1,18 +1,18 @@
 #pragma once
 #include "Shape.h"
-#include "Point.h"
+#include "Point2D.h"
 
 class Rectangle : public Shape
 {
 public:
-	Rectangle(const Point& leftTop, const Point& rightBottom, const Color& color);
+	Rectangle(const Point2D& leftTop, const Point2D& rightBottom, const Color& color);
 
 	void Draw(ICanvas& canvas)const override;
 
-	Point GetLeftTop()const;
-	Point GetRightBottom()const;
+	Point2D GetLeftTop()const;
+	Point2D GetRightBottom()const;
 
 private:
-	Point m_leftTop;
-	Point m_rightBottom;
+	Point2D m_leftTop;
+	Point2D m_rightBottom;
 };

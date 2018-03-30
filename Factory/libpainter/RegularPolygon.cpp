@@ -3,9 +3,9 @@
 
 namespace
 {
-std::vector<Point> GetRegularPolygonPoints(const Point& center, float radius, unsigned count)
+std::vector<Point2D> GetRegularPolygonPoints(const Point2D& center, float radius, unsigned count)
 {
-	std::vector<Point> points(count);
+	std::vector<Point2D> points(count);
 	for (size_t i = 0; i < points.size(); ++i)
 	{
 		points[i].x = float(center.x + radius * std::cos(2 * M_PI * i / count));
@@ -15,13 +15,16 @@ std::vector<Point> GetRegularPolygonPoints(const Point& center, float radius, un
 }
 }
 
-RegularPolygon::RegularPolygon(const Point& center, float radius, unsigned vertexCount, const Color& color)
+RegularPolygon::RegularPolygon(const Point2D& center, float radius, unsigned vertexCount, const Color& color)
 	: m_center(center)
 	, m_radius(radius)
 	, m_vertexCount(vertexCount)
 	, Shape(color)
 {
-	assert(m_vertexCount >= 3u);
+	if (radius < 0 || vertexCount < 3)
+	{
+		throw std::invalid_argument("can't construct regular polygon");
+	}
 }
 
 void RegularPolygon::Draw(ICanvas& canvas)const
@@ -40,7 +43,7 @@ unsigned RegularPolygon::GetVertexCount()const
 	return m_vertexCount;
 }
 
-Point RegularPolygon::GetCenter()const
+Point2D RegularPolygon::GetCenter()const
 {
 	return m_center;
 }

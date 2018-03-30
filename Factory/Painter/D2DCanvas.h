@@ -13,8 +13,8 @@ public:
 	void Clear(const Color& color);
 
 	void SetColor(const Color& color) override;
-	void DrawLine(const Point& from, const Point& to) override;
-	void DrawEllipse(const Point& center, float horizontalRadius, float verticalRadius) override;
+	void DrawLine(const Point2D& from, const Point2D& to) override;
+	void DrawEllipse(const Point2D& center, float horizontalRadius, float verticalRadius) override;
 
 private:
 	ID2D1Factory* m_factory;

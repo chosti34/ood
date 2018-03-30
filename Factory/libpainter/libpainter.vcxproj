@@ -152,7 +152,7 @@
     <ClInclude Include="IShapeFactory.h" />
     <ClInclude Include="Painter.h" />
     <ClInclude Include="PictureDraft.h" />
-    <ClInclude Include="Point.h" />
+    <ClInclude Include="Point2D.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="RegularPolygon.h" />
     <ClInclude Include="Shape.h" />
@@ -160,6 +160,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Triangle.h" />
+    <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Color.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="Ellipse.cpp" />
     <ClCompile Include="Painter.cpp" />
     <ClCompile Include="PictureDraft.cpp" />
+    <ClCompile Include="Point2D.cpp" />
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="RegularPolygon.cpp" />
     <ClCompile Include="Shape.cpp" />
@@ -178,6 +180,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Triangle.cpp" />
+    <ClCompile Include="Vector2D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

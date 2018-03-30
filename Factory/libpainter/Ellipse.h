@@ -4,16 +4,16 @@
 class Ellipse : public Shape
 {
 public:
-	Ellipse(const Point& center, float horizontalRadius, float verticalRadius, const Color& color);
+	Ellipse(const Point2D& center, float horizontalRadius, float verticalRadius, const Color& color);
 
 	void Draw(ICanvas& canvas)const override;
 
-	Point GetCenter()const;
+	Point2D GetCenter()const;
 	float GetHorizontalRadius()const;
 	float GetVerticalRadius()const;
 
 private:
-	Point m_center;
+	Point2D m_center;
 	float m_horizontalRadius;
 	float m_verticalRadius;
 };

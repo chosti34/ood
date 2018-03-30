@@ -1,20 +1,20 @@
 #pragma once
 #include "Shape.h"
-#include "Point.h"
+#include "Point2D.h"
 
 class Triangle : public Shape
 {
 public:
-	Triangle(const Point& p1, const Point& p2, const Point& p3, const Color& color);
+	Triangle(const Point2D& p1, const Point2D& p2, const Point2D& p3, const Color& color);
 
 	void Draw(ICanvas& canvas)const override;
 
-	Point GetVertex1()const;
-	Point GetVertex2()const;
-	Point GetVertex3()const;
+	Point2D GetVertex1()const;
+	Point2D GetVertex2()const;
+	Point2D GetVertex3()const;
 
 private:
-	Point m_p1;
-	Point m_p2;
-	Point m_p3;
+	Point2D m_p1;
+	Point2D m_p2;
+	Point2D m_p3;
 };
