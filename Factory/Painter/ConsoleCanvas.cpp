@@ -3,7 +3,7 @@
 
 void ConsoleCanvas::SetColor(const Color& color)
 {
-	std::cout << "Color set to #" << color.ToString() << std::endl;
+	std::cout << "Color set to #" << ToString(color) << std::endl;
 }
 
 void ConsoleCanvas::DrawLine(const Point2D& from, const Point2D& to)

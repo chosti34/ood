@@ -11,12 +11,12 @@ using namespace std;
 namespace
 {
 const std::unordered_map<std::string, Color> REGULAR_COLORS_MAP = {
-	{ "green", GREEN_COLOR },
-	{ "red", RED_COLOR },
-	{ "blue", BLUE_COLOR },
-	{ "yellow", YELLOW_COLOR },
-	{ "pink", PINK_COLOR },
-	{ "black", BLACK_COLOR }
+	{ "green", Color{ 0, 0xff, 0 } },
+	{ "red", Color{ 0xff, 0, 0 } },
+	{ "blue", Color{ 0, 0, 0xff } },
+	{ "yellow", Color{ 0xff, 0xff, 0 } },
+	{ "pink", Color{ 0xff, 0x69, 0xb4 } },
+	{ "black", Color{ 0, 0, 0 } }
 };
 
 bool ParseColor(istream& strm, Color& color)

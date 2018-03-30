@@ -6,5 +6,5 @@ class PictureDraft;
 class IPainter
 {
 public:
-	virtual void DrawPicture(PictureDraft& draft, ICanvas& canvas) = 0;
+	virtual void DrawPicture(const PictureDraft& draft, ICanvas& canvas) = 0;
 };

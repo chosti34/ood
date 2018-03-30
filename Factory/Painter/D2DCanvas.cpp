@@ -1,12 +1,12 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 #include "D2DCanvas.h"
 
 namespace
 {
 constexpr float STROKE_WIDTH = 1.7f;
 
-// Структура Color хранит компоненты цвета в диапазоне [0 .. 255],
-//  но Direct2D ожидает их в формате [0 .. 1]
+// РЎС‚СЂСѓРєС‚СѓСЂР° Color С…СЂР°РЅРёС‚ РєРѕРјРїРѕРЅРµРЅС‚С‹ С†РІРµС‚Р° РІ РґРёР°РїР°Р·РѕРЅРµ [0 .. 255],
+//  РЅРѕ Direct2D РѕР¶РёРґР°РµС‚ РёС… РІ С„РѕСЂРјР°С‚Рµ [0 .. 1]
 D2D1::ColorF GetNormalizedColor(const Color& color)
 {
 	D2D1::ColorF normalized(color.r, color.g, color.b);
@@ -46,7 +46,7 @@ D2DCanvas::D2DCanvas(HWND hWnd)
 	assert(hr == S_OK);
 
 	hr = m_renderTarget->CreateSolidColorBrush(
-		D2D1::ColorF(D2D1::ColorF::Silver), &m_brush); // Цвет в любом случае будет изменён
+		D2D1::ColorF(D2D1::ColorF::Silver), &m_brush); // Р¦РІРµС‚ РІ Р»СЋР±РѕРј СЃР»СѓС‡Р°Рµ Р±СѓРґРµС‚ РёР·РјРµРЅС‘РЅ
 	assert(hr == S_OK);
 }
 

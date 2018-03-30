@@ -18,7 +18,7 @@ Triangle::Triangle(const Point2D& p1, const Point2D& p2, const Point2D& p3, cons
 	}
 }
 
-void Triangle::Draw(ICanvas& canvas) const
+void Triangle::Draw(ICanvas& canvas)const
 {
 	canvas.SetColor(GetColor());
 	canvas.DrawLine(m_p1, m_p2);

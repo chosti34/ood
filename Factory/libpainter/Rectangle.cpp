@@ -7,8 +7,8 @@ Rectangle::Rectangle(const Point2D& leftTop, const Point2D& rightBottom, const C
 	, m_rightBottom(rightBottom)
 	, Shape(color)
 {
-	Vector2D diag(leftTop, rightBottom);
-	if (diag.x <= 0 || diag.y <= 0)
+	Vector2D diagonal(leftTop, rightBottom);
+	if (diagonal.x <= 0 || diagonal.y <= 0)
 	{
 		throw std::invalid_argument("can't construct rectangle");
 	}
