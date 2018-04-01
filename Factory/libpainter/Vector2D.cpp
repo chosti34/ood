@@ -7,6 +7,12 @@ Vector2D::Vector2D(const Point2D& from, const Point2D& to)
 {
 }
 
+Vector2D::Vector2D(float x, float y)
+	: x(x)
+	, y(y)
+{
+}
+
 float Vector2D::GetLength() const
 {
 	return std::sqrt(std::pow(x, 2) + std::pow(y, 2));
