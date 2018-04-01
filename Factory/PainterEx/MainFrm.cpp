@@ -25,7 +25,8 @@ void MainFrm::OnFileExit()
 
 void MainFrm::OnHelpAbout()
 {
-	MessageBox(_T("Usage: Painter.exe <shapes file path>\n"
+	MessageBox(_T("Usage: Painter.exe\n"
+		"All shapes must be listed in file 'input.txt'\n"
 		"Every shape must be delimited by newline character\n"
 		"List of available shapes: (every point is two numbers)\n"
 		"Triangle <point1> <point2> <point3> <color>\n"
@@ -34,7 +35,8 @@ void MainFrm::OnHelpAbout()
 		"RegularPolygon <center point> <radius> <vertex count> <color>\n"
 		"Colors can be written in hex format like 'ff00ff'\n"
 		"If wanted color is in above list, it can be written by word\n"
-		"[green, red, blue, yellow, pink, black]\n"));
+		"[green, red, blue, yellow, pink, black]\n"
+		"Example: Rectangle 10 10 100 100 red\\nTriangle 10 10 30 30 50 10 ff00ff"));
 }
 
 int MainFrm::OnCreate(LPCREATESTRUCT lpCreateStruct)
