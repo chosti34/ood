@@ -5,7 +5,7 @@
 
 class Menu
 {
-	using Command = std::function<void(const std::string&)>;
+	using Command = std::function<void(std::istream& strm)>;
 
 	struct Item
 	{
@@ -27,13 +27,14 @@ public:
 		const std::string& description,
 		Command&& command);
 
-	bool ExecuteCommand(const std::string& command);
+	void Run();
 	void Exit();
 
 	void ShowInstructions()const;
-	bool IsExit()const;
 
 private:
+	bool ExecuteCommand(const std::string& command);
+
 	std::vector<Item> m_items;
 	bool m_exit;
 };

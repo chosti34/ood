@@ -1,26 +1,34 @@
 #include "stdafx.h"
 #include "Document.h"
 
-void Document::OnCommand(std::unique_ptr<ICommand>&& command)
+Document::Document(const std::string& title)
+	: m_title(title)
 {
 }
 
-std::shared_ptr<IParagraph> Document::InsertParagraph(const std::string & text, boost::optional<size_t> position)
+void Document::OnCommand(std::unique_ptr<ICommand> && command)
+{
+	if (command->Execute(*this))
+	{
+	}
+}
+
+std::shared_ptr<IParagraph> Document::InsertParagraph(const std::string& text, boost::optional<size_t> position)
 {
 	return std::shared_ptr<IParagraph>();
 }
 
-std::shared_ptr<IImage> Document::InsertImage(const Path & path, int width, int height, boost::optional<size_t> position)
+std::shared_ptr<IImage> Document::InsertImage(const Path& path, int width, int height, boost::optional<size_t> position)
 {
 	return std::shared_ptr<IImage>();
 }
 
-size_t Document::GetItemsCount() const
+size_t Document::GetItemsCount()const
 {
 	return size_t();
 }
 
-CConstDocumentItem Document::GetItem(size_t index) const
+CConstDocumentItem Document::GetItem(size_t index)const
 {
 	return CConstDocumentItem();
 }
@@ -34,16 +42,17 @@ void Document::DeleteItem(size_t index)
 {
 }
 
-std::string Document::GetTitle() const
+std::string Document::GetTitle()const
 {
-	return std::string();
+	return m_title;
 }
 
-void Document::SetTitle(const std::string & title)
+void Document::SetTitle(const std::string& title)
 {
+	m_title = title;
 }
 
-bool Document::CanUndo() const
+bool Document::CanUndo()const
 {
 	return false;
 }
@@ -52,7 +61,7 @@ void Document::Undo()
 {
 }
 
-bool Document::CanRedo() const
+bool Document::CanRedo()const
 {
 	return false;
 }
@@ -61,6 +70,6 @@ void Document::Redo()
 {
 }
 
-void Document::Save(const Path & path) const
+void Document::Save(const Path& path)const
 {
 }

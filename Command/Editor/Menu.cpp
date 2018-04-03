@@ -25,22 +25,18 @@ void Menu::AddItem(
 	m_items.emplace_back(shortcut, description, std::move(command));
 }
 
-bool Menu::ExecuteCommand(const std::string& command)
+void Menu::Run()
 {
-	std::istringstream strm(command);
-	std::string shortcut;
-	strm >> shortcut;
+	ShowInstructions();
 
-	auto found = std::find_if(m_items.begin(), m_items.end(), [&shortcut](const Item& item) {
-		return item.shortcut == shortcut;
-	});
-
-	if (found != m_items.end())
+	std::string command;
+	while (!m_exit && std::cout << ">>> " && getline(std::cin, command))
 	{
-		found->command(command);
-		return true;
+		if (!ExecuteCommand(command))
+		{
+			std::cout << "Unknown command!\n";
+		}
 	}
-	return false;
 }
 
 void Menu::Exit()
@@ -57,7 +53,20 @@ void Menu::ShowInstructions()const
 	}
 }
 
-bool Menu::IsExit()const
+bool Menu::ExecuteCommand(const std::string& command)
 {
-	return m_exit;
+	std::istringstream strm(command);
+	std::string shortcut;
+	strm >> shortcut;
+
+	auto found = std::find_if(m_items.begin(), m_items.end(), [&shortcut](const Item& item) {
+		return item.shortcut == shortcut;
+	});
+
+	if (found != m_items.end())
+	{
+		found->command(strm);
+		return true;
+	}
+	return false;
 }
