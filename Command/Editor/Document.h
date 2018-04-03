@@ -1,12 +1,17 @@
 #pragma once
 #include "IDocument.h"
-#include "ICommand.h"
+#include "IDocumentCommand.h"
 
 class Document : private IDocument
 {
 public:
 	Document(const std::string& title);
-	void OnCommand(std::unique_ptr<ICommand> && command);
+	void OnCommand(std::unique_ptr<IDocumentCommand> && command);
+
+	bool CanUndo()const override;
+	void Undo() override;
+	bool CanRedo()const override;
+	void Redo() override;
 
 private:
 	virtual std::shared_ptr<IParagraph> InsertParagraph(
@@ -21,11 +26,6 @@ private:
 
 	virtual std::string GetTitle()const override;
 	virtual void SetTitle(const std::string& title) override;
-
-	virtual bool CanUndo()const override;
-	virtual void Undo() override;
-	virtual bool CanRedo()const override;
-	virtual void Redo() override;
 
 	virtual void Save(const Path& path)const override;
 
