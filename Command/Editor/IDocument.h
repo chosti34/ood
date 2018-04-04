@@ -47,9 +47,17 @@ class CConstDocumentItem
 public:
 	// Возвращает указатель на константное изображение, либо nullptr,
 	// если элемент не является изображением
-	std::shared_ptr<const IImage> GetImage()const;
+	std::shared_ptr<const IImage> GetImage()const
+	{
+		return nullptr;
+	}
+
 	// Возвращает указатель на константный параграф, либо nullptr, если элемент не является параграфом
-	std::shared_ptr<const IParagraph> GetParagraph()const;
+	std::shared_ptr<const IParagraph> GetParagraph()const
+	{
+		return nullptr;
+	}
+
 	virtual ~CConstDocumentItem() = default;
 };
 
@@ -60,9 +68,16 @@ class CDocumentItem : public CConstDocumentItem
 {
 public:
 	// Возвращает указатель на изображение, либо nullptr, если элемент не является изображением
-	std::shared_ptr<IImage> GetImage();
+	std::shared_ptr<IImage> GetImage()
+	{
+		return nullptr;
+	}
+
 	// Возвращает указатель на параграф, либо nullptr, если элемент не является параграфом
-	std::shared_ptr<IParagraph> GetParagraph();
+	std::shared_ptr<IParagraph> GetParagraph()
+	{
+		return nullptr;
+	}
 };
 
 /*
