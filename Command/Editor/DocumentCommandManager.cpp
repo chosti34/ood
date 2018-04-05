@@ -31,15 +31,17 @@ bool DocumentCommandManager::CanRedo()const
 void DocumentCommandManager::Undo(IDocument& document)
 {
 	assert(CanUndo());
-	m_undoStack.back()->Undo(document);
-	m_redoStack.push_back(std::move(m_undoStack.back()));
+	auto command = std::move(m_undoStack.back());
 	m_undoStack.pop_back();
+	command->Undo(document);
+	m_redoStack.push_back(std::move(command));
 }
 
 void DocumentCommandManager::Redo(IDocument& document)
 {
 	assert(CanRedo());
-	m_redoStack.back()->Redo(document);
-	m_undoStack.push_back(std::move(m_redoStack.back()));
+	auto command = std::move(m_redoStack.back());
 	m_redoStack.pop_back();
+	command->Redo(document);
+	m_undoStack.push_back(std::move(command));
 }

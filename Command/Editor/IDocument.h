@@ -1,11 +1,14 @@
 ﻿#pragma once
 #include "DocumentItem.h"
+#include "IDocumentCommand.h"
 #include <boost/optional.hpp>
 #include <memory>
 
 class IDocument
 {
 public:
+	virtual bool DoCommand(IDocumentCommandPtr&& command) = 0;
+
 	// Вставляет параграф текста в указанную позицию (сдвигая последующие элементы)
 	// Если параметр position не указан, вставка происходит в конец документа
 	virtual std::shared_ptr<IParagraph> InsertParagraph(

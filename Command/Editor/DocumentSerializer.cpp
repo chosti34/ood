@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "HtmlExport.h"
+#include "DocumentSerializer.h"
 #include "IDocument.h"
 
 namespace
@@ -43,12 +43,12 @@ std::string EscapeSpecialCharacters(const std::string& content)
 }
 }
 
-void ExportAsHtmlDocument(const std::string& path, const IDocument& document)
+void DocumentSerializer::SerializeAsHTML(const std::string& path, const IDocument& document)
 {
 	std::ofstream output(path);
 	if (!output)
 	{
-		throw std::runtime_error("failed to open " + path + " for exporting");
+		throw std::runtime_error("failed to open " + path + " for serializing");
 	}
 
 	std::ostringstream strm;

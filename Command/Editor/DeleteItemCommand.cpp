@@ -39,4 +39,5 @@ void DeleteItemCommand::Redo(IDocument& document)
 {
 	bool executed = Execute(document);
 	assert(executed);
+	(void)executed;
 }

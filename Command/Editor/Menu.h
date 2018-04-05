@@ -1,11 +1,13 @@
 #pragma once
+
+#include <iosfwd>
 #include <string>
 #include <vector>
 #include <functional>
 
 class Menu
 {
-	using Command = std::function<void(const std::vector<std::string>&)>;
+	using Command = std::function<void(std::istream&)>;
 
 	struct Item
 	{
@@ -29,12 +31,12 @@ public:
 
 	void Run();
 	void Exit();
-
 	void ShowInstructions()const;
 
 private:
-	bool ExecuteCommand(const std::string& command);
+	void ExecuteCommand(const std::string& command);
 
+private:
 	std::vector<Item> m_items;
 	bool m_exit;
 };

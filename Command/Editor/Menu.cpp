@@ -1,18 +1,6 @@
 #include "stdafx.h"
 #include "Menu.h"
 
-namespace
-{
-std::vector<std::string> Tokenize(std::istream& strm)
-{
-	using namespace std;
-	using Iterator = istream_iterator<string>;
-	vector<string> tokens;
-	copy(Iterator(strm), Iterator(), back_inserter(tokens));
-	return tokens;
-}
-}
-
 Menu::Item::Item(
 	const std::string& shortcut,
 	const std::string& description,
@@ -44,9 +32,13 @@ void Menu::Run()
 	std::string command;
 	while (!m_exit && std::cout << ">>> " && getline(std::cin, command))
 	{
-		if (!ExecuteCommand(command))
+		try
 		{
-			std::cout << "Unknown command!\n";
+			ExecuteCommand(command);
+		}
+		catch (const std::exception& ex)
+		{
+			std::cout << ex.what() << std::endl;
 		}
 	}
 }
@@ -58,15 +50,17 @@ void Menu::Exit()
 
 void Menu::ShowInstructions()const
 {
-	std::cout << "Commands list:\n";
+	static const unsigned indent = 2u;
+	std::cout << "Commands list:" << std::endl;
 	for (size_t i = 0u; i < m_items.size(); ++i)
 	{
-		std::cout << "  " << (i + 1) << ". " << m_items[i].shortcut
-			<< " - " << m_items[i].description << "." << std::endl;
+		const size_t index = i + 1;
+		std::cout << std::string(indent, ' ') << index << ". "
+			<< m_items[i].shortcut << " - " << m_items[i].description << "." << std::endl;
 	}
 }
 
-bool Menu::ExecuteCommand(const std::string& command)
+void Menu::ExecuteCommand(const std::string& command)
 {
 	std::istringstream strm(command);
 	std::string shortcut;
@@ -78,8 +72,10 @@ bool Menu::ExecuteCommand(const std::string& command)
 
 	if (found != m_items.end())
 	{
-		found->command(Tokenize(strm));
-		return true;
+		found->command(strm);
 	}
-	return false;
+	else
+	{
+		std::cout << "Unknown command!" << std::endl;
+	}
 }

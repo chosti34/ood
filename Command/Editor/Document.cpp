@@ -24,12 +24,13 @@ bool Document::DoCommand(IDocumentCommandPtr&& command)
 	return false;
 }
 
-std::shared_ptr<IParagraph> Document::InsertParagraph(const std::string& text, boost::optional<size_t> position)
+std::shared_ptr<IParagraph> Document::InsertParagraph(
+	const std::string& text, boost::optional<size_t> position)
 {
 	auto docItem = std::make_shared<DocumentItem>(std::make_shared<Paragraph>(text), nullptr);
 	if (position.is_initialized())
 	{
-		m_items.insert(m_items.begin() + *position, docItem);
+		m_items.insert(m_items.begin() + position.value(), docItem);
 	}
 	else
 	{
@@ -38,7 +39,8 @@ std::shared_ptr<IParagraph> Document::InsertParagraph(const std::string& text, b
 	return docItem->GetParagraph();
 }
 
-std::shared_ptr<IImage> Document::InsertImage(const std::string& path, int width, int height, boost::optional<size_t> position)
+std::shared_ptr<IImage> Document::InsertImage(
+	const std::string& path, int width, int height, boost::optional<size_t> position)
 {
 	(void)path;
 	(void)width;
@@ -58,7 +60,8 @@ std::shared_ptr<DocumentItem> Document::GetItem(size_t index)
 	{
 		return m_items[index];
 	}
-	throw std::out_of_range("index is " + std::to_string(index) + " when size is " + std::to_string(m_items.size()));
+	throw std::out_of_range(
+		"index is " + std::to_string(index) + " when size is " + std::to_string(m_items.size()));
 }
 
 std::shared_ptr<const DocumentItem> Document::GetItem(size_t index)const
@@ -67,7 +70,8 @@ std::shared_ptr<const DocumentItem> Document::GetItem(size_t index)const
 	{
 		return m_items[index];
 	}
-	throw std::out_of_range("index is " + std::to_string(index) + " when size is " + std::to_string(m_items.size()));
+	throw std::out_of_range(
+		"index is " + std::to_string(index) + " when size is " + std::to_string(m_items.size()));
 }
 
 void Document::DeleteItem(size_t index)
