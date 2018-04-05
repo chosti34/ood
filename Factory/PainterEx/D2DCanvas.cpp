@@ -1,12 +1,12 @@
-#include "D2DCanvas.h"
+п»ї#include "D2DCanvas.h"
 #include <cassert>
 
 namespace
 {
 constexpr float STROKE_WIDTH = 1.7f;
 
-// Структура Color хранит компоненты цвета в диапазоне [0 .. 255],
-//  но Direct2D ожидает их в формате [0 .. 1]
+// РЎС‚СЂСѓРєС‚СѓСЂР° Color С…СЂР°РЅРёС‚ РєРѕРјРїРѕРЅРµРЅС‚С‹ С†РІРµС‚Р° РІ РґРёР°РїР°Р·РѕРЅРµ [0 .. 255],
+//  РЅРѕ Direct2D РѕР¶РёРґР°РµС‚ РёС… РІ С„РѕСЂРјР°С‚Рµ [0 .. 1]
 D2D1::ColorF GetNormalizedColor(const Color& color)
 {
 	D2D1::ColorF normalized(color.r, color.g, color.b);
@@ -33,7 +33,7 @@ D2DCanvas::D2DCanvas(HWND hWnd)
 {
 	::CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 	auto hr = m_pFactory.CoCreateInstance(__uuidof(ID2D1Factory));
-	assert(hr != S_FALSE);
+	assert(hr != S_FALSE); // РќРµ РІРѕР·РІСЂР°С‰Р°РµС‚ S_OK
 
 	hr = m_pRenderTarget.CoCreateInstance(__uuidof(ID2D1HwndRenderTarget));
 	assert(hr != S_FALSE);
@@ -47,6 +47,7 @@ D2DCanvas::D2DCanvas(HWND hWnd)
 	RECT rect;
 	auto res = GetClientRect(hWnd, &rect);
 	assert(res != FALSE);
+	(void)res;
 
 	hr = m_pFactory->CreateHwndRenderTarget(
 		D2D1::RenderTargetProperties(),
@@ -56,7 +57,7 @@ D2DCanvas::D2DCanvas(HWND hWnd)
 	assert(hr == S_OK);
 
 	hr = m_pRenderTarget->CreateSolidColorBrush(
-		D2D1::ColorF(D2D1::ColorF::Silver), &m_pBrush); // Цвет в любом случае будет изменён
+		D2D1::ColorF(D2D1::ColorF::Silver), &m_pBrush); // Р¦РІРµС‚ РІ Р»СЋР±РѕРј СЃР»СѓС‡Р°Рµ Р±СѓРґРµС‚ РёР·РјРµРЅС‘РЅ
 	assert(hr == S_OK);
 }
 

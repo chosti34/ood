@@ -43,13 +43,12 @@ int MainFrm::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CFrameWnd::OnCreate(lpCreateStruct) != 0)
 	{
-		MessageBox(_T("The window was not created!!!"));
+		MessageBox(_T("Failed to create window..."));
 		return -1;
 	}
 	if (m_menu.LoadMenu(IDR_MENU1))
 	{
 		SetMenu(&m_menu);
-		MessageBox(_T("The window has been created!!!"));
 		return 0;
 	}
 	return -1;
@@ -126,13 +125,11 @@ void MainFrm::OnClose()
 void MainFrm::OnDestroy()
 {
 	CFrameWnd::OnDestroy();
-	MessageBox(_T("Window Destroyed"));
 }
 
 void MainFrm::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	CFrameWnd::OnLButtonUp(nFlags, point);
-	MessageBox(_T("Hello"));
 }
 
 BEGIN_MESSAGE_MAP(MainFrm, CFrameWnd)
