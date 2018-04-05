@@ -9,7 +9,7 @@ class Document : public IDocument
 public:
 	Document();
 
-	void OnCommand(IDocumentCommandPtr&& command);
+	bool DoCommand(IDocumentCommandPtr&& command);
 
 	std::shared_ptr<IParagraph> InsertParagraph(
 		const std::string& text, boost::optional<size_t> position = boost::none) override;
@@ -31,8 +31,6 @@ public:
 
 	bool CanRedo()const override;
 	void Redo() override;
-
-	void Save(const std::string& path)const override;
 
 private:
 	std::string m_title;

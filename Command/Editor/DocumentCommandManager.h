@@ -1,11 +1,11 @@
 #pragma once
 #include "IDocumentCommand.h"
-#include <vector>
+#include <deque>
 
 class DocumentCommandManager
 {
 public:
-	DocumentCommandManager(unsigned commandsDepth);
+	DocumentCommandManager(unsigned historyDepth);
 
 	void RegisterCommand(IDocumentCommandPtr&& command);
 
@@ -16,7 +16,7 @@ public:
 	void Redo(IDocument& document);
 
 private:
-	unsigned m_commandsDepth;
-	std::vector<std::unique_ptr<IDocumentCommand>> m_undoStack;
-	std::vector<std::unique_ptr<IDocumentCommand>> m_redoStack;
+	unsigned m_historyDepth;
+	std::deque<std::unique_ptr<IDocumentCommand>> m_undoStack;
+	std::deque<std::unique_ptr<IDocumentCommand>> m_redoStack;
 };

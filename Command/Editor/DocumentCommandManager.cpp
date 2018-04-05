@@ -1,16 +1,21 @@
 #include "stdafx.h"
 #include "DocumentCommandManager.h"
 
-DocumentCommandManager::DocumentCommandManager(unsigned commandsDepth)
+DocumentCommandManager::DocumentCommandManager(unsigned historyDepth)
 	: m_undoStack()
 	, m_redoStack()
-	, m_commandsDepth(commandsDepth)
+	, m_historyDepth(historyDepth)
 {
 }
 
 void DocumentCommandManager::RegisterCommand(IDocumentCommandPtr&& command)
 {
+	if (m_undoStack.size() == m_historyDepth)
+	{
+		m_undoStack.pop_front();
+	}
 	m_undoStack.push_back(std::move(command));
+	m_redoStack.clear();
 }
 
 bool DocumentCommandManager::CanUndo()const

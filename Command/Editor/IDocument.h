@@ -1,58 +1,7 @@
 ﻿#pragma once
-
-#include "IParagraph.h"
-#include "IImage.h"
-
-#include <memory>
+#include "DocumentItem.h"
 #include <boost/optional.hpp>
-
-class DocumentItem
-{
-public:
-	DocumentItem(std::shared_ptr<IParagraph> paragraph, std::shared_ptr<IImage> image)
-		: m_paragraph(paragraph)
-		, m_image(image)
-	{
-	}
-
-	std::shared_ptr<IParagraph> GetParagraph()
-	{
-		return m_paragraph;
-	}
-
-	std::shared_ptr<const IParagraph> GetParagraph()const
-	{
-		return m_paragraph;
-	}
-
-	std::shared_ptr<IImage> GetImage()
-	{
-		return m_image;
-	}
-
-	std::shared_ptr<const IImage> GetImage()const
-	{
-		return m_image;
-	}
-
-	std::string GetDescription()const
-	{
-		if (m_paragraph != nullptr)
-		{
-			return "Paragraph: " + m_paragraph->GetText();
-		}
-		else if (m_image != nullptr)
-		{
-			return "Image: " + std::to_string(m_image->GetWidth()) + " "
-				+ std::to_string(m_image->GetHeight()) + " " + m_image->GetPath();
-		}
-		throw std::logic_error("DocumentItem is neither paragraph or image");
-	}
-
-private:
-	std::shared_ptr<IParagraph> m_paragraph;
-	std::shared_ptr<IImage> m_image;
-};
+#include <memory>
 
 class IDocument
 {
@@ -93,10 +42,6 @@ public:
 	virtual bool CanRedo()const = 0;
 	// Выполняет отменённую команду редактирования
 	virtual void Redo() = 0;
-
-	// Сохраняет документ в формате html. Изображения сохраняются в подкаталог images.
-	// Пути к изображениям указываются относительно пути к сохраняемому HTML файлу
-	virtual void Save(const std::string& path)const = 0;
 
 	virtual ~IDocument() = default;
 };

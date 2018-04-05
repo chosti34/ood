@@ -2,19 +2,26 @@
 #include "Document.h"
 #include "Paragraph.h"
 
+namespace
+{
+const unsigned COMMAND_HISTORY_DEPTH = 10u;
+}
+
 Document::Document()
 	: m_title("untitled")
 	, m_items()
-	, m_commandManager()
+	, m_commandManager(COMMAND_HISTORY_DEPTH)
 {
 }
 
-void Document::OnCommand(IDocumentCommandPtr&& command)
+bool Document::DoCommand(IDocumentCommandPtr&& command)
 {
 	if (command->Execute(*this))
 	{
-		std::cout << "Executed" << std::endl;
+		m_commandManager.RegisterCommand(std::move(command));
+		return true;
 	}
+	return false;
 }
 
 std::shared_ptr<IParagraph> Document::InsertParagraph(const std::string& text, boost::optional<size_t> position)
@@ -80,26 +87,22 @@ void Document::SetTitle(const std::string& title)
 
 bool Document::CanUndo()const
 {
-	return false;
+	return m_commandManager.CanUndo();
 }
 
 void Document::Undo()
 {
-	std::cout << "Undo\n";
+	assert(m_commandManager.CanUndo());
+	m_commandManager.Undo(*this);
 }
 
 bool Document::CanRedo()const
 {
-	return false;
+	return m_commandManager.CanRedo();
 }
 
 void Document::Redo()
 {
-	std::cout << "Redo\n";
-}
-
-void Document::Save(const std::string& path)const
-{
-	(void)path;
-	std::cout << "Save\n" << std::endl;
+	assert(m_commandManager.CanRedo());
+	m_commandManager.Redo(*this);
 }
