@@ -11,4 +11,4 @@ public:
 	virtual void Redo(IDocument& document) = 0;
 };
 
-using ICommandPtr = std::unique_ptr<IDocumentCommand>;
+using IDocumentCommandPtr = std::unique_ptr<IDocumentCommand>;

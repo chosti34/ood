@@ -1,11 +1,11 @@
 #pragma once
 #include "IDocumentCommand.h"
-#include <string>
+#include "IDocument.h"
 
-class ReplaceTextCommand : public IDocumentCommand
+class DeleteItemCommand : public IDocumentCommand
 {
 public:
-	ReplaceTextCommand(size_t pos, const std::string& text);
+	DeleteItemCommand(size_t pos);
 
 	bool Execute(IDocument& document) override;
 	void Undo(IDocument& document) override;
@@ -13,6 +13,5 @@ public:
 
 private:
 	size_t m_pos;
-	std::string m_newText;
-	std::string m_oldText;
+	std::shared_ptr<const DocumentItem> m_deletedItem;
 };

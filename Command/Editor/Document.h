@@ -1,35 +1,41 @@
 #pragma once
 #include "IDocument.h"
 #include "IDocumentCommand.h"
+#include "DocumentCommandManager.h"
+#include <vector>
 
-class Document : private IDocument
+class Document : public IDocument
 {
 public:
-	Document(const std::string& title);
-	void OnCommand(std::unique_ptr<IDocumentCommand> && command);
+	Document();
+
+	void OnCommand(IDocumentCommandPtr&& command);
+
+	std::shared_ptr<IParagraph> InsertParagraph(
+		const std::string& text, boost::optional<size_t> position = boost::none) override;
+
+	std::shared_ptr<IImage> InsertImage(
+		const std::string& path, int width, int height, boost::optional<size_t> position = boost::none) override;
 
 	size_t GetItemsCount()const override;
-	CConstDocumentItem GetItem(size_t index)const override;
-	CDocumentItem GetItem(size_t index) override;
+	std::shared_ptr<DocumentItem> GetItem(size_t index) override;
+	std::shared_ptr<const DocumentItem> GetItem(size_t index)const override;
 
+	void DeleteItem(size_t index) override;
+
+	void SetTitle(const std::string& title) override;
 	std::string GetTitle()const override;
 
 	bool CanUndo()const override;
 	void Undo() override;
+
 	bool CanRedo()const override;
 	void Redo() override;
 
-private:
-	std::shared_ptr<IParagraph> InsertParagraph(
-		const std::string& text, boost::optional<size_t> position = boost::none) override;
-	std::shared_ptr<IImage> InsertImage(
-		const Path& path, int width, int height, boost::optional<size_t> position = boost::none) override;
-
-	void DeleteItem(size_t index) override;
-	void SetTitle(const std::string& title) override;
-
-	void Save(const Path& path)const override;
+	void Save(const std::string& path)const override;
 
 private:
 	std::string m_title;
+	std::vector<std::shared_ptr<DocumentItem>> m_items;
+	DocumentCommandManager m_commandManager;
 };

@@ -1,131 +1,102 @@
-#pragma once
-#include <boost/optional.hpp>
+п»ї#pragma once
+
+#include "IParagraph.h"
+#include "IImage.h"
+
 #include <memory>
+#include <boost/optional.hpp>
 
-// Пока вот так =)
-class Path
+class DocumentItem
 {
 public:
-};
-
-/*
-Интерфейс изображения
-*/
-class IImage
-{
-public:
-	// Возвращает путь относительно каталога документа
-	virtual Path GetPath()const = 0;
-
-	// Ширина изображения в пикселях
-	virtual int GetWidth()const = 0;
-	// Высота изображения в пикселях
-	virtual int GetHeight()const = 0;
-
-	// Изменяет размер изображения
-	virtual void Resize(int width, int height) = 0;
-
-	virtual ~IImage() = default;
-};
-
-/*
-Интерфейс параграфа
-*/
-class IParagraph
-{
-public:
-	virtual std::string GetText()const = 0;
-	virtual void SetText(const std::string& text) = 0;
-	virtual ~IParagraph() = default;
-};
-
-/*
-Неизменяемый элемент документа
-*/
-class CConstDocumentItem
-{
-public:
-	// Возвращает указатель на константное изображение, либо nullptr,
-	// если элемент не является изображением
-	std::shared_ptr<const IImage> GetImage()const
+	DocumentItem(std::shared_ptr<IParagraph> paragraph, std::shared_ptr<IImage> image)
+		: m_paragraph(paragraph)
+		, m_image(image)
 	{
-		return nullptr;
 	}
 
-	// Возвращает указатель на константный параграф, либо nullptr, если элемент не является параграфом
-	std::shared_ptr<const IParagraph> GetParagraph()const
-	{
-		return nullptr;
-	}
-
-	virtual ~CConstDocumentItem() = default;
-};
-
-/*
-Элемент документа. Позволяет получить доступ к изображению или параграфу
-*/
-class CDocumentItem : public CConstDocumentItem
-{
-public:
-	// Возвращает указатель на изображение, либо nullptr, если элемент не является изображением
-	std::shared_ptr<IImage> GetImage()
-	{
-		return nullptr;
-	}
-
-	// Возвращает указатель на параграф, либо nullptr, если элемент не является параграфом
 	std::shared_ptr<IParagraph> GetParagraph()
 	{
-		return nullptr;
+		return m_paragraph;
 	}
+
+	std::shared_ptr<const IParagraph> GetParagraph()const
+	{
+		return m_paragraph;
+	}
+
+	std::shared_ptr<IImage> GetImage()
+	{
+		return m_image;
+	}
+
+	std::shared_ptr<const IImage> GetImage()const
+	{
+		return m_image;
+	}
+
+	std::string GetDescription()const
+	{
+		if (m_paragraph != nullptr)
+		{
+			return "Paragraph: " + m_paragraph->GetText();
+		}
+		else if (m_image != nullptr)
+		{
+			return "Image: " + std::to_string(m_image->GetWidth()) + " "
+				+ std::to_string(m_image->GetHeight()) + " " + m_image->GetPath();
+		}
+		throw std::logic_error("DocumentItem is neither paragraph or image");
+	}
+
+private:
+	std::shared_ptr<IParagraph> m_paragraph;
+	std::shared_ptr<IImage> m_image;
 };
 
-/*
-Интерфейс документа
-*/
 class IDocument
 {
 public:
-	// Вставляет параграф текста в указанную позицию (сдвигая последующие элементы)
-	// Если параметр position не указан, вставка происходит в конец документа
+	// Р’СЃС‚Р°РІР»СЏРµС‚ РїР°СЂР°РіСЂР°С„ С‚РµРєСЃС‚Р° РІ СѓРєР°Р·Р°РЅРЅСѓСЋ РїРѕР·РёС†РёСЋ (СЃРґРІРёРіР°СЏ РїРѕСЃР»РµРґСѓСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹)
+	// Р•СЃР»Рё РїР°СЂР°РјРµС‚СЂ position РЅРµ СѓРєР°Р·Р°РЅ, РІСЃС‚Р°РІРєР° РїСЂРѕРёСЃС…РѕРґРёС‚ РІ РєРѕРЅРµС† РґРѕРєСѓРјРµРЅС‚Р°
 	virtual std::shared_ptr<IParagraph> InsertParagraph(
 		const std::string& text, boost::optional<size_t> position = boost::none) = 0;
 
-	// Вставляет изображение в указанную позицию (сдвигая последующие элементы)
-	// Параметр path задает путь к вставляемому изображению
-	// При вставке изображение должно копироваться в подкаталог images
-	// под автоматически сгенерированным именем
+	// Р’СЃС‚Р°РІР»СЏРµС‚ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РІ СѓРєР°Р·Р°РЅРЅСѓСЋ РїРѕР·РёС†РёСЋ (СЃРґРІРёРіР°СЏ РїРѕСЃР»РµРґСѓСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹)
+	// РџР°СЂР°РјРµС‚СЂ path Р·Р°РґР°РµС‚ РїСѓС‚СЊ Рє РІСЃС‚Р°РІР»СЏРµРјРѕРјСѓ РёР·РѕР±СЂР°Р¶РµРЅРёСЋ
+	// РџСЂРё РІСЃС‚Р°РІРєРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РґРѕР»Р¶РЅРѕ РєРѕРїРёСЂРѕРІР°С‚СЊСЃСЏ РІ РїРѕРґРєР°С‚Р°Р»РѕРі images
+	// РїРѕРґ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё СЃРіРµРЅРµСЂРёСЂРѕРІР°РЅРЅС‹Рј РёРјРµРЅРµРј
 	virtual std::shared_ptr<IImage> InsertImage(
-		const Path& path, int width, int height, boost::optional<size_t> position = boost::none) = 0;
+		const std::string& path, int width, int height, boost::optional<size_t> position = boost::none) = 0;
 
-	// Возвращает количество элементов в документе
+	// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ РґРѕРєСѓРјРµРЅС‚Рµ
 	virtual size_t GetItemsCount()const = 0;
 
-	// Доступ к элементам изображения
-	virtual CConstDocumentItem GetItem(size_t index)const = 0;
-	virtual CDocumentItem GetItem(size_t index) = 0;
+	// Р”РѕСЃС‚СѓРї Рє СЌР»РµРјРµРЅС‚Р°Рј РґРѕРєСѓРјРµРЅС‚Р°
+	virtual std::shared_ptr<DocumentItem> GetItem(size_t index) = 0;
+	virtual std::shared_ptr<const DocumentItem> GetItem(size_t index)const = 0;
 
-	// Удаляет элемент из документа
+	// РЈРґР°Р»СЏРµС‚ СЌР»РµРјРµРЅС‚ РёР· РґРѕРєСѓРјРµРЅС‚Р°
 	virtual void DeleteItem(size_t index) = 0;
 
-	// Возвращает заголовок документа
+	// Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·Р°РіРѕР»РѕРІРѕРє РґРѕРєСѓРјРµРЅС‚Р°
 	virtual std::string GetTitle()const = 0;
-	// Изменяет заголовок документа
+	// РР·РјРµРЅСЏРµС‚ Р·Р°РіРѕР»РѕРІРѕРє РґРѕРєСѓРјРµРЅС‚Р°
 	virtual void SetTitle(const std::string& title) = 0;
 
-	// Сообщает о доступности операции Undo
+	// РЎРѕРѕР±С‰Р°РµС‚ Рѕ РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё РѕРїРµСЂР°С†РёРё Undo
 	virtual bool CanUndo()const = 0;
-	// Отменяет команду редактирования
+	// РћС‚РјРµРЅСЏРµС‚ РєРѕРјР°РЅРґСѓ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
 	virtual void Undo() = 0;
 
-	// Сообщает о доступности операции Redo
+	// РЎРѕРѕР±С‰Р°РµС‚ Рѕ РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё РѕРїРµСЂР°С†РёРё Redo
 	virtual bool CanRedo()const = 0;
-	// Выполняет отменённую команду редактирования
+	// Р’С‹РїРѕР»РЅСЏРµС‚ РѕС‚РјРµРЅС‘РЅРЅСѓСЋ РєРѕРјР°РЅРґСѓ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
 	virtual void Redo() = 0;
 
-	// Сохраняет документ в формате html. Изображения сохраняются в подкаталог images.
-	// Пути к изображениям указываются относительно пути к сохраняемому HTML файлу
-	virtual void Save(const Path& path)const = 0;
+	// РЎРѕС…СЂР°РЅСЏРµС‚ РґРѕРєСѓРјРµРЅС‚ РІ С„РѕСЂРјР°С‚Рµ html. РР·РѕР±СЂР°Р¶РµРЅРёСЏ СЃРѕС…СЂР°РЅСЏСЋС‚СЃСЏ РІ РїРѕРґРєР°С‚Р°Р»РѕРі images.
+	// РџСѓС‚Рё Рє РёР·РѕР±СЂР°Р¶РµРЅРёСЏРј СѓРєР°Р·С‹РІР°СЋС‚СЃСЏ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РїСѓС‚Рё Рє СЃРѕС…СЂР°РЅСЏРµРјРѕРјСѓ HTML С„Р°Р№Р»Сѓ
+	virtual void Save(const std::string& path)const = 0;
 
 	virtual ~IDocument() = default;
 };

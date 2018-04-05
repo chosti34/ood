@@ -1,26 +1,37 @@
 #include "stdafx.h"
 #include "Document.h"
+#include "Paragraph.h"
 
-Document::Document(const std::string& title)
-	: m_title(title)
+Document::Document()
+	: m_title("untitled")
+	, m_items()
+	, m_commandManager()
 {
 }
 
-void Document::OnCommand(std::unique_ptr<IDocumentCommand> && command)
+void Document::OnCommand(IDocumentCommandPtr&& command)
 {
 	if (command->Execute(*this))
 	{
+		std::cout << "Executed" << std::endl;
 	}
 }
 
 std::shared_ptr<IParagraph> Document::InsertParagraph(const std::string& text, boost::optional<size_t> position)
 {
-	(void)text;
-	(void)position;
-	return std::shared_ptr<IParagraph>();
+	auto docItem = std::make_shared<DocumentItem>(std::make_shared<Paragraph>(text), nullptr);
+	if (position.is_initialized())
+	{
+		m_items.insert(m_items.begin() + *position, docItem);
+	}
+	else
+	{
+		m_items.push_back(docItem);
+	}
+	return docItem->GetParagraph();
 }
 
-std::shared_ptr<IImage> Document::InsertImage(const Path& path, int width, int height, boost::optional<size_t> position)
+std::shared_ptr<IImage> Document::InsertImage(const std::string& path, int width, int height, boost::optional<size_t> position)
 {
 	(void)path;
 	(void)width;
@@ -31,24 +42,30 @@ std::shared_ptr<IImage> Document::InsertImage(const Path& path, int width, int h
 
 size_t Document::GetItemsCount()const
 {
-	return size_t();
+	return m_items.size();
 }
 
-CConstDocumentItem Document::GetItem(size_t index)const
+std::shared_ptr<DocumentItem> Document::GetItem(size_t index)
 {
-	(void)index;
-	return CConstDocumentItem();
+	if (index < m_items.size())
+	{
+		return m_items[index];
+	}
+	throw std::out_of_range("index is " + std::to_string(index) + " when size is " + std::to_string(m_items.size()));
 }
 
-CDocumentItem Document::GetItem(size_t index)
+std::shared_ptr<const DocumentItem> Document::GetItem(size_t index)const
 {
-	(void)index;
-	return CDocumentItem();
+	if (index < m_items.size())
+	{
+		return m_items[index];
+	}
+	throw std::out_of_range("index is " + std::to_string(index) + " when size is " + std::to_string(m_items.size()));
 }
 
 void Document::DeleteItem(size_t index)
 {
-	(void)index;
+	m_items.erase(m_items.begin() + index);
 }
 
 std::string Document::GetTitle()const
@@ -68,6 +85,7 @@ bool Document::CanUndo()const
 
 void Document::Undo()
 {
+	std::cout << "Undo\n";
 }
 
 bool Document::CanRedo()const
@@ -77,9 +95,11 @@ bool Document::CanRedo()const
 
 void Document::Redo()
 {
+	std::cout << "Redo\n";
 }
 
-void Document::Save(const Path& path)const
+void Document::Save(const std::string& path)const
 {
 	(void)path;
+	std::cout << "Save\n" << std::endl;
 }

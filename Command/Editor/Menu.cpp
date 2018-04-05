@@ -1,6 +1,18 @@
 #include "stdafx.h"
 #include "Menu.h"
 
+namespace
+{
+std::vector<std::string> Tokenize(std::istream& strm)
+{
+	using namespace std;
+	using Iterator = istream_iterator<string>;
+	vector<string> tokens;
+	copy(Iterator(strm), Iterator(), back_inserter(tokens));
+	return tokens;
+}
+}
+
 Menu::Item::Item(
 	const std::string& shortcut,
 	const std::string& description,
@@ -47,9 +59,10 @@ void Menu::Exit()
 void Menu::ShowInstructions()const
 {
 	std::cout << "Commands list:\n";
-	for (auto& item : m_items)
+	for (size_t i = 0u; i < m_items.size(); ++i)
 	{
-		std::cout << "  " << item.shortcut << " - " << item.description << "\n";
+		std::cout << "  " << (i + 1) << ". " << m_items[i].shortcut
+			<< " - " << m_items[i].description << "." << std::endl;
 	}
 }
 
@@ -65,7 +78,7 @@ bool Menu::ExecuteCommand(const std::string& command)
 
 	if (found != m_items.end())
 	{
-		found->command(strm);
+		found->command(Tokenize(strm));
 		return true;
 	}
 	return false;

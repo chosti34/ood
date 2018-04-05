@@ -5,7 +5,7 @@
 
 class Menu
 {
-	using Command = std::function<void(std::istream& strm)>;
+	using Command = std::function<void(const std::vector<std::string>&)>;
 
 	struct Item
 	{
