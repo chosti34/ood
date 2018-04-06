@@ -1,5 +1,6 @@
 #pragma once
 #include "IDocumentCommand.h"
+#include "IDocument.h"
 #include <deque>
 
 class DocumentCommandManager
@@ -12,8 +13,8 @@ public:
 	bool CanUndo()const;
 	bool CanRedo()const;
 
-	void Undo(IDocument& document);
-	void Redo(IDocument& document);
+	void Undo(IDocumentControl& document);
+	void Redo(IDocumentControl& document);
 
 private:
 	unsigned m_historyDepth;

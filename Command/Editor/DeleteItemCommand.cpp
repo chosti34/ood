@@ -1,43 +1,19 @@
 #include "stdafx.h"
 #include "DeleteItemCommand.h"
-#include "IDocument.h"
 
-DeleteItemCommand::DeleteItemCommand(size_t pos)
-	: m_pos(pos)
+DeleteItemCommand::DeleteItemCommand(size_t index)
+	: m_index(index)
 	, m_deletedItem(nullptr)
 {
 }
 
-bool DeleteItemCommand::Execute(IDocument& document)
+void DeleteItemCommand::Execute(IDocumentControl& control)
 {
-	if (m_pos < document.GetItemsCount())
-	{
-		m_deletedItem = document.GetItem(m_pos);
-		document.DeleteItem(m_pos);
-		return true;
-	}
-	return false;
+	m_deletedItem = control.DoRemoveItem(m_index);
 }
 
-void DeleteItemCommand::Undo(IDocument& document)
+void DeleteItemCommand::Unexecute(IDocumentControl& document)
 {
-	if (m_deletedItem->GetImage())
-	{
-		assert(!m_deletedItem->GetParagraph());
-		const auto& image = m_deletedItem->GetImage();
-		document.InsertImage(image->GetPath(), image->GetWidth(), image->GetHeight(), m_pos);
-	}
-	if (m_deletedItem->GetParagraph())
-	{
-		assert(!m_deletedItem->GetImage());
-		const auto& paragraph = m_deletedItem->GetParagraph();
-		document.InsertParagraph(paragraph->GetText(), m_pos);
-	}
-}
-
-void DeleteItemCommand::Redo(IDocument& document)
-{
-	bool executed = Execute(document);
-	assert(executed);
-	(void)executed;
+	document.DoInsertItem(m_deletedItem, m_index);
+	m_deletedItem = nullptr;
 }

@@ -1,52 +1,72 @@
 #include "stdafx.h"
 #include "Document.h"
-#include "Paragraph.h"
+#include "SetTitleCommand.h"
+#include "DeleteItemCommand.h"
+#include "ReplaceTextCommand.h"
+#include "InsertParagraphCommand.h"
 
 namespace
 {
-const unsigned COMMAND_HISTORY_DEPTH = 10u;
+constexpr unsigned COMMAND_HISTORY_DEPTH = 10u;
 }
 
-Document::Document()
-	: m_title("untitled")
-	, m_items()
+Document::Document(const std::string& title)
+	: m_title(title)
 	, m_commandManager(COMMAND_HISTORY_DEPTH)
+	, m_items()
 {
 }
 
-bool Document::DoCommand(IDocumentCommandPtr&& command)
+void Document::InsertParagraph(const std::string& text, boost::optional<size_t> position)
 {
-	if (command->Execute(*this))
+	if (position && *position >= m_items.size())
 	{
-		m_commandManager.RegisterCommand(std::move(command));
-		return true;
+		throw std::invalid_argument("invalid position specified");
 	}
-	return false;
+	DoCommand<InsertParagraphCommand>(text, position);
 }
 
-std::shared_ptr<IParagraph> Document::InsertParagraph(
-	const std::string& text, boost::optional<size_t> position)
+void Document::InsertImage(const std::string& path, unsigned width, unsigned height, boost::optional<size_t> index)
 {
-	auto docItem = std::make_shared<DocumentItem>(std::make_shared<Paragraph>(text), nullptr);
-	if (position.is_initialized())
-	{
-		m_items.insert(m_items.begin() + position.value(), docItem);
-	}
-	else
-	{
-		m_items.push_back(docItem);
-	}
-	return docItem->GetParagraph();
+	// TODO: implement this
 }
 
-std::shared_ptr<IImage> Document::InsertImage(
-	const std::string& path, int width, int height, boost::optional<size_t> position)
+void Document::RemoveItem(size_t position)
 {
-	(void)path;
-	(void)width;
-	(void)height;
-	(void)position;
-	return std::shared_ptr<IImage>();
+	if (position >= m_items.size())
+	{
+		throw std::invalid_argument("invalid position specified");
+	}
+	DoCommand<DeleteItemCommand>(position);
+}
+
+void Document::ReplaceText(const std::string& text, size_t position)
+{
+	if (position >= m_items.size())
+	{
+		throw std::invalid_argument("invalid position specified");
+	}
+	auto paragraph = m_items[position]->GetParagraph();
+	if (!paragraph)
+	{
+		throw std::invalid_argument("item at specified position is not paragraph");
+	}
+	DoCommand<ReplaceTextCommand>(text, paragraph->GetText(), position);
+}
+
+void Document::ResizeImage(unsigned width, unsigned height, size_t index)
+{
+	// TODO: implement this
+}
+
+void Document::SetTitle(const std::string& title)
+{
+	DoCommand<SetTitleCommand>(title, m_title);
+}
+
+std::string Document::GetTitle()const
+{
+	return m_title;
 }
 
 size_t Document::GetItemsCount()const
@@ -60,8 +80,7 @@ std::shared_ptr<DocumentItem> Document::GetItem(size_t index)
 	{
 		return m_items[index];
 	}
-	throw std::out_of_range(
-		"index is " + std::to_string(index) + " when size is " + std::to_string(m_items.size()));
+	throw std::out_of_range("invalid index");
 }
 
 std::shared_ptr<const DocumentItem> Document::GetItem(size_t index)const
@@ -70,23 +89,7 @@ std::shared_ptr<const DocumentItem> Document::GetItem(size_t index)const
 	{
 		return m_items[index];
 	}
-	throw std::out_of_range(
-		"index is " + std::to_string(index) + " when size is " + std::to_string(m_items.size()));
-}
-
-void Document::DeleteItem(size_t index)
-{
-	m_items.erase(m_items.begin() + index);
-}
-
-std::string Document::GetTitle()const
-{
-	return m_title;
-}
-
-void Document::SetTitle(const std::string& title)
-{
-	m_title = title;
+	throw std::out_of_range("invalid index");
 }
 
 bool Document::CanUndo()const
@@ -109,4 +112,47 @@ void Document::Redo()
 {
 	assert(m_commandManager.CanRedo());
 	m_commandManager.Redo(*this);
+}
+
+void Document::DoInsertItem(const std::shared_ptr<DocumentItem>& item, boost::optional<size_t> position)
+{
+	if (!position)
+	{
+		m_items.push_back(item);
+		return;
+	}
+	assert(*position < m_items.size());
+	m_items.insert(m_items.begin() + *position, item);
+}
+
+std::shared_ptr<DocumentItem> Document::DoRemoveItem(boost::optional<size_t> position)
+{
+	if (!position)
+	{
+		assert(!m_items.empty());
+		auto item = m_items.back();
+		m_items.pop_back();
+		return item;
+	}
+	assert(*position < m_items.size());
+	auto item = m_items[*position];
+	m_items.erase(m_items.begin() + *position);
+	return item;
+}
+
+void Document::DoSetTitle(const std::string& title)
+{
+	m_title = title;
+}
+
+void Document::DoReplaceText(const std::string& text, size_t index)
+{
+	assert(index < m_items.size());
+	assert(m_items[index]->GetParagraph());
+	m_items[index]->GetParagraph()->SetText(text);
+}
+
+void Document::DoResizeImage(unsigned width, unsigned height, size_t index)
+{
+	// TODO: implement this
 }

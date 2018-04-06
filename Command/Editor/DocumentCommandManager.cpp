@@ -28,20 +28,20 @@ bool DocumentCommandManager::CanRedo()const
 	return !m_redoStack.empty();
 }
 
-void DocumentCommandManager::Undo(IDocument& document)
+void DocumentCommandManager::Undo(IDocumentControl& document)
 {
 	assert(CanUndo());
 	auto command = std::move(m_undoStack.back());
 	m_undoStack.pop_back();
-	command->Undo(document);
+	command->Unexecute(document);
 	m_redoStack.push_back(std::move(command));
 }
 
-void DocumentCommandManager::Redo(IDocument& document)
+void DocumentCommandManager::Redo(IDocumentControl& document)
 {
 	assert(CanRedo());
 	auto command = std::move(m_redoStack.back());
 	m_redoStack.pop_back();
-	command->Redo(document);
+	command->Execute(document);
 	m_undoStack.push_back(std::move(command));
 }

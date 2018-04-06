@@ -155,6 +155,7 @@
     <ClInclude Include="DocumentSerializer.h" />
     <ClInclude Include="IDocumentCommand.h" />
     <ClInclude Include="IDocument.h" />
+    <ClInclude Include="IDocumentControl.h" />
     <ClInclude Include="IImage.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="InsertParagraphCommand.h" />

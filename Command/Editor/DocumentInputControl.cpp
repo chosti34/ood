@@ -121,7 +121,7 @@ void DocumentInputControl::DoSetTitleCommand(std::istream& strm)
 		std::cout << "Provide title..." << std::endl;
 		return;
 	}
-	m_document.DoCommand(std::make_unique<SetTitleCommand>(title));
+	m_document.SetTitle(title);
 }
 
 void DocumentInputControl::DoInsertParagraphCommand(std::istream& strm)
@@ -134,18 +134,7 @@ void DocumentInputControl::DoInsertParagraphCommand(std::istream& strm)
 	}
 
 	const boost::optional<size_t> position = ReadAsPosition(tokens[0]);
-	if (!position.is_initialized())
-	{
-		m_document.DoCommand(std::make_unique<InsertParagraphCommand>(tokens[1]));
-	}
-	else if (position.value() < m_document.GetItemsCount())
-	{
-		m_document.DoCommand(std::make_unique<InsertParagraphCommand>(tokens[1], position.value()));
-	}
-	else
-	{
-		std::cout << "Index must be less than items count" << std::endl;
-	}
+	m_document.InsertParagraph(tokens[1], position);
 }
 
 void DocumentInputControl::DoListCommand(std::istream& /* strm */)
@@ -177,7 +166,7 @@ void DocumentInputControl::DoReplaceTextCommand(std::istream& strm)
 	if (m_document.GetItem(index)->GetParagraph())
 	{
 		assert(!m_document.GetItem(index)->GetImage());
-		m_document.DoCommand(std::make_unique<ReplaceTextCommand>(index, tokens[1]));
+		m_document.ReplaceText(tokens[1], index);
 	}
 	else
 	{
@@ -201,7 +190,7 @@ void DocumentInputControl::DoDeleteItemCommand(std::istream& strm)
 		return;
 	}
 
-	m_document.DoCommand(std::make_unique<DeleteItemCommand>(index));
+	m_document.RemoveItem(index);
 }
 
 void DocumentInputControl::DoSaveCommand(std::istream& strm)

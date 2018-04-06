@@ -1,38 +1,20 @@
 #include "stdafx.h"
 #include "InsertParagraphCommand.h"
-#include "IDocument.h"
+#include "Paragraph.h"
 
-InsertParagraphCommand::InsertParagraphCommand(
-	const std::string& text, boost::optional<size_t> pos)
+InsertParagraphCommand::InsertParagraphCommand(const std::string& text, boost::optional<size_t> index)
 	: m_text(text)
-	, m_pos(pos)
-	, m_insertedAtPos(boost::none)
+	, m_index(index)
 {
 }
 
-bool InsertParagraphCommand::Execute(IDocument& document)
+void InsertParagraphCommand::Execute(IDocumentControl& document)
 {
-	if (m_pos.is_initialized())
-	{
-		assert(m_pos.value() < document.GetItemsCount());
-		m_insertedAtPos = m_pos;
-	}
-	else
-	{
-		m_insertedAtPos = document.GetItemsCount();
-	}
-	auto inserted = document.InsertParagraph(m_text, m_pos);
-	assert(inserted != nullptr);
-	return true;
+	auto item = std::make_shared<DocumentItem>(std::make_shared<Paragraph>(m_text), nullptr);
+	document.DoInsertItem(item, m_index);
 }
 
-void InsertParagraphCommand::Undo(IDocument& document)
+void InsertParagraphCommand::Unexecute(IDocumentControl& document)
 {
-	assert(m_insertedAtPos.is_initialized());
-	document.DeleteItem(*m_insertedAtPos);
-}
-
-void InsertParagraphCommand::Redo(IDocument& document)
-{
-	document.InsertParagraph(m_text, m_pos);
+	document.DoRemoveItem(m_index);
 }

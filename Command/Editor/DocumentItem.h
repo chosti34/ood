@@ -3,6 +3,9 @@
 #include "IImage.h"
 #include <memory>
 
+/*
+Элемент документа. Может являться как параграфом, так и картинкой.
+*/
 class DocumentItem
 {
 public:

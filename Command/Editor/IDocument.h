@@ -1,25 +1,27 @@
 ﻿#pragma once
 #include "DocumentItem.h"
-#include "IDocumentCommand.h"
 #include <boost/optional.hpp>
-#include <memory>
 
+/*
+Интерфейс документа
+*/
 class IDocument
 {
 public:
-	virtual bool DoCommand(IDocumentCommandPtr&& command) = 0;
+	// Вставить параграф в указанную позицию
+	virtual void InsertParagraph(const std::string& text, boost::optional<size_t> index) = 0;
 
-	// Вставляет параграф текста в указанную позицию (сдвигая последующие элементы)
-	// Если параметр position не указан, вставка происходит в конец документа
-	virtual std::shared_ptr<IParagraph> InsertParagraph(
-		const std::string& text, boost::optional<size_t> position = boost::none) = 0;
+	// Вставить картинку в указанную позицию
+	virtual void InsertImage(const std::string& path, unsigned width, unsigned height, boost::optional<size_t> index) = 0;
 
-	// Вставляет изображение в указанную позицию (сдвигая последующие элементы)
-	// Параметр path задает путь к вставляемому изображению
-	// При вставке изображение должно копироваться в подкаталог images
-	// под автоматически сгенерированным именем
-	virtual std::shared_ptr<IImage> InsertImage(
-		const std::string& path, int width, int height, boost::optional<size_t> position = boost::none) = 0;
+	// Удалить элемент находящийся в указанной позиции
+	virtual void RemoveItem(size_t index) = 0;
+
+	// Изменить текст в параграфе по указанному индексу
+	virtual void ReplaceText(const std::string& text, size_t index) = 0;
+
+	// Изменить размеры изображения по указанному индексу
+	virtual void ResizeImage(unsigned width, unsigned height, size_t index) = 0;
 
 	// Возвращает количество элементов в документе
 	virtual size_t GetItemsCount()const = 0;
@@ -28,13 +30,11 @@ public:
 	virtual std::shared_ptr<DocumentItem> GetItem(size_t index) = 0;
 	virtual std::shared_ptr<const DocumentItem> GetItem(size_t index)const = 0;
 
-	// Удаляет элемент из документа
-	virtual void DeleteItem(size_t index) = 0;
+	// Изменяет заголовок документа
+	virtual void SetTitle(const std::string& title) = 0;
 
 	// Возвращает заголовок документа
 	virtual std::string GetTitle()const = 0;
-	// Изменяет заголовок документа
-	virtual void SetTitle(const std::string& title) = 0;
 
 	// Сообщает о доступности операции Undo
 	virtual bool CanUndo()const = 0;

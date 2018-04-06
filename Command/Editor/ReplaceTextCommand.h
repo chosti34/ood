@@ -1,18 +1,18 @@
 #pragma once
 #include "IDocumentCommand.h"
+#include "IDocumentControl.h"
 #include <string>
 
 class ReplaceTextCommand : public IDocumentCommand
 {
 public:
-	ReplaceTextCommand(size_t pos, const std::string& text);
+	ReplaceTextCommand(const std::string& newText, const std::string& oldText, size_t index);
 
-	bool Execute(IDocument& document) override;
-	void Undo(IDocument& document) override;
-	void Redo(IDocument& document) override;
+	void Execute(IDocumentControl& control) override;
+	void Unexecute(IDocumentControl& control) override;
 
 private:
-	size_t m_pos;
+	size_t m_index;
 	std::string m_newText;
 	std::string m_oldText;
 };

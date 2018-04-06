@@ -1,21 +1,17 @@
 #pragma once
 #include "IDocumentCommand.h"
-#include <string>
 #include <boost/optional.hpp>
+#include <string>
 
 class InsertParagraphCommand : public IDocumentCommand
 {
 public:
-	InsertParagraphCommand(
-		const std::string& text,
-		boost::optional<size_t> pos = boost::none);
+	InsertParagraphCommand(const std::string& text, boost::optional<size_t> index = boost::none);
 
-	bool Execute(IDocument& document) override;
-	void Undo(IDocument& document) override;
-	void Redo(IDocument& document) override;
+	void Execute(IDocumentControl& control) override;
+	void Unexecute(IDocumentControl& control) override;
 
 private:
 	std::string m_text;
-	boost::optional<size_t> m_pos;
-	boost::optional<size_t> m_insertedAtPos;
+	boost::optional<size_t> m_index;
 };

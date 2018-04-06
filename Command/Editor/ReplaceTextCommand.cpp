@@ -2,32 +2,19 @@
 #include "ReplaceTextCommand.h"
 #include "IDocument.h"
 
-ReplaceTextCommand::ReplaceTextCommand(size_t pos, const std::string& text)
-	: m_pos(pos)
-	, m_newText(text)
-	, m_oldText()
+ReplaceTextCommand::ReplaceTextCommand(const std::string& newText, const std::string& oldText, size_t index)
+	: m_newText(newText)
+	, m_oldText(oldText)
+	, m_index(index)
 {
 }
 
-bool ReplaceTextCommand::Execute(IDocument& document)
+void ReplaceTextCommand::Execute(IDocumentControl& control)
 {
-	auto paragraph = document.GetItem(m_pos)->GetParagraph();
-	assert(paragraph);
-	m_oldText = paragraph->GetText();
-	paragraph->SetText(m_newText);
-	return true;
+	control.DoReplaceText(m_newText, m_index);
 }
 
-void ReplaceTextCommand::Undo(IDocument& document)
+void ReplaceTextCommand::Unexecute(IDocumentControl& control)
 {
-	auto paragraph = document.GetItem(m_pos)->GetParagraph();
-	assert(paragraph);
-	paragraph->SetText(m_oldText);
-}
-
-void ReplaceTextCommand::Redo(IDocument& document)
-{
-	auto paragraph = document.GetItem(m_pos)->GetParagraph();
-	assert(paragraph);
-	paragraph->SetText(m_newText);
+	control.DoReplaceText(m_oldText, m_index);
 }

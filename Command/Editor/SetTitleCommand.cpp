@@ -1,27 +1,19 @@
 #include "stdafx.h"
 #include "SetTitleCommand.h"
-#include "IDocument.h"
+#include "IDocumentControl.h"
 
-SetTitleCommand::SetTitleCommand(const std::string& title)
-	: m_newTitle(title)
-	, m_oldTitle()
+SetTitleCommand::SetTitleCommand(const std::string& newTitle, const std::string& oldTitle)
+	: m_newTitle(newTitle)
+	, m_oldTitle(oldTitle)
 {
 }
 
-bool SetTitleCommand::Execute(IDocument& document)
+void SetTitleCommand::Execute(IDocumentControl& control)
 {
-	m_oldTitle = document.GetTitle();
-	document.SetTitle(m_newTitle);
-	return true;
+	control.DoSetTitle(m_newTitle);
 }
 
-void SetTitleCommand::Undo(IDocument& document)
+void SetTitleCommand::Unexecute(IDocumentControl& control)
 {
-	assert(m_oldTitle.is_initialized());
-	document.SetTitle(m_oldTitle.value());
-}
-
-void SetTitleCommand::Redo(IDocument& document)
-{
-	document.SetTitle(m_newTitle);
+	control.DoSetTitle(m_oldTitle);
 }
