@@ -1,5 +1,4 @@
 #pragma once
-
 #include <iosfwd>
 #include <string>
 #include <vector>
@@ -7,7 +6,7 @@
 
 class Menu
 {
-	using Command = std::function<void(std::istream&)>;
+	using Command = std::function<void(std::vector<std::string> const&)>;
 
 	struct Item
 	{

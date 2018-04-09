@@ -1,6 +1,18 @@
 #include "stdafx.h"
 #include "Menu.h"
 
+namespace
+{
+std::vector<std::string> Tokenize(std::istream& strm)
+{
+	using namespace std;
+	using Iterator = istream_iterator<string>;
+	vector<string> tokens;
+	copy(Iterator(strm), Iterator(), back_inserter(tokens));
+	return tokens;
+}
+}
+
 Menu::Item::Item(
 	const std::string& shortcut,
 	const std::string& description,
@@ -72,7 +84,8 @@ void Menu::ExecuteCommand(const std::string& command)
 
 	if (found != m_items.end())
 	{
-		found->command(strm);
+		auto& command = found->command;
+		command(Tokenize(strm));
 	}
 	else
 	{

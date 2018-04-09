@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "DocumentSerializer.h"
-#include "IDocument.h"
 
 namespace
 {
@@ -25,6 +24,7 @@ std::string EscapeSpecialCharacters(const std::string& content)
 		{
 			const auto& specialChar = pair.first;
 			const auto& replacement = pair.second;
+
 			if (content.compare(i, specialChar.length(), specialChar) == 0)
 			{
 				escaped.append(replacement);
@@ -43,31 +43,54 @@ std::string EscapeSpecialCharacters(const std::string& content)
 }
 }
 
-void DocumentSerializer::SerializeAsHTML(const std::string& path, const IDocument& document)
+DocumentSerializer::DocumentSerializer()
+	: m_body()
+	, m_title()
 {
-	std::ofstream output(path);
-	if (!output)
-	{
-		throw std::runtime_error("failed to open " + path + " for serializing");
-	}
+}
 
-	std::ostringstream strm;
-	strm << "<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"utf-8\">\n    <title>"
-		<< EscapeSpecialCharacters(document.GetTitle()) << "</title>\n"
+void DocumentSerializer::SetTitle(const std::string& title)
+{
+	m_title = EscapeSpecialCharacters(title);
+}
+
+void DocumentSerializer::AddParagraph(const std::string& text)
+{
+	m_body.push_back("<p>" + EscapeSpecialCharacters(text) + "</p>");
+}
+
+void DocumentSerializer::AddImage(const std::string& path, unsigned width, unsigned height)
+{
+	using std::to_string;
+
+	const std::string img =
+		"<img src=\"" + EscapeSpecialCharacters(path) + "\" width=\"" + to_string(width) +
+		"\" height=\"" + to_string(height) + "\" />";
+
+	m_body.push_back(img);
+}
+
+std::string DocumentSerializer::Serialize() const
+{
+	std::ostringstream content;
+
+	content
+		<< "<!DOCTYPE html>\n"
+		<< "<html>\n"
+		<< "  <head>\n"
+		<< "    <meta charset=\"utf-8\" />\n"
+		<< "    <title>" + m_title + "</title>\n"
+		<< "  </head>\n"
 		<< "  <body>\n";
 
-	for (size_t i = 0; i < document.GetItemsCount(); ++i)
+	for (const auto& element : m_body)
 	{
-		auto item = document.GetItem(i);
-		if (item->GetParagraph())
-		{
-			strm << "    <p>";
-			assert(!item->GetImage());
-			strm << EscapeSpecialCharacters(item->GetParagraph()->GetText());
-			strm << "</p>\n";
-		}
+		content << std::string(4u, ' ') << element << "\n";
 	}
 
-	strm << "  </body>\n</html>\n";
-	output << strm.str();
+	content
+		<< "  </body>\n"
+		<< "</html>\n";
+
+	return content.str();
 }

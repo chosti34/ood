@@ -63,13 +63,13 @@
     <ClInclude Include="DocumentItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DocumentInputControl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DocumentSerializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IDocumentCommandControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DocumentMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -110,10 +110,10 @@
     <ClCompile Include="DocumentItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DocumentInputControl.cpp">
+    <ClCompile Include="DocumentSerializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DocumentSerializer.cpp">
+    <ClCompile Include="DocumentMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

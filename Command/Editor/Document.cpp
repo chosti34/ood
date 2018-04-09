@@ -27,7 +27,7 @@ void Document::InsertParagraph(const std::string& text, boost::optional<size_t> 
 {
 	if (position && *position >= m_items.size())
 	{
-		throw std::invalid_argument("invalid position specified");
+		throw std::out_of_range("position must be less than items count");
 	}
 	DoCommand<InsertParagraphCommand>(text, position);
 }
@@ -41,7 +41,7 @@ void Document::RemoveItem(size_t index)
 {
 	if (index >= m_items.size())
 	{
-		throw std::invalid_argument("invalid index specified");
+		throw std::invalid_argument("index must be less than items count");
 	}
 	DoCommand<DeleteItemCommand>(index);
 }
@@ -50,7 +50,7 @@ void Document::ReplaceText(const std::string& text, size_t index)
 {
 	if (index >= m_items.size())
 	{
-		throw std::invalid_argument("invalid index specified");
+		throw std::invalid_argument("index must be less than items count");
 	}
 	auto paragraph = m_items[index]->GetParagraph();
 	if (!paragraph)
@@ -86,7 +86,7 @@ std::shared_ptr<DocumentItem> Document::GetItem(size_t index)
 	{
 		return m_items[index];
 	}
-	throw std::out_of_range("invalid index");
+	throw std::out_of_range("index must be less than items count");
 }
 
 std::shared_ptr<const DocumentItem> Document::GetItem(size_t index)const
@@ -95,7 +95,7 @@ std::shared_ptr<const DocumentItem> Document::GetItem(size_t index)const
 	{
 		return m_items[index];
 	}
-	throw std::out_of_range("invalid index");
+	throw std::out_of_range("index must be less than items count");
 }
 
 bool Document::CanUndo()const
