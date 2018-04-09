@@ -13,8 +13,8 @@ public:
 	bool CanUndo()const;
 	bool CanRedo()const;
 
-	void Undo(IDocumentControl& document);
-	void Redo(IDocumentControl& document);
+	void Undo(IDocumentCommandControl& document);
+	void Redo(IDocumentCommandControl& document);
 
 private:
 	unsigned m_historyDepth;

@@ -9,12 +9,12 @@ class IDocument
 {
 public:
 	// Вставить параграф в указанную позицию
-	virtual void InsertParagraph(const std::string& text, boost::optional<size_t> index) = 0;
+	virtual void InsertParagraph(const std::string& text, boost::optional<size_t> position) = 0;
 
 	// Вставить картинку в указанную позицию
-	virtual void InsertImage(const std::string& path, unsigned width, unsigned height, boost::optional<size_t> index) = 0;
+	virtual void InsertImage(const std::string& path, unsigned width, unsigned height, boost::optional<size_t> position) = 0;
 
-	// Удалить элемент находящийся в указанной позиции
+	// Удалить элемент находящийся по указанному индексу
 	virtual void RemoveItem(size_t index) = 0;
 
 	// Изменить текст в параграфе по указанному индексу

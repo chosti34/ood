@@ -2,7 +2,7 @@
 #include "DocumentItem.h"
 #include <memory>
 
-class IDocumentControl
+class IDocumentCommandControl
 {
 public:
 	// Операция вставки элемента документа по указанному индексу
@@ -23,5 +23,5 @@ public:
 	virtual void DoResizeImage(unsigned width, unsigned height, size_t position) = 0;
 
 protected:
-	~IDocumentControl() = default;
+	~IDocumentCommandControl() = default;
 };

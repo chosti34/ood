@@ -2,19 +2,19 @@
 #include "InsertParagraphCommand.h"
 #include "Paragraph.h"
 
-InsertParagraphCommand::InsertParagraphCommand(const std::string& text, boost::optional<size_t> index)
+InsertParagraphCommand::InsertParagraphCommand(const std::string& text, boost::optional<size_t> position)
 	: m_text(text)
-	, m_index(index)
+	, m_position(position)
 {
 }
 
-void InsertParagraphCommand::Execute(IDocumentControl& document)
+void InsertParagraphCommand::Execute(IDocumentCommandControl& document)
 {
 	auto item = std::make_shared<DocumentItem>(std::make_shared<Paragraph>(m_text), nullptr);
-	document.DoInsertItem(item, m_index);
+	document.DoInsertItem(item, m_position);
 }
 
-void InsertParagraphCommand::Unexecute(IDocumentControl& document)
+void InsertParagraphCommand::Unexecute(IDocumentCommandControl& document)
 {
-	document.DoRemoveItem(m_index);
+	document.DoRemoveItem(m_position);
 }

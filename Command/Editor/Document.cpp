@@ -8,6 +8,12 @@
 namespace
 {
 constexpr unsigned COMMAND_HISTORY_DEPTH = 10u;
+const std::string DOCUMENT_TITLE = "untitled";
+}
+
+Document::Document()
+	: Document(DOCUMENT_TITLE)
+{
 }
 
 Document::Document(const std::string& title)
@@ -26,32 +32,32 @@ void Document::InsertParagraph(const std::string& text, boost::optional<size_t> 
 	DoCommand<InsertParagraphCommand>(text, position);
 }
 
-void Document::InsertImage(const std::string& path, unsigned width, unsigned height, boost::optional<size_t> index)
+void Document::InsertImage(const std::string& path, unsigned width, unsigned height, boost::optional<size_t> position)
 {
 	// TODO: implement this
 }
 
-void Document::RemoveItem(size_t position)
+void Document::RemoveItem(size_t index)
 {
-	if (position >= m_items.size())
+	if (index >= m_items.size())
 	{
-		throw std::invalid_argument("invalid position specified");
+		throw std::invalid_argument("invalid index specified");
 	}
-	DoCommand<DeleteItemCommand>(position);
+	DoCommand<DeleteItemCommand>(index);
 }
 
-void Document::ReplaceText(const std::string& text, size_t position)
+void Document::ReplaceText(const std::string& text, size_t index)
 {
-	if (position >= m_items.size())
+	if (index >= m_items.size())
 	{
-		throw std::invalid_argument("invalid position specified");
+		throw std::invalid_argument("invalid index specified");
 	}
-	auto paragraph = m_items[position]->GetParagraph();
+	auto paragraph = m_items[index]->GetParagraph();
 	if (!paragraph)
 	{
-		throw std::invalid_argument("item at specified position is not paragraph");
+		throw std::invalid_argument("item at specified index is not a paragraph");
 	}
-	DoCommand<ReplaceTextCommand>(text, paragraph->GetText(), position);
+	DoCommand<ReplaceTextCommand>(text, paragraph->GetText(), index);
 }
 
 void Document::ResizeImage(unsigned width, unsigned height, size_t index)

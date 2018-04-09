@@ -1,14 +1,14 @@
 #pragma once
 #include "IDocumentCommand.h"
-#include "IDocumentControl.h"
+#include "IDocumentCommandControl.h"
 
 class DeleteItemCommand : public IDocumentCommand
 {
 public:
 	DeleteItemCommand(size_t index);
 
-	void Execute(IDocumentControl& control) override;
-	void Unexecute(IDocumentControl& control) override;
+	void Execute(IDocumentCommandControl& control) override;
+	void Unexecute(IDocumentCommandControl& control) override;
 
 private:
 	std::shared_ptr<DocumentItem> m_deletedItem;

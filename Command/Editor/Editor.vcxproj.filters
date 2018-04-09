@@ -69,7 +69,7 @@
     <ClInclude Include="DocumentSerializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IDocumentControl.h">
+    <ClInclude Include="IDocumentCommandControl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

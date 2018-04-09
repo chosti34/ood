@@ -1,6 +1,6 @@
 #pragma once
 #include "IDocumentCommand.h"
-#include "IDocumentControl.h"
+#include "IDocumentCommandControl.h"
 #include <string>
 
 class SetTitleCommand : public IDocumentCommand
@@ -8,8 +8,8 @@ class SetTitleCommand : public IDocumentCommand
 public:
 	SetTitleCommand(const std::string& newTitle, const std::string& oldTitle);
 
-	void Execute(IDocumentControl& control) override;
-	void Unexecute(IDocumentControl& control) override;
+	void Execute(IDocumentCommandControl& control) override;
+	void Unexecute(IDocumentCommandControl& control) override;
 
 private:
 	std::string m_newTitle;

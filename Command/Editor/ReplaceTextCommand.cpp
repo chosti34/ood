@@ -9,12 +9,12 @@ ReplaceTextCommand::ReplaceTextCommand(const std::string& newText, const std::st
 {
 }
 
-void ReplaceTextCommand::Execute(IDocumentControl& control)
+void ReplaceTextCommand::Execute(IDocumentCommandControl& control)
 {
 	control.DoReplaceText(m_newText, m_index);
 }
 
-void ReplaceTextCommand::Unexecute(IDocumentControl& control)
+void ReplaceTextCommand::Unexecute(IDocumentCommandControl& control)
 {
 	control.DoReplaceText(m_oldText, m_index);
 }

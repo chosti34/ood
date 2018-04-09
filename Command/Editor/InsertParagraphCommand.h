@@ -6,12 +6,12 @@
 class InsertParagraphCommand : public IDocumentCommand
 {
 public:
-	InsertParagraphCommand(const std::string& text, boost::optional<size_t> index = boost::none);
+	InsertParagraphCommand(const std::string& text, boost::optional<size_t> position);
 
-	void Execute(IDocumentControl& control) override;
-	void Unexecute(IDocumentControl& control) override;
+	void Execute(IDocumentCommandControl& control) override;
+	void Unexecute(IDocumentCommandControl& control) override;
 
 private:
 	std::string m_text;
-	boost::optional<size_t> m_index;
+	boost::optional<size_t> m_position;
 };

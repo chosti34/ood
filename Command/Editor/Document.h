@@ -1,21 +1,23 @@
-#pragma once
+﻿#pragma once
 #include "IDocument.h"
 #include "DocumentCommandManager.h"
-#include "IDocumentControl.h"
+#include "IDocumentCommandControl.h"
 #include <deque>
 
 class Document
 	: public IDocument
-	, private IDocumentControl
+	, private IDocumentCommandControl
 {
 public:
-	Document(const std::string& title = "untitled");
+	Document();
+	Document(const std::string& title);
 
+	// Методы, создающие команды
 	void InsertParagraph(const std::string& text, boost::optional<size_t> position) override;
 	void InsertImage(const std::string& path, unsigned width, unsigned height, boost::optional<size_t> position) override;
-	void RemoveItem(size_t position) override;
-	void ReplaceText(const std::string& text, size_t position) override;
-	void ResizeImage(unsigned width, unsigned height, size_t position) override;
+	void RemoveItem(size_t index) override;
+	void ReplaceText(const std::string& text, size_t index) override;
+	void ResizeImage(unsigned width, unsigned height, size_t index) override;
 	void SetTitle(const std::string& title) override;
 
 	std::string GetTitle()const override;
@@ -33,6 +35,7 @@ private:
 	template <typename Command, typename... Args>
 	void DoCommand(Args&&... args);
 
+	// Методы, к которым будут обращаться команды
 	void DoInsertItem(const std::shared_ptr<DocumentItem>& item, boost::optional<size_t> position) override;
 	std::shared_ptr<DocumentItem> DoRemoveItem(boost::optional<size_t> index) override;
 	void DoSetTitle(const std::string& title) override;
