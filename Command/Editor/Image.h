@@ -6,9 +6,9 @@ class Image : public IImage
 public:
 	Image(const std::string& path, unsigned width, unsigned height);
 
-	std::string GetPath() const override;
-	int GetWidth() const override;
-	int GetHeight() const override;
+	std::string GetPath()const override;
+	int GetWidth()const override;
+	int GetHeight()const override;
 	void Resize(int width, int height) override;
 
 private:

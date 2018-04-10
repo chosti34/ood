@@ -42,6 +42,16 @@ size_t ReadAsIndex(const std::string& str)
 	throw std::invalid_argument("can't read " + str + " as index");
 }
 
+unsigned ReadAsUnsigned(const std::string& str)
+{
+	unsigned number;
+	if (sscanf_s(str.c_str(), "%u", &number) == 1)
+	{
+		return number;
+	}
+	throw std::invalid_argument("can't read " + str + " as unsigned");
+}
+
 std::string GetDocumentItemDescription(const DocumentItem& item)
 {
 	using std::to_string;
@@ -69,13 +79,24 @@ DocumentMenu::DocumentMenu(IDocument& document)
 	using std::bind;
 	using namespace std::placeholders;
 	AddItem("Exit", "Exit from menu, no args", [this](auto const&) { Exit(); });
-	AddItem("Help", "Show command instructions, no args", [this](auto const&) { ShowInstructions(); });
-	AddItem("SetTitle", "Set document title, args: <title>", bind(&DocumentMenu::SetDocumentTitle, this, _1));
-	AddItem("InsertParagraph", "Insert paragraph, args: <pos>|end <text>", bind(&DocumentMenu::InsertParagraph, this, _1));
-	AddItem("List", "List all document's elements, no args", bind(&DocumentMenu::List, this, _1));
-	AddItem("ReplaceText", "Replace paragraph's text, args: <index> <text>", bind(&DocumentMenu::ReplaceText, this, _1));
-	AddItem("DeleteItem", "Delete item at specified index, args: <index>", bind(&DocumentMenu::DeleteItem, this, _1));
-	AddItem("Save", "Save document to file in HTML format, args: <path>", bind(&DocumentMenu::Save, this, _1));
+	AddItem("Help", "Show command instructions, no args",
+		[this](auto const&) { ShowInstructions(); });
+	AddItem("SetTitle", "Set document title, args: <title>",
+		bind(&DocumentMenu::SetDocumentTitle, this, _1));
+	AddItem("InsertParagraph", "Insert paragraph, args: <pos>|end <text>",
+		bind(&DocumentMenu::InsertParagraph, this, _1));
+	AddItem("InsertImage", "Insert image, args: <pos>|end <width> <height> <path>",
+		bind(&DocumentMenu::InsertImage, this, _1));
+	AddItem("List", "List all document's elements, no args",
+		bind(&DocumentMenu::List, this, _1));
+	AddItem("ReplaceText", "Replace paragraph's text, args: <index> <text>",
+		bind(&DocumentMenu::ReplaceText, this, _1));
+	AddItem("ResizeImage", "Resize image, args: <index> <width> <height>",
+		bind(&DocumentMenu::ResizeImage, this, _1));
+	AddItem("DeleteItem", "Delete item at specified index, args: <index>",
+		bind(&DocumentMenu::DeleteItem, this, _1));
+	AddItem("Save", "Save document to file in HTML format, args: <path>",
+		bind(&DocumentMenu::Save, this, _1));
 	AddItem("Undo", "Undo last performed command", bind(&DocumentMenu::Undo, this, _1));
 	AddItem("Redo", "Redo last undoned command", bind(&DocumentMenu::Redo, this, _1));
 }
@@ -108,6 +129,21 @@ void DocumentMenu::InsertParagraph(std::vector<std::string> const& args)
 	m_document.InsertParagraph(args[1], ReinterpretAsDocumentPosition(args.front()));
 }
 
+void DocumentMenu::InsertImage(std::vector<std::string> const& args)
+{
+	if (!EnsureArgumentsCount(4u, args.size()))
+	{
+		return;
+	}
+
+	const auto position = ReinterpretAsDocumentPosition(args.front());
+	const auto width = ReadAsUnsigned(args[1]);
+	const auto height = ReadAsUnsigned(args[2]);
+	const auto& path = args[3];
+
+	m_document.InsertImage(path, width, height, position);
+}
+
 void DocumentMenu::List(std::vector<std::string> const& args)
 {
 	if (!EnsureArgumentsCount(0u, args.size()))
@@ -130,6 +166,20 @@ void DocumentMenu::ReplaceText(std::vector<std::string> const& args)
 		return;
 	}
 	m_document.ReplaceText(args[1], ReadAsIndex(args.front()));
+}
+
+void DocumentMenu::ResizeImage(std::vector<std::string> const& args)
+{
+	if (!EnsureArgumentsCount(3u, args.size()))
+	{
+		return;
+	}
+
+	const auto index = ReadAsIndex(args.front());
+	const auto width = ReadAsUnsigned(args[1]);
+	const auto height = ReadAsUnsigned(args[2]);
+
+	m_document.ResizeImage(width, height, index);
 }
 
 void DocumentMenu::DeleteItem(std::vector<std::string> const& args)

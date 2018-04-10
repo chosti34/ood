@@ -12,8 +12,10 @@ private:
 
 	void SetDocumentTitle(std::vector<std::string> const& args);
 	void InsertParagraph(std::vector<std::string> const& args);
+	void InsertImage(std::vector<std::string> const& args);
 	void List(std::vector<std::string> const& args);
 	void ReplaceText(std::vector<std::string> const& args);
+	void ResizeImage(std::vector<std::string> const& args);
 	void DeleteItem(std::vector<std::string> const& args);
 	void Save(std::vector<std::string> const& args);
 	void Undo(std::vector<std::string> const& args);

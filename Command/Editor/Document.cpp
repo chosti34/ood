@@ -3,7 +3,9 @@
 #include "SetTitleCommand.h"
 #include "DeleteItemCommand.h"
 #include "ReplaceTextCommand.h"
+#include "ResizeImageCommand.h"
 #include "InsertParagraphCommand.h"
+#include "InsertImageCommand.h"
 
 namespace
 {
@@ -34,7 +36,11 @@ void Document::InsertParagraph(const std::string& text, boost::optional<size_t> 
 
 void Document::InsertImage(const std::string& path, unsigned width, unsigned height, boost::optional<size_t> position)
 {
-	// TODO: implement this
+	if (position && *position >= m_items.size())
+	{
+		throw std::out_of_range("position must be less than items count");
+	}
+	DoCommand<InsertImageCommand>(width, height, path, position);
 }
 
 void Document::RemoveItem(size_t index)
