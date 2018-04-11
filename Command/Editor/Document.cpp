@@ -11,6 +11,7 @@ namespace
 {
 constexpr unsigned COMMAND_HISTORY_DEPTH = 10u;
 const std::string DOCUMENT_TITLE = "untitled";
+const std::string IMAGES_DIR = "images";
 }
 
 Document::Document()
@@ -22,6 +23,7 @@ Document::Document(const std::string& title)
 	: m_title(title)
 	, m_commandManager(COMMAND_HISTORY_DEPTH)
 	, m_items()
+	, m_storage(IMAGES_DIR)
 {
 }
 
@@ -40,7 +42,7 @@ void Document::InsertImage(const std::string& path, unsigned width, unsigned hei
 	{
 		throw std::out_of_range("position must be less than items count");
 	}
-	DoCommand<InsertImageCommand>(width, height, path, position);
+	DoCommand<InsertImageCommand>(width, height, m_storage.AddImage(path), position, m_storage);
 }
 
 void Document::RemoveItem(size_t index)
@@ -49,7 +51,7 @@ void Document::RemoveItem(size_t index)
 	{
 		throw std::invalid_argument("index must be less than items count");
 	}
-	DoCommand<DeleteItemCommand>(index);
+	DoCommand<DeleteItemCommand>(index, m_storage);
 }
 
 void Document::ReplaceText(const std::string& text, size_t index)

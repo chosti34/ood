@@ -78,6 +78,9 @@
     <ClInclude Include="ResizeImageCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ImageFileStorage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -126,6 +129,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ResizeImageCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageFileStorage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

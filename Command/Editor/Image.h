@@ -12,6 +12,9 @@ public:
 	void Resize(int width, int height) override;
 
 private:
+	void SetSize(int width, int height);
+
+private:
 	std::string m_path;
 	unsigned m_width;
 	unsigned m_height;

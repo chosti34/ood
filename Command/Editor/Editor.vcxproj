@@ -153,6 +153,7 @@
     <ClInclude Include="DocumentItem.h" />
     <ClInclude Include="DocumentMenu.h" />
     <ClInclude Include="DocumentSerializer.h" />
+    <ClInclude Include="ImageFileStorage.h" />
     <ClInclude Include="IDocumentCommand.h" />
     <ClInclude Include="IDocument.h" />
     <ClInclude Include="IDocumentCommandControl.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="DocumentMenu.cpp" />
     <ClCompile Include="DocumentSerializer.cpp" />
     <ClCompile Include="Image.cpp" />
+    <ClCompile Include="ImageFileStorage.cpp" />
     <ClCompile Include="InsertImageCommand.cpp" />
     <ClCompile Include="InsertParagraphCommand.cpp" />
     <ClCompile Include="Main.cpp" />

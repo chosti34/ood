@@ -2,6 +2,7 @@
 #include "IDocument.h"
 #include "DocumentCommandManager.h"
 #include "IDocumentCommandControl.h"
+#include "ImageFileStorage.h"
 #include <deque>
 
 class Document
@@ -46,6 +47,7 @@ private:
 	std::string m_title;
 	std::deque<std::shared_ptr<DocumentItem>> m_items;
 	DocumentCommandManager m_commandManager;
+	ImageFileStorage m_storage;
 };
 
 template <typename Command, typename... Args>
