@@ -2,16 +2,16 @@
 #include "IDocument.h"
 #include "DocumentCommandManager.h"
 #include "IDocumentCommandControl.h"
-#include "ImageFileStorage.h"
 #include <deque>
+class ImageFileStorage;
 
 class Document
 	: public IDocument
 	, private IDocumentCommandControl
 {
 public:
-	Document();
-	Document(const std::string& title);
+	Document(ImageFileStorage& storage);
+	Document(ImageFileStorage& storage, const std::string& title);
 
 	// Методы, создающие команды
 	void InsertParagraph(const std::string& text, boost::optional<size_t> position) override;
@@ -47,7 +47,7 @@ private:
 	std::string m_title;
 	std::deque<std::shared_ptr<DocumentItem>> m_items;
 	DocumentCommandManager m_commandManager;
-	ImageFileStorage m_storage;
+	ImageFileStorage& m_storage;
 };
 
 template <typename Command, typename... Args>

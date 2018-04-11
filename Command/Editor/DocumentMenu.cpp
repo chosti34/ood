@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "DocumentMenu.h"
 #include "DocumentSerializer.h"
+#include "ImageFileStorage.h"
 
 namespace
 {
@@ -11,7 +12,6 @@ void WriteToFile(const std::string& filePath, const std::string& content)
 	{
 		throw std::runtime_error("failed to open " + filePath + " for writing");
 	}
-
 	file << content;
 }
 
@@ -73,8 +73,9 @@ std::string GetDocumentItemDescription(const DocumentItem& item)
 }
 }
 
-DocumentMenu::DocumentMenu(IDocument& document)
+DocumentMenu::DocumentMenu(IDocument& document, ImageFileStorage& storage)
 	: m_document(document)
+	, m_storage(storage)
 {
 	using std::bind;
 	using namespace std::placeholders;
@@ -212,7 +213,7 @@ void DocumentMenu::Save(std::vector<std::string> const& args)
 			assert(!image);
 			serializer.AddParagraph(paragraph->GetText());
 		}
-		else if (image)
+		if (image)
 		{
 			assert(!paragraph);
 			serializer.AddImage(image->GetPath(), image->GetWidth(), image->GetHeight());
@@ -220,6 +221,7 @@ void DocumentMenu::Save(std::vector<std::string> const& args)
 	}
 
 	WriteToFile(args.front(), serializer.Serialize());
+	m_storage.CopyTo(args.front());
 }
 
 void DocumentMenu::Undo(std::vector<std::string> const& args)

@@ -1,21 +1,29 @@
-#pragma once
+п»ї#pragma once
 #include <string>
+#include <unordered_map>
 
 /*
-Класс с помощью которого можно копировать картинки
-в рабочую директорию картинок документа
+РљР»Р°СЃСЃ СЃ РїРѕРјРѕС‰СЊСЋ РєРѕС‚РѕСЂРѕРіРѕ РјРѕР¶РЅРѕ РєРѕРїРёСЂРѕРІР°С‚СЊ РєР°СЂС‚РёРЅРєРё
+РІ СЂР°Р±РѕС‡СѓСЋ РґРёСЂРµРєС‚РѕСЂРёСЋ РєР°СЂС‚РёРЅРѕРє РґРѕРєСѓРјРµРЅС‚Р°
 */
 class ImageFileStorage
 {
 public:
-	ImageFileStorage(const std::string& directory);
+	ImageFileStorage();
 
-	// Возвращает путь до картинки с новым сгенерированным именем
-	std::string AddImage(const std::string& imagePath)const;
+	// Р’РѕР·РІСЂР°С‰Р°РµС‚ РїСѓС‚СЊ РґРѕ РєР°СЂС‚РёРЅРєРё СЃ РЅРѕРІС‹Рј СЃРіРµРЅРµСЂРёСЂРѕРІР°РЅРЅС‹Рј РёРјРµРЅРµРј
+	std::string AddImage(const std::string& imagePath);
 
-	// Удалить картинку по заданному пути
+	// РЈРґР°Р»РёС‚СЊ РєР°СЂС‚РёРЅРєСѓ РїРѕ Р·Р°РґР°РЅРЅРѕРјСѓ РїСѓС‚Рё
 	void Delete(const std::string& path);
 
+	// РЎРєРѕРїРёСЂРѕРІР°С‚СЊ РІСЃРµ С„Р°Р№Р»С‹ РєР°СЂС‚РёРЅРѕРє РІ РїР°РїРєСѓ РіРґРµ С…СЂР°РЅРёС‚СЃСЏ С„Р°Р№Р» РґРѕРєСѓРјРµРЅС‚Р°
+	void CopyTo(const std::string& documentPath);
+
+	// РЈРєР°Р·С‹РІР°РµРј, РЅСѓР¶РЅРѕ Р»Рё РєРѕРїРёСЂРѕРІР°С‚СЊ С„Р°Р№Р» РїСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё РґРѕРєСѓРјРµРЅС‚Р°
+	void SetCopyFlag(const std::string& filePath, bool copy);
+
 private:
+	std::unordered_map<std::string, bool> m_copyFileFlags;
 	std::string m_directory;
 };

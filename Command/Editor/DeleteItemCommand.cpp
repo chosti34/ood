@@ -15,6 +15,7 @@ void DeleteItemCommand::Execute(IDocumentCommandControl& control)
 	m_deletedItem = control.DoRemoveItem(m_index);
 	if (m_deletedItem->GetImage())
 	{
+		m_storage.SetCopyFlag(m_deletedItem->GetImage()->GetPath(), false);
 		m_deleteFlag = true;
 	}
 }
@@ -22,8 +23,12 @@ void DeleteItemCommand::Execute(IDocumentCommandControl& control)
 void DeleteItemCommand::Unexecute(IDocumentCommandControl& control)
 {
 	control.DoInsertItem(m_deletedItem, m_index);
+	if (m_deletedItem->GetImage())
+	{
+		m_storage.SetCopyFlag(m_deletedItem->GetImage()->GetPath(), true);
+		m_deleteFlag = false;
+	}
 	m_deletedItem = nullptr;
-	m_deleteFlag = false;
 }
 
 DeleteItemCommand::~DeleteItemCommand()

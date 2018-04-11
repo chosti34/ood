@@ -1,11 +1,12 @@
 #pragma once
 #include "IDocument.h"
 #include "Menu.h"
+class ImageFileStorage;
 
 class DocumentMenu : public Menu
 {
 public:
-	DocumentMenu(IDocument& document);
+	DocumentMenu(IDocument& document, ImageFileStorage& storage);
 
 private:
 	bool EnsureArgumentsCount(uint64_t expected, uint64_t count);
@@ -23,4 +24,5 @@ private:
 
 private:
 	IDocument& m_document;
+	ImageFileStorage& m_storage;
 };

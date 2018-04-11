@@ -4,6 +4,7 @@
 ResizeImageCommand::ResizeImageCommand(const Size& newSize, const Size& oldSize, size_t index)
 	: m_newSize(newSize)
 	, m_oldSize(oldSize)
+	, m_index(index)
 {
 }
 

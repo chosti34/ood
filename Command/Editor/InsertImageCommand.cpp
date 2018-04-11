@@ -21,12 +21,14 @@ void InsertImageCommand::Execute(IDocumentCommandControl& control)
 	auto item = std::make_shared<DocumentItem>(nullptr, std::make_shared<Image>(m_path, m_width, m_height));
 	control.DoInsertItem(item, m_position);
 	m_deleteFlag = false;
+	m_storage.SetCopyFlag(m_path, true);
 }
 
 void InsertImageCommand::Unexecute(IDocumentCommandControl& control)
 {
 	control.DoRemoveItem(m_position);
 	m_deleteFlag = true;
+	m_storage.SetCopyFlag(m_path, false);
 }
 
 InsertImageCommand::~InsertImageCommand()

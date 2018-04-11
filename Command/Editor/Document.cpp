@@ -6,24 +6,24 @@
 #include "ResizeImageCommand.h"
 #include "InsertParagraphCommand.h"
 #include "InsertImageCommand.h"
+#include "ImageFileStorage.h"
 
 namespace
 {
 constexpr unsigned COMMAND_HISTORY_DEPTH = 10u;
 const std::string DOCUMENT_TITLE = "untitled";
-const std::string IMAGES_DIR = "images";
 }
 
-Document::Document()
-	: Document(DOCUMENT_TITLE)
+Document::Document(ImageFileStorage& storage)
+	: Document(storage, DOCUMENT_TITLE)
 {
 }
 
-Document::Document(const std::string& title)
+Document::Document(ImageFileStorage& storage, const std::string& title)
 	: m_title(title)
 	, m_commandManager(COMMAND_HISTORY_DEPTH)
 	, m_items()
-	, m_storage(IMAGES_DIR)
+	, m_storage(storage)
 {
 }
 
@@ -63,6 +63,7 @@ void Document::ReplaceText(const std::string& text, size_t index)
 	auto paragraph = m_items[index]->GetParagraph();
 	if (!paragraph)
 	{
+		assert(m_items[index]->GetImage());
 		throw std::invalid_argument("item at specified index is not a paragraph");
 	}
 	DoCommand<ReplaceTextCommand>(text, paragraph->GetText(), index);
@@ -70,7 +71,19 @@ void Document::ReplaceText(const std::string& text, size_t index)
 
 void Document::ResizeImage(unsigned width, unsigned height, size_t index)
 {
-	// TODO: implement this
+	if (index >= m_items.size())
+	{
+		throw std::invalid_argument("index must be less than items count");
+	}
+	auto image = m_items[index]->GetImage();
+	if (!image)
+	{
+		assert(m_items[index]->GetParagraph());
+		throw std::invalid_argument("item at specified index is not an image");
+	}
+	const std::pair<unsigned, unsigned> oldSize = { image->GetWidth(), image->GetHeight() };
+	const std::pair<unsigned, unsigned> newSize = { width, height };
+	DoCommand<ResizeImageCommand>(newSize, oldSize, index);
 }
 
 void Document::SetTitle(const std::string& title)
@@ -135,7 +148,7 @@ void Document::DoInsertItem(const std::shared_ptr<DocumentItem>& item, boost::op
 		m_items.push_back(item);
 		return;
 	}
-	assert(*position < m_items.size());
+	assert(*position < m_items.size() || *position == 0);
 	m_items.insert(m_items.begin() + *position, item);
 }
 
@@ -168,5 +181,7 @@ void Document::DoReplaceText(const std::string& text, size_t index)
 
 void Document::DoResizeImage(unsigned width, unsigned height, size_t index)
 {
-	// TODO: implement this
+	assert(index < m_items.size());
+	assert(m_items[index]->GetImage());
+	m_items[index]->GetImage()->Resize(width, height);
 }
