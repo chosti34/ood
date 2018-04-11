@@ -129,7 +129,7 @@ void ImageFileStorage::Delete(const std::string& path)
 	m_copyFileFlags.erase(path);
 }
 
-void ImageFileStorage::CopyTo(const std::string& documentPath)
+void ImageFileStorage::CopyTo(const std::string& documentPath)const
 {
 	RecursiveDirectoryContentCopy(m_directory, fs::path(documentPath).parent_path() / m_directory, m_copyFileFlags);
 }

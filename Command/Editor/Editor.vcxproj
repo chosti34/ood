@@ -153,6 +153,7 @@
     <ClInclude Include="DocumentItem.h" />
     <ClInclude Include="DocumentMenu.h" />
     <ClInclude Include="DocumentSerializer.h" />
+    <ClInclude Include="IImageFileStorage.h" />
     <ClInclude Include="ImageFileStorage.h" />
     <ClInclude Include="IDocumentCommand.h" />
     <ClInclude Include="IDocument.h" />

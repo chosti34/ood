@@ -1,27 +1,21 @@
 ﻿#pragma once
-#include <string>
+#include "IImageFileStorage.h"
 #include <unordered_map>
 
 /*
 Класс с помощью которого можно копировать картинки
 в рабочую директорию картинок документа
 */
-class ImageFileStorage
+class ImageFileStorage : public IImageFileStorage
 {
 public:
 	ImageFileStorage();
 
-	// Возвращает путь до картинки с новым сгенерированным именем
-	std::string AddImage(const std::string& imagePath);
+	std::string AddImage(const std::string& imagePath) override;
+	void Delete(const std::string& path) override;
 
-	// Удалить картинку по заданному пути
-	void Delete(const std::string& path);
-
-	// Скопировать все файлы картинок в папку где хранится файл документа
-	void CopyTo(const std::string& documentPath);
-
-	// Указываем, нужно ли копировать файл при сохранении документа
-	void SetCopyFlag(const std::string& filePath, bool copy);
+	void CopyTo(const std::string& documentPath)const override;
+	void SetCopyFlag(const std::string& filePath, bool copy) override;
 
 private:
 	std::unordered_map<std::string, bool> m_copyFileFlags;

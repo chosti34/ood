@@ -14,12 +14,12 @@ constexpr unsigned COMMAND_HISTORY_DEPTH = 10u;
 const std::string DOCUMENT_TITLE = "untitled";
 }
 
-Document::Document(ImageFileStorage& storage)
+Document::Document(IImageFileStorage& storage)
 	: Document(storage, DOCUMENT_TITLE)
 {
 }
 
-Document::Document(ImageFileStorage& storage, const std::string& title)
+Document::Document(IImageFileStorage& storage, const std::string& title)
 	: m_title(title)
 	, m_commandManager(COMMAND_HISTORY_DEPTH)
 	, m_items()
@@ -51,7 +51,7 @@ void Document::RemoveItem(size_t index)
 	{
 		throw std::invalid_argument("index must be less than items count");
 	}
-	DoCommand<DeleteItemCommand>(index, m_storage);
+	DoCommand<DeleteItemCommand>(index, index == (m_items.size() - 1u), m_storage);
 }
 
 void Document::ReplaceText(const std::string& text, size_t index)

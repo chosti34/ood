@@ -6,7 +6,7 @@
 InsertImageCommand::InsertImageCommand(
 	unsigned width, unsigned height,
 	const std::string& path, boost::optional<size_t> position,
-	ImageFileStorage& storage)
+	IImageFileStorage& storage)
 	: m_width(width)
 	, m_height(height)
 	, m_path(path)

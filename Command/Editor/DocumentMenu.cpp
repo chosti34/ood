@@ -73,9 +73,10 @@ std::string GetDocumentItemDescription(const DocumentItem& item)
 }
 }
 
-DocumentMenu::DocumentMenu(IDocument& document, ImageFileStorage& storage)
+DocumentMenu::DocumentMenu(IDocument& document, IImageFileStorage& storage, std::ostream& output)
 	: m_document(document)
 	, m_storage(storage)
+	, Menu(output)
 {
 	using std::bind;
 	using namespace std::placeholders;
@@ -106,7 +107,7 @@ bool DocumentMenu::EnsureArgumentsCount(uint64_t expected, uint64_t count)
 {
 	if (expected != count)
 	{
-		std::cout << "Expected " << expected << " arguments, " << count << " given" << std::endl;
+		m_output << "Expected " << expected << " arguments, " << count << " given" << std::endl;
 		return false;
 	}
 	return true;
@@ -152,11 +153,11 @@ void DocumentMenu::List(std::vector<std::string> const& args)
 		return;
 	}
 
-	std::cout << "Document's title: '" << m_document.GetTitle() << "'" << std::endl;
+	m_output << "Document's title: '" << m_document.GetTitle() << "'" << std::endl;
 	for (size_t index = 0; index < m_document.GetItemsCount(); ++index)
 	{
 		const auto& item = m_document.GetItem(index);
-		std::cout << index << ". " << GetDocumentItemDescription(*item) << std::endl;
+		m_output << index << ". " << GetDocumentItemDescription(*item) << std::endl;
 	}
 }
 
@@ -237,7 +238,7 @@ void DocumentMenu::Undo(std::vector<std::string> const& args)
 	}
 	else
 	{
-		std::cout << "Can't undo" << std::endl;
+		m_output << "Can't undo" << std::endl;
 	}
 }
 
@@ -254,6 +255,6 @@ void DocumentMenu::Redo(std::vector<std::string> const& args)
 	}
 	else
 	{
-		std::cout << "Can't redo" << std::endl;
+		m_output << "Can't redo" << std::endl;
 	}
 }

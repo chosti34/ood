@@ -1,5 +1,6 @@
 #pragma once
 #include "DocumentItem.h"
+#include <boost/optional.hpp>
 #include <memory>
 
 class IDocumentCommandControl

@@ -1,8 +1,8 @@
 #pragma once
 #include "IDocumentCommand.h"
+#include "IImageFileStorage.h"
 #include <boost/optional.hpp>
 #include <string>
-class ImageFileStorage;
 
 class InsertImageCommand : public IDocumentCommand
 {
@@ -10,7 +10,7 @@ public:
 	InsertImageCommand(
 		unsigned width, unsigned height,
 		const std::string& path, boost::optional<size_t> position,
-		ImageFileStorage& storage);
+		IImageFileStorage& storage);
 
 	void Execute(IDocumentCommandControl& control);
 	void Unexecute(IDocumentCommandControl& control);
@@ -23,5 +23,5 @@ private:
 	unsigned m_height;
 	std::string m_path;
 	boost::optional<size_t> m_position;
-	ImageFileStorage& m_storage;
+	IImageFileStorage& m_storage;
 };

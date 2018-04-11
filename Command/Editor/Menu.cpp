@@ -23,9 +23,10 @@ Menu::Item::Item(
 {
 }
 
-Menu::Menu()
+Menu::Menu(std::ostream& output)
 	: m_items()
 	, m_exit(false)
+	, m_output(output)
 {
 }
 
@@ -37,12 +38,12 @@ void Menu::AddItem(
 	m_items.emplace_back(shortcut, description, std::move(command));
 }
 
-void Menu::Run()
+void Menu::Run(std::istream& strm)
 {
 	ShowInstructions();
 
 	std::string command;
-	while (!m_exit && std::cout << ">>> " && getline(std::cin, command))
+	while (!m_exit && m_output << ">>> " && getline(strm, command))
 	{
 		try
 		{
@@ -50,7 +51,7 @@ void Menu::Run()
 		}
 		catch (const std::exception& ex)
 		{
-			std::cout << ex.what() << std::endl;
+			m_output << ex.what() << std::endl;
 		}
 	}
 }
@@ -62,17 +63,17 @@ void Menu::Exit()
 
 void Menu::ShowInstructions()const
 {
-	std::cout << "Commands list:" << std::endl;
+	m_output << "Commands list:" << std::endl;
 	for (size_t i = 0u; i < m_items.size(); ++i)
 	{
 		const auto index = i + 1;
 		const auto& shortcut = m_items[i].shortcut;
 		const auto& description = m_items[i].description;
-		std::cout << "  " << index << ". " << shortcut << " - " << description << std::endl;
+		m_output << "  " << index << ". " << shortcut << " - " << description << std::endl;
 	}
 }
 
-void Menu::ExecuteCommand(const std::string& command)
+bool Menu::ExecuteCommand(const std::string& command)
 {
 	std::istringstream strm(command);
 	std::string shortcut;
@@ -86,9 +87,11 @@ void Menu::ExecuteCommand(const std::string& command)
 	{
 		auto& fn = found->command;
 		fn(Tokenize(strm));
+		return true;
 	}
 	else
 	{
-		std::cout << "Unknown command!" << std::endl;
+		m_output << "Unknown command!" << std::endl;
+		return false;
 	}
 }

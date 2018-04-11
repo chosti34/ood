@@ -30,7 +30,10 @@ bool DocumentCommandManager::CanRedo()const
 
 void DocumentCommandManager::Undo(IDocumentCommandControl& document)
 {
-	assert(CanUndo());
+	if (!CanUndo())
+	{
+		throw std::logic_error("can't undo");
+	}
 	auto command = std::move(m_undoStack.back());
 	m_undoStack.pop_back();
 	command->Unexecute(document);
@@ -39,7 +42,10 @@ void DocumentCommandManager::Undo(IDocumentCommandControl& document)
 
 void DocumentCommandManager::Redo(IDocumentCommandControl& document)
 {
-	assert(CanRedo());
+	if (!CanRedo())
+	{
+		throw std::logic_error("can't redo");
+	}
 	auto command = std::move(m_redoStack.back());
 	m_redoStack.pop_back();
 	command->Execute(document);
