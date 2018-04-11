@@ -62,13 +62,13 @@ void Menu::Exit()
 
 void Menu::ShowInstructions()const
 {
-	static const unsigned indent = 2u;
 	std::cout << "Commands list:" << std::endl;
 	for (size_t i = 0u; i < m_items.size(); ++i)
 	{
-		const size_t index = i + 1;
-		std::cout << std::string(indent, ' ') << index << ". "
-			<< m_items[i].shortcut << " - " << m_items[i].description << "." << std::endl;
+		const auto index = i + 1;
+		const auto& shortcut = m_items[i].shortcut;
+		const auto& description = m_items[i].description;
+		std::cout << "  " << index << ". " << shortcut << " - " << description << std::endl;
 	}
 }
 
@@ -84,8 +84,8 @@ void Menu::ExecuteCommand(const std::string& command)
 
 	if (found != m_items.end())
 	{
-		auto& command = found->command;
-		command(Tokenize(strm));
+		auto& fn = found->command;
+		fn(Tokenize(strm));
 	}
 	else
 	{

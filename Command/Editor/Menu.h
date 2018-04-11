@@ -31,8 +31,6 @@ public:
 	void Run();
 	void Exit();
 	void ShowInstructions()const;
-
-private:
 	void ExecuteCommand(const std::string& command);
 
 private:
