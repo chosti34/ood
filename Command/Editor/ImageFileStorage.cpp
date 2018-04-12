@@ -59,7 +59,7 @@ void RecursiveDirectoryContentCopy(const fs::path& from, const fs::path& to,
 {
 	if (fs::exists(to))
 	{
-		throw std::runtime_error(to.generic_string() + " folder exists");
+		throw std::runtime_error(to.generic_string() + " folder already exists");
 	}
 
 	if (fs::is_directory(from))
@@ -73,8 +73,7 @@ void RecursiveDirectoryContentCopy(const fs::path& from, const fs::path& to,
 	else if (fs::is_regular_file(from))
 	{
 		auto found = copyFlags.find(from.generic_string());
-		assert(found != copyFlags.end());
-		if (found->second)
+		if (found != copyFlags.end() && found->second)
 		{
 			fs::copy(from, to);
 		}

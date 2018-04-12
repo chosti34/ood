@@ -97,7 +97,7 @@ DocumentMenu::DocumentMenu(IDocument& document, IImageFileStorage& storage, std:
 		bind(&DocumentMenu::ResizeImage, this, _1));
 	AddItem("DeleteItem", "Delete item at specified index, args: <index>",
 		bind(&DocumentMenu::DeleteItem, this, _1));
-	AddItem("Save", "Save document to file in HTML format, args: <path>",
+	AddItem("Save", "Save document to file in specified format, args: <path> <type>{html/xml/json}",
 		bind(&DocumentMenu::Save, this, _1));
 	AddItem("Undo", "Undo last performed command", bind(&DocumentMenu::Undo, this, _1));
 	AddItem("Redo", "Redo last undoned command", bind(&DocumentMenu::Redo, this, _1));
@@ -195,13 +195,28 @@ void DocumentMenu::DeleteItem(std::vector<std::string> const& args)
 
 void DocumentMenu::Save(std::vector<std::string> const& args)
 {
-	if (!EnsureArgumentsCount(1u, args.size()))
+	if (!EnsureArgumentsCount(2u, args.size()))
 	{
 		return;
 	}
 
-	DocumentSerializer serializer;
-	serializer.SetTitle(m_document.GetTitle());
+	std::unique_ptr<IDocumentSerializer> serializer = nullptr;
+	if (args[1] == "html")
+	{
+		serializer = std::make_unique<HtmlDocumentSerializer>();
+	}
+	else if (args[1] == "xml")
+	{
+		serializer = std::make_unique<XmlDocumentSerializer>();
+	}
+	else if (args[1] == "json")
+	{
+		serializer = std::make_unique<JsonDocumentSerializer>();
+	}
+	else
+	{
+		throw std::invalid_argument("invalid save format provided");
+	}
 
 	for (size_t i = 0; i < m_document.GetItemsCount(); ++i)
 	{
@@ -212,16 +227,16 @@ void DocumentMenu::Save(std::vector<std::string> const& args)
 		if (paragraph)
 		{
 			assert(!image);
-			serializer.AddParagraph(paragraph->GetText());
+			serializer->AddParagraph(paragraph->GetText());
 		}
 		if (image)
 		{
 			assert(!paragraph);
-			serializer.AddImage(image->GetPath(), image->GetWidth(), image->GetHeight());
+			serializer->AddImage(image->GetPath(), image->GetWidth(), image->GetHeight());
 		}
 	}
 
-	WriteToFile(args.front(), serializer.Serialize());
+	WriteToFile(args.front(), serializer->Serialize(m_document.GetTitle()));
 	m_storage.CopyTo(args.front());
 }
 
