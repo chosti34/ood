@@ -27,6 +27,9 @@
     <ClInclude Include="ImageFileStorageMock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DocumentControlMock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -84,6 +87,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DocumentCommandManagerTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="InsertParagraphCommandTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="InsertImageCommandTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="DeleteItemCommandTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>

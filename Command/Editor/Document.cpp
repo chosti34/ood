@@ -51,7 +51,8 @@ void Document::RemoveItem(size_t index)
 	{
 		throw std::invalid_argument("index must be less than items count");
 	}
-	DoCommand<DeleteItemCommand>(index, index == (m_items.size() - 1u), m_storage);
+	DoCommand<DeleteItemCommand>(
+		index == (m_items.size() - 1) ? boost::none : boost::make_optional<size_t>(index), m_storage);
 }
 
 void Document::ReplaceText(const std::string& text, size_t index)

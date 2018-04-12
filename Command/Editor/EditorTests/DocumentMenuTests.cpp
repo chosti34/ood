@@ -53,12 +53,12 @@ public:
 		return m_itemsCount;
 	}
 
-	std::shared_ptr<DocumentItem> GetItem(size_t index) override
+	std::shared_ptr<DocumentItem> GetItem(size_t) override
 	{
 		return nullptr;
 	}
 
-	std::shared_ptr<const DocumentItem> GetItem(size_t index) const override
+	std::shared_ptr<const DocumentItem> GetItem(size_t) const override
 	{
 		return nullptr;
 	}
