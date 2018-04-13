@@ -1,5 +1,6 @@
 #pragma once
 #include "IImage.h"
+#include "ICommandManager.h"
 
 class Image : public IImage
 {
@@ -7,12 +8,9 @@ public:
 	Image(const std::string& path, unsigned width, unsigned height);
 
 	std::string GetPath()const override;
-	int GetWidth()const override;
-	int GetHeight()const override;
-	void Resize(int width, int height) override;
-
-private:
-	void SetSize(int width, int height);
+	unsigned GetWidth()const override;
+	unsigned GetHeight()const override;
+	void Resize(unsigned width, unsigned height) override;
 
 private:
 	std::string m_path;

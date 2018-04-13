@@ -147,15 +147,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AbstractCommand.h" />
     <ClInclude Include="DeleteItemCommand.h" />
     <ClInclude Include="Document.h" />
     <ClInclude Include="DocumentCommandManager.h" />
     <ClInclude Include="DocumentItem.h" />
     <ClInclude Include="DocumentMenu.h" />
     <ClInclude Include="DocumentSerializer.h" />
+    <ClInclude Include="ICommand.h" />
+    <ClInclude Include="ICommandManager.h" />
     <ClInclude Include="IImageFileStorage.h" />
     <ClInclude Include="ImageFileStorage.h" />
-    <ClInclude Include="IDocumentCommand.h" />
     <ClInclude Include="IDocument.h" />
     <ClInclude Include="IDocumentCommandControl.h" />
     <ClInclude Include="IImage.h" />
@@ -172,6 +174,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractCommand.cpp" />
     <ClCompile Include="DeleteItemCommand.cpp" />
     <ClCompile Include="Document.cpp" />
     <ClCompile Include="DocumentCommandManager.cpp" />

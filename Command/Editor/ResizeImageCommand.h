@@ -1,19 +1,21 @@
 #pragma once
-#include "IDocumentCommand.h"
-#include <utility>
+#include "AbstractCommand.h"
+#include "IImage.h"
+#include <utility> // std::pair
 
-class ResizeImageCommand : public IDocumentCommand
+class ResizeImageCommand final : public AbstractCommand
 {
-	using Size = std::pair<unsigned, unsigned>;
+	using ImageSize = std::pair<unsigned, unsigned>;
 
 public:
-	ResizeImageCommand(const Size& newSize, const Size& oldSize, size_t index);
-
-	void Execute(IDocumentCommandControl& control) override;
-	void Unexecute(IDocumentCommandControl& control) override;
+	ResizeImageCommand(IImage& image, const ImageSize& newSize);
 
 private:
-	Size m_newSize;
-	Size m_oldSize;
-	size_t m_index;
+	void ExecuteImpl() override;
+	void UnexecuteImpl() override;
+
+private:
+	IImage& m_image;
+	ImageSize m_newSize;
+	ImageSize m_oldSize;
 };

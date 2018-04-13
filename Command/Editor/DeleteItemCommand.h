@@ -1,20 +1,24 @@
 #pragma once
-#include "IDocumentCommand.h"
+#include "AbstractCommand.h"
 #include "IDocumentCommandControl.h"
 #include "IImageFileStorage.h"
 
-class DeleteItemCommand : public IDocumentCommand
+class DeleteItemCommand final : public AbstractCommand
 {
 public:
-	DeleteItemCommand(boost::optional<size_t>, IImageFileStorage& storage);
-
-	void Execute(IDocumentCommandControl& control) override;
-	void Unexecute(IDocumentCommandControl& control) override;
-
+	DeleteItemCommand(
+		IDocumentCommandControl& control,
+		boost::optional<size_t> index,
+		IImageFileStorage& storage);
 	~DeleteItemCommand();
 
 private:
-	bool m_deleteFlag;
+	void ExecuteImpl() override;
+	void UnexecuteImpl() override;
+
+private:
+	IDocumentCommandControl& m_control;
+	bool m_imageDeletedFlag;
 	boost::optional<size_t> m_index;
 	std::shared_ptr<DocumentItem> m_deletedItem;
 	IImageFileStorage& m_storage;

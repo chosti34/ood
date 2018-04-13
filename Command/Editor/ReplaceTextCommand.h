@@ -1,18 +1,18 @@
 #pragma once
-#include "IDocumentCommand.h"
-#include "IDocumentCommandControl.h"
-#include <string>
+#include "AbstractCommand.h"
+#include "IParagraph.h"
 
-class ReplaceTextCommand : public IDocumentCommand
+class ReplaceTextCommand final : public AbstractCommand
 {
 public:
-	ReplaceTextCommand(const std::string& newText, const std::string& oldText, size_t index);
-
-	void Execute(IDocumentCommandControl& control) override;
-	void Unexecute(IDocumentCommandControl& control) override;
+	ReplaceTextCommand(IParagraph& paragraph, const std::string& newText);
 
 private:
-	size_t m_index;
+	void ExecuteImpl() override;
+	void UnexecuteImpl() override;
+
+private:
+	IParagraph& m_paragraph; // Параграф не должен быть удалён, пока эта команда жива
 	std::string m_newText;
 	std::string m_oldText;
 };

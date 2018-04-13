@@ -2,19 +2,19 @@
 #include "ReplaceTextCommand.h"
 #include "IDocument.h"
 
-ReplaceTextCommand::ReplaceTextCommand(const std::string& newText, const std::string& oldText, size_t index)
-	: m_newText(newText)
-	, m_oldText(oldText)
-	, m_index(index)
+ReplaceTextCommand::ReplaceTextCommand(IParagraph& paragraph, const std::string& newText)
+	: m_paragraph(paragraph)
+	, m_newText(newText)
+	, m_oldText(paragraph.GetText())
 {
 }
 
-void ReplaceTextCommand::Execute(IDocumentCommandControl& control)
+void ReplaceTextCommand::ExecuteImpl()
 {
-	control.DoReplaceText(m_newText, m_index);
+	m_paragraph.SetText(m_newText);
 }
 
-void ReplaceTextCommand::Unexecute(IDocumentCommandControl& control)
+void ReplaceTextCommand::UnexecuteImpl()
 {
-	control.DoReplaceText(m_oldText, m_index);
+	m_paragraph.SetText(m_oldText);
 }

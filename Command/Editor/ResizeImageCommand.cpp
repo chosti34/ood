@@ -1,19 +1,19 @@
 #include "stdafx.h"
 #include "ResizeImageCommand.h"
 
-ResizeImageCommand::ResizeImageCommand(const Size& newSize, const Size& oldSize, size_t index)
-	: m_newSize(newSize)
-	, m_oldSize(oldSize)
-	, m_index(index)
+ResizeImageCommand::ResizeImageCommand(IImage& image, const ImageSize& newSize)
+	: m_image(image)
+	, m_newSize(newSize)
+	, m_oldSize({ image.GetWidth(), image.GetHeight() })
 {
 }
 
-void ResizeImageCommand::Execute(IDocumentCommandControl& control)
+void ResizeImageCommand::ExecuteImpl()
 {
-	control.DoResizeImage(m_newSize.first, m_newSize.second, m_index);
+	m_image.Resize(m_newSize.first, m_newSize.second);
 }
 
-void ResizeImageCommand::Unexecute(IDocumentCommandControl& control)
+void ResizeImageCommand::UnexecuteImpl()
 {
-	control.DoResizeImage(m_oldSize.first, m_oldSize.second, m_index);
+	m_image.Resize(m_oldSize.first, m_oldSize.second);
 }

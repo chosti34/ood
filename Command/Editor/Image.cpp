@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Image.h"
+#include "ResizeImageCommand.h"
 
 namespace
 {
@@ -10,30 +11,25 @@ constexpr unsigned MAX_DIMENSION_SIZE = 10000u;
 Image::Image(const std::string& path, unsigned width, unsigned height)
 	: m_path(path)
 {
-	SetSize(width, height);
+	Resize(width, height);
 }
 
-std::string Image::GetPath() const
+std::string Image::GetPath()const
 {
 	return m_path;
 }
 
-int Image::GetWidth() const
+unsigned Image::GetWidth()const
 {
 	return m_width;
 }
 
-int Image::GetHeight() const
+unsigned Image::GetHeight()const
 {
 	return m_height;
 }
 
-void Image::Resize(int width, int height)
-{
-	SetSize(width, height);
-}
-
-void Image::SetSize(int width, int height)
+void Image::Resize(unsigned width, unsigned height)
 {
 	if (width < MIN_DIMENSION_SIZE || width > MAX_DIMENSION_SIZE)
 	{

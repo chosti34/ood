@@ -2,18 +2,22 @@
 #include "SetTitleCommand.h"
 #include "IDocumentCommandControl.h"
 
-SetTitleCommand::SetTitleCommand(const std::string& newTitle, const std::string& oldTitle)
-	: m_newTitle(newTitle)
+SetTitleCommand::SetTitleCommand(
+	IDocumentCommandControl& control,
+	const std::string& newTitle,
+	const std::string& oldTitle)
+	: m_control(control)
+	, m_newTitle(newTitle)
 	, m_oldTitle(oldTitle)
 {
 }
 
-void SetTitleCommand::Execute(IDocumentCommandControl& control)
+void SetTitleCommand::ExecuteImpl()
 {
-	control.DoSetTitle(m_newTitle);
+	m_control.DoSetTitle(m_newTitle);
 }
 
-void SetTitleCommand::Unexecute(IDocumentCommandControl& control)
+void SetTitleCommand::UnexecuteImpl()
 {
-	control.DoSetTitle(m_oldTitle);
+	m_control.DoSetTitle(m_oldTitle);
 }

@@ -33,7 +33,9 @@ void Document::InsertParagraph(const std::string& text, boost::optional<size_t> 
 	{
 		throw std::out_of_range("position must be less than items count");
 	}
-	DoCommand<InsertParagraphCommand>(text, position);
+	auto command = std::unique_ptr<InsertParagraphCommand>(new InsertParagraphCommand(*this, m_commandManager, text, position));
+	command->Execute();
+	m_commandManager.RegisterCommand(std::move(command));
 }
 
 void Document::InsertImage(const std::string& path, unsigned width, unsigned height, boost::optional<size_t> position)
@@ -42,7 +44,11 @@ void Document::InsertImage(const std::string& path, unsigned width, unsigned hei
 	{
 		throw std::out_of_range("position must be less than items count");
 	}
-	DoCommand<InsertImageCommand>(width, height, m_storage.AddImage(path), position, m_storage);
+	const std::string insertedImagePath = m_storage.AddImage(path);
+	auto command = std::unique_ptr<InsertImageCommand>(
+		new InsertImageCommand(*this, m_commandManager, width, height, insertedImagePath, position, m_storage));
+	command->Execute();
+	m_commandManager.RegisterCommand(std::move(command));
 }
 
 void Document::RemoveItem(size_t index)
@@ -51,8 +57,10 @@ void Document::RemoveItem(size_t index)
 	{
 		throw std::invalid_argument("index must be less than items count");
 	}
-	DoCommand<DeleteItemCommand>(
-		index == (m_items.size() - 1) ? boost::none : boost::optional<size_t>(index), m_storage);
+	const auto position = index == (m_items.size() - 1) ? boost::none : boost::make_optional(index);
+	auto command = std::unique_ptr<DeleteItemCommand>(new DeleteItemCommand(*this, index, m_storage));
+	command->Execute();
+	m_commandManager.RegisterCommand(std::move(command));
 }
 
 void Document::ReplaceText(const std::string& text, size_t index)
@@ -61,13 +69,11 @@ void Document::ReplaceText(const std::string& text, size_t index)
 	{
 		throw std::invalid_argument("index must be less than items count");
 	}
-	auto paragraph = m_items[index]->GetParagraph();
-	if (!paragraph)
+	if (!m_items[index]->GetParagraph())
 	{
-		assert(m_items[index]->GetImage());
 		throw std::invalid_argument("item at specified index is not a paragraph");
 	}
-	DoCommand<ReplaceTextCommand>(text, paragraph->GetText(), index);
+	m_items[index]->ReplaceText(text);
 }
 
 void Document::ResizeImage(unsigned width, unsigned height, size_t index)
@@ -76,20 +82,18 @@ void Document::ResizeImage(unsigned width, unsigned height, size_t index)
 	{
 		throw std::invalid_argument("index must be less than items count");
 	}
-	auto image = m_items[index]->GetImage();
-	if (!image)
+	if (!m_items[index]->GetImage())
 	{
-		assert(m_items[index]->GetParagraph());
-		throw std::invalid_argument("item at specified index is not an image");
+		throw std::invalid_argument("item at specified index is not a paragraph");
 	}
-	const std::pair<unsigned, unsigned> oldSize = { image->GetWidth(), image->GetHeight() };
-	const std::pair<unsigned, unsigned> newSize = { width, height };
-	DoCommand<ResizeImageCommand>(newSize, oldSize, index);
+	m_items[index]->ResizeImage(width, height);
 }
 
 void Document::SetTitle(const std::string& title)
 {
-	DoCommand<SetTitleCommand>(title, m_title);
+	auto command = std::unique_ptr<SetTitleCommand>(new SetTitleCommand(*this, title, m_title));
+	command->Execute();
+	m_commandManager.RegisterCommand(std::move(command));
 }
 
 std::string Document::GetTitle()const
@@ -128,7 +132,7 @@ bool Document::CanUndo()const
 void Document::Undo()
 {
 	assert(m_commandManager.CanUndo());
-	m_commandManager.Undo(*this);
+	m_commandManager.Undo();
 }
 
 bool Document::CanRedo()const
@@ -139,7 +143,7 @@ bool Document::CanRedo()const
 void Document::Redo()
 {
 	assert(m_commandManager.CanRedo());
-	m_commandManager.Redo(*this);
+	m_commandManager.Redo();
 }
 
 void Document::DoInsertItem(const std::shared_ptr<DocumentItem>& item, boost::optional<size_t> position)
@@ -171,18 +175,4 @@ std::shared_ptr<DocumentItem> Document::DoRemoveItem(boost::optional<size_t> pos
 void Document::DoSetTitle(const std::string& title)
 {
 	m_title = title;
-}
-
-void Document::DoReplaceText(const std::string& text, size_t index)
-{
-	assert(index < m_items.size());
-	assert(m_items[index]->GetParagraph());
-	m_items[index]->GetParagraph()->SetText(text);
-}
-
-void Document::DoResizeImage(unsigned width, unsigned height, size_t index)
-{
-	assert(index < m_items.size());
-	assert(m_items[index]->GetImage());
-	m_items[index]->GetImage()->Resize(width, height);
 }

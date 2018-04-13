@@ -73,9 +73,8 @@ std::string GetDocumentItemDescription(const DocumentItem& item)
 }
 }
 
-DocumentMenu::DocumentMenu(IDocument& document, IImageFileStorage& storage, std::ostream& output)
+DocumentMenu::DocumentMenu(std::ostream& output, IDocument& document)
 	: m_document(document)
-	, m_storage(storage)
 	, Menu(output)
 {
 	using std::bind;
@@ -167,7 +166,16 @@ void DocumentMenu::ReplaceText(std::vector<std::string> const& args)
 	{
 		return;
 	}
-	m_document.ReplaceText(args[1], ReadAsIndex(args.front()));
+
+	const auto index = ReadAsIndex(args.front());
+	if (m_document.GetItem(index)->GetParagraph())
+	{
+		m_document.GetItem(index)->ReplaceText(args[1]);
+	}
+	else
+	{
+		m_output << "Element at index " << args.front() << " is not an paragraph\n";
+	}
 }
 
 void DocumentMenu::ResizeImage(std::vector<std::string> const& args)
@@ -181,7 +189,14 @@ void DocumentMenu::ResizeImage(std::vector<std::string> const& args)
 	const auto width = ReadAsUnsigned(args[1]);
 	const auto height = ReadAsUnsigned(args[2]);
 
-	m_document.ResizeImage(width, height, index);
+	if (m_document.GetItem(index)->GetImage())
+	{
+		m_document.ResizeImage(width, height, index);
+	}
+	else
+	{
+		m_output << "Element at index " << args.front() << " is not an image\n";
+	}
 }
 
 void DocumentMenu::DeleteItem(std::vector<std::string> const& args)
@@ -237,7 +252,7 @@ void DocumentMenu::Save(std::vector<std::string> const& args)
 	}
 
 	WriteToFile(args.front(), serializer->Serialize(m_document.GetTitle()));
-	m_storage.CopyTo(args.front());
+	// m_storage.CopyTo(args.front());
 }
 
 void DocumentMenu::Undo(std::vector<std::string> const& args)

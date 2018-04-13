@@ -6,7 +6,7 @@
 class DocumentMenu : public Menu
 {
 public:
-	DocumentMenu(IDocument& document, IImageFileStorage& storage, std::ostream& output);
+	DocumentMenu(std::ostream& output, IDocument& document);
 
 private:
 	bool EnsureArgumentsCount(uint64_t expected, uint64_t count);
@@ -24,5 +24,4 @@ private:
 
 private:
 	IDocument& m_document;
-	IImageFileStorage& m_storage;
 };

@@ -7,6 +7,8 @@
 class IImageFileStorage
 {
 public:
+	virtual ~IImageFileStorage() = default;
+
 	// Возвращает путь до картинки с новым сгенерированным именем
 	virtual std::string AddImage(const std::string& imagePath) = 0;
 

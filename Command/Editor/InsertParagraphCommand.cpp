@@ -2,19 +2,28 @@
 #include "InsertParagraphCommand.h"
 #include "Paragraph.h"
 
-InsertParagraphCommand::InsertParagraphCommand(const std::string& text, boost::optional<size_t> position)
-	: m_text(text)
+InsertParagraphCommand::InsertParagraphCommand(
+	IDocumentCommandControl& control,
+	ICommandManager& manager,
+	const std::string& text,
+	boost::optional<size_t> position)
+	: m_control(control)
+	, m_manager(manager)
+	, m_text(text)
 	, m_position(position)
 {
 }
 
-void InsertParagraphCommand::Execute(IDocumentCommandControl& document)
+void InsertParagraphCommand::ExecuteImpl()
 {
-	auto item = std::make_shared<DocumentItem>(std::make_shared<Paragraph>(m_text), nullptr);
-	document.DoInsertItem(item, m_position);
+	if (!m_item)
+	{
+		m_item = std::make_shared<DocumentItem>(std::make_shared<Paragraph>(m_text), nullptr, m_manager);
+	}
+	m_control.DoInsertItem(m_item, m_position);
 }
 
-void InsertParagraphCommand::Unexecute(IDocumentCommandControl& document)
+void InsertParagraphCommand::UnexecuteImpl()
 {
-	document.DoRemoveItem(m_position);
+	m_item = m_control.DoRemoveItem(m_position);
 }

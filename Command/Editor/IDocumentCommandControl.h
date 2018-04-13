@@ -17,12 +17,6 @@ public:
 	// Операция изменения заголовка документа
 	virtual void DoSetTitle(const std::string& title) = 0;
 
-	// Операция изменения текста параграфа
-	virtual void DoReplaceText(const std::string& newText, size_t position) = 0;
-
-	// Операция изменения размеров изображения
-	virtual void DoResizeImage(unsigned width, unsigned height, size_t position) = 0;
-
 protected:
 	~IDocumentCommandControl() = default;
 };

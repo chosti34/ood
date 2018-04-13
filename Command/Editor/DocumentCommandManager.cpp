@@ -8,7 +8,7 @@ DocumentCommandManager::DocumentCommandManager(unsigned historyDepth)
 {
 }
 
-void DocumentCommandManager::RegisterCommand(IDocumentCommandPtr&& command)
+void DocumentCommandManager::RegisterCommand(std::unique_ptr<ICommand>&& command)
 {
 	if (m_undoStack.size() == m_historyDepth)
 	{
@@ -28,7 +28,7 @@ bool DocumentCommandManager::CanRedo()const
 	return !m_redoStack.empty();
 }
 
-void DocumentCommandManager::Undo(IDocumentCommandControl& document)
+void DocumentCommandManager::Undo()
 {
 	if (!CanUndo())
 	{
@@ -36,11 +36,11 @@ void DocumentCommandManager::Undo(IDocumentCommandControl& document)
 	}
 	auto command = std::move(m_undoStack.back());
 	m_undoStack.pop_back();
-	command->Unexecute(document);
+	command->Unexecute();
 	m_redoStack.push_back(std::move(command));
 }
 
-void DocumentCommandManager::Redo(IDocumentCommandControl& document)
+void DocumentCommandManager::Redo()
 {
 	if (!CanRedo())
 	{
@@ -48,6 +48,6 @@ void DocumentCommandManager::Redo(IDocumentCommandControl& document)
 	}
 	auto command = std::move(m_redoStack.back());
 	m_redoStack.pop_back();
-	command->Execute(document);
+	command->Execute();
 	m_undoStack.push_back(std::move(command));
 }

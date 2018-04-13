@@ -33,15 +33,10 @@ public:
 	void Redo() override;
 
 private:
-	template <typename Command, typename... Args>
-	void DoCommand(Args&&... args);
-
 	// Методы, к которым будут обращаться команды
 	void DoInsertItem(const std::shared_ptr<DocumentItem>& item, boost::optional<size_t> position) override;
 	std::shared_ptr<DocumentItem> DoRemoveItem(boost::optional<size_t> index) override;
 	void DoSetTitle(const std::string& title) override;
-	void DoReplaceText(const std::string& text, size_t index) override;
-	void DoResizeImage(unsigned width, unsigned height, size_t index) override;
 
 private:
 	std::string m_title;
@@ -49,11 +44,3 @@ private:
 	DocumentCommandManager m_commandManager;
 	IImageFileStorage& m_storage;
 };
-
-template <typename Command, typename... Args>
-inline void Document::DoCommand(Args&&... args)
-{
-	auto command = std::make_unique<Command>(args...);
-	command->Execute(*this);
-	m_commandManager.RegisterCommand(std::move(command));
-}
