@@ -1,15 +1,14 @@
 #pragma once
 #include "IDocument.h"
 #include "Menu.h"
-#include "IImageFileStorage.h"
 
 class DocumentMenu : public Menu
 {
 public:
-	DocumentMenu(std::ostream& output, IDocument& document);
+	DocumentMenu(std::istream& input, std::ostream& output, IDocument& document);
 
 private:
-	bool EnsureArgumentsCount(uint64_t expected, uint64_t count);
+	bool EnsureArgumentsCount(const uint64_t& expected, const uint64_t& count);
 
 	void SetDocumentTitle(std::vector<std::string> const& args);
 	void InsertParagraph(std::vector<std::string> const& args);

@@ -1,15 +1,15 @@
 #pragma once
 #include "AbstractCommand.h"
-#include "IDocumentCommandControl.h"
 #include "IImageFileStorage.h"
+#include "DocumentItem.h"
 
 class DeleteItemCommand final : public AbstractCommand
 {
 public:
 	DeleteItemCommand(
-		IDocumentCommandControl& control,
-		boost::optional<size_t> index,
-		IImageFileStorage& storage);
+		size_t index,
+		std::vector<std::shared_ptr<DocumentItem>>& items,
+		std::shared_ptr<IImageFileStorage> storage);
 	~DeleteItemCommand();
 
 private:
@@ -17,9 +17,9 @@ private:
 	void UnexecuteImpl() override;
 
 private:
-	IDocumentCommandControl& m_control;
-	bool m_imageDeletedFlag;
-	boost::optional<size_t> m_index;
-	std::shared_ptr<DocumentItem> m_deletedItem;
-	IImageFileStorage& m_storage;
+	size_t m_index;
+	std::shared_ptr<DocumentItem> m_item;
+	std::vector<std::shared_ptr<DocumentItem>>& m_items;
+	std::shared_ptr<IImageFileStorage> m_storage;
+	bool m_deleteImageFlag;
 };

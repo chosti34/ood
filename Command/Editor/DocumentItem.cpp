@@ -5,11 +5,9 @@
 
 DocumentItem::DocumentItem(
 	std::shared_ptr<IParagraph> paragraph,
-	std::shared_ptr<IImage> image,
-	ICommandManager& commandManager)
+	std::shared_ptr<IImage> image)
 	: m_paragraph(paragraph)
 	, m_image(image)
-	, m_commandManager(commandManager)
 {
 }
 
@@ -33,24 +31,25 @@ std::shared_ptr<const IImage> DocumentItem::GetImage()const
 	return m_image;
 }
 
-void DocumentItem::ReplaceText(const std::string& text)
+std::string GetDescription(const DocumentItem& item)
 {
-	if (!m_paragraph)
-	{
-		throw std::logic_error("trying to replace text on image element");
-	}
-	auto command = std::make_unique<ReplaceTextCommand>(*m_paragraph, text);
-	command->Execute();
-	m_commandManager.RegisterCommand(std::move(command));
-}
+	using std::to_string;
 
-void DocumentItem::ResizeImage(unsigned width, unsigned height)
-{
-	if (!m_image)
+	const auto& paragraph = item.GetParagraph();
+	const auto& image = item.GetImage();
+
+	if (paragraph)
 	{
-		throw std::logic_error("trying to apply resize image command to paragraph");
+		assert(!image);
+		return "Paragraph: " + paragraph->GetText();
 	}
-	auto command = std::make_unique<ResizeImageCommand>(*m_image, std::make_pair(width, height));
-	command->Execute();
-	m_commandManager.RegisterCommand(std::move(command));
+	if (image)
+	{
+		assert(!paragraph);
+		const auto& width = image->GetWidth();
+		const auto& height = image->GetHeight();
+		const auto& path = image->GetPath();
+		return "Image: " + path + " " + to_string(width) + " " + to_string(height);
+	}
+	throw std::logic_error("document item is neither image or paragraph");
 }

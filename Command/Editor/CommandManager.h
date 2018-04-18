@@ -3,12 +3,12 @@
 #include "IDocument.h"
 #include <deque>
 
-class DocumentCommandManager : public ICommandManager
+class CommandManager : public ICommandManager
 {
 public:
-	DocumentCommandManager(unsigned historyDepth);
+	CommandManager(unsigned historyDepth);
 
-	void RegisterCommand(std::unique_ptr<ICommand>&& command) override;
+	void ApplyCommand(std::unique_ptr<ICommand>&& command) override;
 
 	bool CanUndo()const override;
 	bool CanRedo()const override;

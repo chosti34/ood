@@ -23,10 +23,12 @@ Menu::Item::Item(
 {
 }
 
-Menu::Menu(std::ostream& output)
+Menu::Menu(std::istream& input, std::ostream& output)
 	: m_items()
 	, m_exit(false)
+	, m_input(input)
 	, m_output(output)
+
 {
 }
 
@@ -38,12 +40,12 @@ void Menu::AddItem(
 	m_items.emplace_back(shortcut, description, std::move(command));
 }
 
-void Menu::Run(std::istream& strm)
+void Menu::Run()
 {
 	ShowInstructions();
 
 	std::string command;
-	while (!m_exit && m_output << ">>> " && getline(strm, command))
+	while (!m_exit && m_output << ">>> " && getline(m_input, command))
 	{
 		try
 		{

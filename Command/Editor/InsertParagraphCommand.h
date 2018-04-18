@@ -1,26 +1,23 @@
 #pragma once
 #include "AbstractCommand.h"
-#include "IDocumentCommandControl.h"
+#include "DocumentItem.h"
 #include <boost/optional.hpp>
 #include <string>
 
-class InsertParagraphCommand : public AbstractCommand
+class InsertParagraphCommand final : public AbstractCommand
 {
 public:
 	InsertParagraphCommand(
-		IDocumentCommandControl& control,
-		ICommandManager& manager,
-		const std::string& text,
-		boost::optional<size_t> position);
+		boost::optional<size_t> index,
+		std::shared_ptr<IParagraph> paragraph,
+		std::vector<std::shared_ptr<DocumentItem>>& items);
 
 private:
 	void ExecuteImpl() override;
 	void UnexecuteImpl() override;
 
 private:
-	IDocumentCommandControl& m_control;
-	ICommandManager& m_manager;
-	std::string m_text;
+	boost::optional<size_t> m_index;
 	std::shared_ptr<DocumentItem> m_item;
-	boost::optional<size_t> m_position;
+	std::vector<std::shared_ptr<DocumentItem>>& m_items;
 };

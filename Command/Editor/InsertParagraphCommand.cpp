@@ -3,27 +3,35 @@
 #include "Paragraph.h"
 
 InsertParagraphCommand::InsertParagraphCommand(
-	IDocumentCommandControl& control,
-	ICommandManager& manager,
-	const std::string& text,
-	boost::optional<size_t> position)
-	: m_control(control)
-	, m_manager(manager)
-	, m_text(text)
-	, m_position(position)
+	boost::optional<size_t> index,
+	std::shared_ptr<IParagraph> paragraph,
+	std::vector<std::shared_ptr<DocumentItem>>& items)
+	: m_index(index)
+	, m_item(std::make_shared<DocumentItem>(paragraph, nullptr))
+	, m_items(items)
 {
 }
 
 void InsertParagraphCommand::ExecuteImpl()
 {
-	if (!m_item)
+	if (m_index)
 	{
-		m_item = std::make_shared<DocumentItem>(std::make_shared<Paragraph>(m_text), nullptr, m_manager);
+		m_items.insert(m_items.begin() + *m_index, m_item);
 	}
-	m_control.DoInsertItem(m_item, m_position);
+	else
+	{
+		m_items.push_back(m_item);
+	}
 }
 
 void InsertParagraphCommand::UnexecuteImpl()
 {
-	m_item = m_control.DoRemoveItem(m_position);
+	if (m_index)
+	{
+		m_items.erase(m_items.begin() + *m_index);
+	}
+	else
+	{
+		m_items.pop_back();
+	}
 }

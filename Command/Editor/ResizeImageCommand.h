@@ -1,21 +1,20 @@
 #pragma once
 #include "AbstractCommand.h"
 #include "IImage.h"
-#include <utility> // std::pair
+#include <functional>
 
 class ResizeImageCommand final : public AbstractCommand
 {
-	using ImageSize = std::pair<unsigned, unsigned>;
-
 public:
-	ResizeImageCommand(IImage& image, const ImageSize& newSize);
+	ResizeImageCommand(unsigned& width, unsigned& height, unsigned newWidth, unsigned newHeight);
 
 private:
 	void ExecuteImpl() override;
 	void UnexecuteImpl() override;
 
 private:
-	IImage& m_image;
-	ImageSize m_newSize;
-	ImageSize m_oldSize;
+	unsigned& m_width;
+	unsigned& m_height;
+	unsigned m_newWidth;
+	unsigned m_newHeight;
 };

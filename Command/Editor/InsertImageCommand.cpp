@@ -5,30 +5,24 @@
 #include "ImageFileStorage.h"
 
 InsertImageCommand::InsertImageCommand(
-	IDocumentCommandControl& control,
-	ICommandManager& manager,
-	unsigned width, unsigned height,
-	const std::string& path,
-	boost::optional<size_t> position,
-	IImageFileStorage& storage)
-	: m_width(width)
-	, m_height(height)
-	, m_path(path)
-	, m_position(position)
+	boost::optional<size_t> index,
+	std::shared_ptr<IImage> image,
+	std::vector<std::shared_ptr<DocumentItem>>& items,
+	std::shared_ptr<IImageFileStorage> storage)
+	: m_index(index)
+	, m_item(std::make_shared<DocumentItem>(nullptr, image))
+	, m_items(items)
 	, m_storage(storage)
-	, m_control(control)
-	, m_manager(manager)
-	, m_item(nullptr)
 {
 }
 
 InsertImageCommand::~InsertImageCommand()
 {
-	if (IsExecuted())
+	if (!IsExecuted())
 	{
 		try
 		{
-			m_storage.Delete(m_path);
+			m_storage->Delete(m_item->GetImage()->GetPath());
 		}
 		catch (...)
 		{
@@ -38,16 +32,26 @@ InsertImageCommand::~InsertImageCommand()
 
 void InsertImageCommand::ExecuteImpl()
 {
-	if (!m_item)
+	if (m_index)
 	{
-		m_item = std::make_shared<DocumentItem>(nullptr, std::make_shared<Image>(m_path, m_width, m_height), m_manager);
+		m_items.insert(m_items.begin() + *m_index, m_item);
 	}
-	m_control.DoInsertItem(m_item, m_position);
-	m_storage.SetCopyFlag(m_path, true);
+	else
+	{
+		m_items.push_back(m_item);
+	}
+	m_storage->SetCopyFlag(m_item->GetImage()->GetPath(), true);
 }
 
 void InsertImageCommand::UnexecuteImpl()
 {
-	m_item = m_control.DoRemoveItem(m_position);
-	m_storage.SetCopyFlag(m_path, false);
+	if (m_index)
+	{
+		m_items.erase(m_items.begin() + *m_index);
+	}
+	else
+	{
+		m_items.pop_back();
+	}
+	m_storage->SetCopyFlag(m_item->GetImage()->GetPath(), false);
 }

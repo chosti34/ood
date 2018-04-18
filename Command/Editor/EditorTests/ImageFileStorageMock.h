@@ -1,5 +1,4 @@
 #pragma once
-#include <ostream>
 #include "../IImageFileStorage.h"
 
 //  ласс подмен€ющий хранилище файлов:
@@ -12,13 +11,13 @@ public:
 	{
 	}
 
-	std::string AddImage(const std::string& imagePath) override
+	std::string AddImage(const std::string& imagePath)override
 	{
 		m_copyFlags.emplace(imagePath, true);
 		return imagePath;
 	}
 
-	void Delete(const std::string& path) override
+	void Delete(const std::string& path)override
 	{
 		if (m_output)
 		{
@@ -26,13 +25,12 @@ public:
 		}
 	}
 
-	void CopyTo(const std::string& documentPath) const override
+	void CopyTo(const std::string& documentPath)const override
 	{
 		for (auto& pair : m_copyFlags)
 		{
 			auto& path = pair.first;
 			auto& copyFlag = pair.second;
-
 			if (m_output && copyFlag)
 			{
 				*m_output << path << " copied to " << documentPath;
@@ -40,7 +38,7 @@ public:
 		}
 	}
 
-	void SetCopyFlag(const std::string& filePath, bool copyFlag) override
+	void SetCopyFlag(const std::string& filePath, bool copyFlag)override
 	{
 		auto found = m_copyFlags.find(filePath);
 		if (found != m_copyFlags.end())

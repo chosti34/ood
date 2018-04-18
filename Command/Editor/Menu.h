@@ -21,19 +21,20 @@ class Menu
 	};
 
 public:
-	Menu(std::ostream& output);
+	Menu(std::istream& input, std::ostream& output);
 
 	void AddItem(
 		const std::string& shortcut,
 		const std::string& description,
 		Command&& command);
 
-	void Run(std::istream& strm);
+	void Run();
 	void Exit();
 	void ShowInstructions()const;
 	bool ExecuteCommand(const std::string& command);
 
 protected:
+	std::istream& m_input;
 	std::ostream& m_output;
 
 private:

@@ -5,7 +5,7 @@
 class Image : public IImage
 {
 public:
-	Image(const std::string& path, unsigned width, unsigned height);
+	Image(const std::string& path, unsigned width, unsigned height, ICommandManager& manager);
 
 	std::string GetPath()const override;
 	unsigned GetWidth()const override;
@@ -16,4 +16,5 @@ private:
 	std::string m_path;
 	unsigned m_width;
 	unsigned m_height;
+	ICommandManager& m_manager;
 };

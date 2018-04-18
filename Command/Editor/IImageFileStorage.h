@@ -9,7 +9,8 @@ class IImageFileStorage
 public:
 	virtual ~IImageFileStorage() = default;
 
-	// Возвращает путь до картинки с новым сгенерированным именем
+	// Копирует картинку по указанному пути в хранилище,
+	//  возвращает путь до скопированной картинки относительно документа
 	virtual std::string AddImage(const std::string& imagePath) = 0;
 
 	// Удалить картинку по заданному пути

@@ -1,27 +1,25 @@
 ﻿#pragma once
 #include "IDocument.h"
-#include "DocumentCommandManager.h"
-#include "IDocumentCommandControl.h"
-#include "IImageFileStorage.h"
-#include <deque>
+#include "ICommandManager.h"
+#include "ImageFileStorage.h"
+#include <vector>
 
-class Document
-	: public IDocument
-	, private IDocumentCommandControl
+class Document : public IDocument
 {
 public:
-	Document(IImageFileStorage& storage);
-	Document(IImageFileStorage& storage, const std::string& title);
+	Document(const std::string& title,
+		std::shared_ptr<IImageFileStorage> storage = std::make_shared<ImageFileStorage>());
 
-	// Методы, создающие команды
 	void InsertParagraph(const std::string& text, boost::optional<size_t> position) override;
 	void InsertImage(const std::string& path, unsigned width, unsigned height, boost::optional<size_t> position) override;
 	void RemoveItem(size_t index) override;
+
 	void ReplaceText(const std::string& text, size_t index) override;
 	void ResizeImage(unsigned width, unsigned height, size_t index) override;
-	void SetTitle(const std::string& title) override;
 
+	void SetTitle(const std::string& title) override;
 	std::string GetTitle()const override;
+
 	size_t GetItemsCount()const override;
 	std::shared_ptr<DocumentItem> GetItem(size_t index) override;
 	std::shared_ptr<const DocumentItem> GetItem(size_t index)const override;
@@ -32,15 +30,11 @@ public:
 	bool CanRedo()const override;
 	void Redo() override;
 
-private:
-	// Методы, к которым будут обращаться команды
-	void DoInsertItem(const std::shared_ptr<DocumentItem>& item, boost::optional<size_t> position) override;
-	std::shared_ptr<DocumentItem> DoRemoveItem(boost::optional<size_t> index) override;
-	void DoSetTitle(const std::string& title) override;
+	void Save(const std::string& path)override;
 
 private:
 	std::string m_title;
-	std::deque<std::shared_ptr<DocumentItem>> m_items;
-	DocumentCommandManager m_commandManager;
-	IImageFileStorage& m_storage;
+	std::vector<std::shared_ptr<DocumentItem>> m_items;
+	std::unique_ptr<ICommandManager> m_commandManager;
+	std::shared_ptr<IImageFileStorage> m_storage;
 };

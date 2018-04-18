@@ -1,23 +1,11 @@
 ﻿#include "stdafx.h"
 #include "DocumentMenu.h"
-#include "DocumentSerializer.h"
-#include "ImageFileStorage.h"
 
 namespace
 {
-void WriteToFile(const std::string& filePath, const std::string& content)
-{
-	std::ofstream file(filePath);
-	if (!file)
-	{
-		throw std::runtime_error("failed to open " + filePath + " for writing");
-	}
-	file << content;
-}
-
 // В случае "end" -> boost::none
-// иначе попытка считать как size_t
-boost::optional<size_t> ReinterpretAsDocumentPosition(const std::string& str)
+// иначе попытка считать как optional<size_t>
+boost::optional<size_t> ReadAsDocumentPosition(const std::string& str)
 {
 	if (str == "end")
 	{
@@ -51,31 +39,11 @@ unsigned ReadAsUnsigned(const std::string& str)
 	}
 	throw std::invalid_argument("can't read " + str + " as unsigned");
 }
-
-std::string GetDocumentItemDescription(const DocumentItem& item)
-{
-	using std::to_string;
-	if (item.GetParagraph())
-	{
-		assert(!item.GetImage());
-		return "Paragraph: " + item.GetParagraph()->GetText();
-	}
-	if (item.GetImage())
-	{
-		assert(!item.GetParagraph());
-		const auto& image = item.GetImage();
-		const auto& width = image->GetWidth();
-		const auto& height = image->GetHeight();
-		const auto& path = image->GetPath();
-		return "Image: " + to_string(width) + " " + to_string(height) + " " + path;
-	}
-	throw std::logic_error("document item is neither image or paragraph");
-}
 }
 
-DocumentMenu::DocumentMenu(std::ostream& output, IDocument& document)
+DocumentMenu::DocumentMenu(std::istream& input, std::ostream& output, IDocument& document)
 	: m_document(document)
-	, Menu(output)
+	, Menu(input, output)
 {
 	using std::bind;
 	using namespace std::placeholders;
@@ -96,13 +64,13 @@ DocumentMenu::DocumentMenu(std::ostream& output, IDocument& document)
 		bind(&DocumentMenu::ResizeImage, this, _1));
 	AddItem("DeleteItem", "Delete item at specified index, args: <index>",
 		bind(&DocumentMenu::DeleteItem, this, _1));
-	AddItem("Save", "Save document to file in specified format, args: <path> <type>{html/xml/json}",
+	AddItem("Save", "Save document to file in specified format, args: <path>",
 		bind(&DocumentMenu::Save, this, _1));
 	AddItem("Undo", "Undo last performed command", bind(&DocumentMenu::Undo, this, _1));
 	AddItem("Redo", "Redo last undoned command", bind(&DocumentMenu::Redo, this, _1));
 }
 
-bool DocumentMenu::EnsureArgumentsCount(uint64_t expected, uint64_t count)
+bool DocumentMenu::EnsureArgumentsCount(const uint64_t& expected, const uint64_t& count)
 {
 	if (expected != count)
 	{
@@ -127,7 +95,7 @@ void DocumentMenu::InsertParagraph(std::vector<std::string> const& args)
 	{
 		return;
 	}
-	m_document.InsertParagraph(args[1], ReinterpretAsDocumentPosition(args.front()));
+	m_document.InsertParagraph(args[1], ReadAsDocumentPosition(args.front()));
 }
 
 void DocumentMenu::InsertImage(std::vector<std::string> const& args)
@@ -137,7 +105,7 @@ void DocumentMenu::InsertImage(std::vector<std::string> const& args)
 		return;
 	}
 
-	const auto position = ReinterpretAsDocumentPosition(args.front());
+	const auto position = ReadAsDocumentPosition(args.front());
 	const auto width = ReadAsUnsigned(args[1]);
 	const auto height = ReadAsUnsigned(args[2]);
 	const auto& path = args[3];
@@ -152,11 +120,10 @@ void DocumentMenu::List(std::vector<std::string> const& args)
 		return;
 	}
 
-	m_output << "Document's title: '" << m_document.GetTitle() << "'" << std::endl;
-	for (size_t index = 0; index < m_document.GetItemsCount(); ++index)
+	m_output << "Title: " << m_document.GetTitle() << "\n";
+	for (size_t i = 0; i < m_document.GetItemsCount(); ++i)
 	{
-		const auto& item = m_document.GetItem(index);
-		m_output << index << ". " << GetDocumentItemDescription(*item) << std::endl;
+		m_output << i << ". " << GetDescription(*m_document.GetItem(i)) << "\n";
 	}
 }
 
@@ -166,16 +133,7 @@ void DocumentMenu::ReplaceText(std::vector<std::string> const& args)
 	{
 		return;
 	}
-
-	const auto index = ReadAsIndex(args.front());
-	if (m_document.GetItem(index)->GetParagraph())
-	{
-		m_document.GetItem(index)->ReplaceText(args[1]);
-	}
-	else
-	{
-		m_output << "Element at index " << args.front() << " is not an paragraph\n";
-	}
+	m_document.ReplaceText(args[1], ReadAsIndex(args.front()));
 }
 
 void DocumentMenu::ResizeImage(std::vector<std::string> const& args)
@@ -184,19 +142,7 @@ void DocumentMenu::ResizeImage(std::vector<std::string> const& args)
 	{
 		return;
 	}
-
-	const auto index = ReadAsIndex(args.front());
-	const auto width = ReadAsUnsigned(args[1]);
-	const auto height = ReadAsUnsigned(args[2]);
-
-	if (m_document.GetItem(index)->GetImage())
-	{
-		m_document.ResizeImage(width, height, index);
-	}
-	else
-	{
-		m_output << "Element at index " << args.front() << " is not an image\n";
-	}
+	m_document.ResizeImage(ReadAsUnsigned(args[1]), ReadAsUnsigned(args[2]), ReadAsIndex(args.front()));
 }
 
 void DocumentMenu::DeleteItem(std::vector<std::string> const& args)
@@ -210,49 +156,11 @@ void DocumentMenu::DeleteItem(std::vector<std::string> const& args)
 
 void DocumentMenu::Save(std::vector<std::string> const& args)
 {
-	if (!EnsureArgumentsCount(2u, args.size()))
+	if (!EnsureArgumentsCount(1u, args.size()))
 	{
 		return;
 	}
-
-	std::unique_ptr<IDocumentSerializer> serializer = nullptr;
-	if (args[1] == "html")
-	{
-		serializer = std::make_unique<HtmlDocumentSerializer>();
-	}
-	else if (args[1] == "xml")
-	{
-		serializer = std::make_unique<XmlDocumentSerializer>();
-	}
-	else if (args[1] == "json")
-	{
-		serializer = std::make_unique<JsonDocumentSerializer>();
-	}
-	else
-	{
-		throw std::invalid_argument("invalid save format provided");
-	}
-
-	for (size_t i = 0; i < m_document.GetItemsCount(); ++i)
-	{
-		const auto& paragraph = m_document.GetItem(i)->GetParagraph();
-		const auto& image = m_document.GetItem(i)->GetImage();
-		assert(paragraph || image);
-
-		if (paragraph)
-		{
-			assert(!image);
-			serializer->AddParagraph(paragraph->GetText());
-		}
-		if (image)
-		{
-			assert(!paragraph);
-			serializer->AddImage(image->GetPath(), image->GetWidth(), image->GetHeight());
-		}
-	}
-
-	WriteToFile(args.front(), serializer->Serialize(m_document.GetTitle()));
-	// m_storage.CopyTo(args.front());
+	m_document.Save(args.front());
 }
 
 void DocumentMenu::Undo(std::vector<std::string> const& args)

@@ -59,7 +59,7 @@ void RecursiveDirectoryContentCopy(const fs::path& from, const fs::path& to,
 {
 	if (fs::exists(to))
 	{
-		throw std::runtime_error(to.generic_string() + " folder already exists");
+		throw std::runtime_error("folder \"" + from.generic_string() + "\" already exists");
 	}
 
 	if (fs::is_directory(from))
@@ -89,6 +89,24 @@ ImageFileStorage::ImageFileStorage()
 	: m_directory("images")
 	, m_copyFileFlags()
 {
+	if (DirectoryExists(m_directory))
+	{
+		fs::remove_all(m_directory);
+	}
+}
+
+ImageFileStorage::~ImageFileStorage()
+{
+	if (DirectoryExists(m_directory))
+	{
+		try
+		{
+			fs::remove_all(m_directory);
+		}
+		catch (...)
+		{
+		}
+	}
 }
 
 std::string ImageFileStorage::AddImage(const std::string& imagePath)
@@ -113,7 +131,7 @@ std::string ImageFileStorage::AddImage(const std::string& imagePath)
 		throw std::runtime_error("failed to copy file, code: " + std::to_string(code.value()));
 	}
 
-	m_copyFileFlags.emplace(m_directory + "/" + generatedFileName, false);
+	m_copyFileFlags.emplace(m_directory + "/" + generatedFileName, true);
 	return m_directory + "/" + generatedFileName;
 }
 

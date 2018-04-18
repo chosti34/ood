@@ -8,13 +8,13 @@ namespace
 struct DocumentFixture
 {
 	DocumentFixture()
-		: storage()
-		, document(storage)
+		: storage(std::make_shared<ImageFileStorageMock>())
+		, document("untitled", storage)
 	{
 	}
 
+	std::shared_ptr<ImageFileStorageMock> storage;
 	Document document;
-	ImageFileStorageMock storage;
 };
 }
 
@@ -71,12 +71,12 @@ BOOST_FIXTURE_TEST_SUITE(CDocument, DocumentFixture)
 			const auto image1 = document.GetItem(0u)->GetImage();
 			const auto image2 = document.GetItem(1u)->GetImage();
 
-			BOOST_CHECK_EQUAL(image1->GetWidth(), 100);
-			BOOST_CHECK_EQUAL(image1->GetHeight(), 500);
+			BOOST_CHECK_EQUAL(image1->GetWidth(), 100u);
+			BOOST_CHECK_EQUAL(image1->GetHeight(), 500u);
 			BOOST_CHECK_EQUAL(image1->GetPath(), "some-random-path.png");
 
-			BOOST_CHECK_EQUAL(image2->GetWidth(), 500);
-			BOOST_CHECK_EQUAL(image2->GetHeight(), 100);
+			BOOST_CHECK_EQUAL(image2->GetWidth(), 500u);
+			BOOST_CHECK_EQUAL(image2->GetHeight(), 100u);
 			BOOST_CHECK_EQUAL(image2->GetPath(), "some-random-path-2.png");
 		}
 
@@ -95,21 +95,21 @@ BOOST_FIXTURE_TEST_SUITE(CDocument, DocumentFixture)
 			const auto image2 = document.GetItem(0u)->GetImage();
 			const auto image3 = document.GetItem(1u)->GetImage();
 
-			BOOST_CHECK_EQUAL(image1->GetWidth(), 100);
-			BOOST_CHECK_EQUAL(image1->GetHeight(), 500);
+			BOOST_CHECK_EQUAL(image1->GetWidth(), 100u);
+			BOOST_CHECK_EQUAL(image1->GetHeight(), 500u);
 			BOOST_CHECK_EQUAL(image1->GetPath(), "some-random-path.png");
 
-			BOOST_CHECK_EQUAL(image2->GetWidth(), 500);
-			BOOST_CHECK_EQUAL(image2->GetHeight(), 100);
+			BOOST_CHECK_EQUAL(image2->GetWidth(), 500u);
+			BOOST_CHECK_EQUAL(image2->GetHeight(), 100u);
 			BOOST_CHECK_EQUAL(image2->GetPath(), "some-random-path-2.png");
 
-			BOOST_CHECK_EQUAL(image3->GetWidth(), 1000);
-			BOOST_CHECK_EQUAL(image3->GetHeight(), 100);
+			BOOST_CHECK_EQUAL(image3->GetWidth(), 1000u);
+			BOOST_CHECK_EQUAL(image3->GetHeight(), 100u);
 			BOOST_CHECK_EQUAL(image3->GetPath(), "some-random-path-3.png");
 		}
-	BOOST_AUTO_TEST_SUITE_END()
+		BOOST_AUTO_TEST_SUITE_END()
 
-	BOOST_AUTO_TEST_SUITE(can_do_and_then_undo_and_then_redo)
+		BOOST_AUTO_TEST_SUITE(can_do_and_then_undo_and_then_redo)
 		BOOST_AUTO_TEST_CASE(remove_item_command)
 		{
 			document.InsertImage("some-random-path.png", 100, 500, boost::none);
@@ -118,20 +118,20 @@ BOOST_FIXTURE_TEST_SUITE(CDocument, DocumentFixture)
 
 			document.RemoveItem(1u);
 			BOOST_CHECK_EQUAL(document.GetItemsCount(), 1u);
-			BOOST_CHECK(document.GetItem(0)->GetImage());
+			BOOST_CHECK(document.GetItem(0)->GetImage() != nullptr);
 
 			document.RemoveItem(0u);
 			BOOST_CHECK_EQUAL(document.GetItemsCount(), 0u);
 
 			document.Undo();
 			BOOST_CHECK_EQUAL(document.GetItemsCount(), 1u);
-			BOOST_CHECK(document.GetItem(0)->GetImage());
+			BOOST_CHECK(document.GetItem(0)->GetImage() != nullptr);
 
 			document.Undo();
 
 			BOOST_CHECK_EQUAL(document.GetItemsCount(), 2u);
-			BOOST_CHECK(document.GetItem(0)->GetImage());
-			BOOST_CHECK(document.GetItem(1)->GetParagraph());
+			BOOST_CHECK(document.GetItem(0)->GetImage() != nullptr);
+			BOOST_CHECK(document.GetItem(1)->GetParagraph() != nullptr);
 
 			document.Redo();
 			document.Redo();

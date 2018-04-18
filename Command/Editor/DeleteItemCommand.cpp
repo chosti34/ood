@@ -3,26 +3,24 @@
 #include "ImageFileStorage.h"
 
 DeleteItemCommand::DeleteItemCommand(
-	IDocumentCommandControl& control,
-	boost::optional<size_t> index,
-	IImageFileStorage& storage)
+	size_t index,
+	std::vector<std::shared_ptr<DocumentItem>>& items,
+	std::shared_ptr<IImageFileStorage> storage)
 	: m_index(index)
-	, m_deletedItem(nullptr)
+	, m_item(nullptr)
+	, m_items(items)
 	, m_storage(storage)
-	, m_imageDeletedFlag(false)
-	, m_control(control)
+	, m_deleteImageFlag(false)
 {
 }
 
 DeleteItemCommand::~DeleteItemCommand()
 {
-	if (m_imageDeletedFlag)
+	if (m_deleteImageFlag)
 	{
-		assert(m_deletedItem);
-		assert(m_deletedItem->GetImage());
 		try
 		{
-			m_storage.Delete(m_deletedItem->GetImage()->GetPath());
+			m_storage->Delete(m_item->GetImage()->GetPath());
 		}
 		catch (...)
 		{
@@ -32,21 +30,22 @@ DeleteItemCommand::~DeleteItemCommand()
 
 void DeleteItemCommand::ExecuteImpl()
 {
-	m_deletedItem = m_control.DoRemoveItem(m_index);
-	if (m_deletedItem->GetImage())
+	m_item = m_items.at(m_index);
+	m_items.erase(m_items.begin() + m_index);
+	if (m_item->GetImage())
 	{
-		m_storage.SetCopyFlag(m_deletedItem->GetImage()->GetPath(), false);
-		m_imageDeletedFlag = true;
+		m_storage->SetCopyFlag(m_item->GetImage()->GetPath(), false);
+		m_deleteImageFlag = true;
 	}
 }
 
 void DeleteItemCommand::UnexecuteImpl()
 {
-	m_control.DoInsertItem(m_deletedItem, m_index);
-	if (m_deletedItem->GetImage())
+	m_items.insert(m_items.begin() + m_index, m_item);
+	if (m_item->GetImage())
 	{
-		m_storage.SetCopyFlag(m_deletedItem->GetImage()->GetPath(), true);
-		m_imageDeletedFlag = false;
+		m_storage->SetCopyFlag(m_item->GetImage()->GetPath(), true);
+		m_deleteImageFlag = false;
 	}
-	m_deletedItem = nullptr;
+	m_item = nullptr;
 }

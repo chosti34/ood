@@ -10,6 +10,7 @@ class ImageFileStorage : public IImageFileStorage
 {
 public:
 	ImageFileStorage();
+	~ImageFileStorage();
 
 	std::string AddImage(const std::string& imagePath) override;
 	void Delete(const std::string& path) override;

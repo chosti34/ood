@@ -1,29 +1,31 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 #include "../InsertImageCommand.h"
 #include "ImageFileStorageMock.h"
-#include "DocumentControlMock.h"
+#include "../Image.h"
+#include "../CommandManager.h"
+#include <boost/test/tools/output_test_stream.hpp>
 
 namespace
 {
 struct InsertImageCommandFixture
 {
 	InsertImageCommandFixture()
-		: control(strm)
-		, storage(&strm)
+		: storage(std::make_shared<ImageFileStorageMock>(&strm))
+		, manager(10)
 	{
 	}
 
 	std::unique_ptr<InsertImageCommand> CreateAndExecuteCommand()
 	{
-		auto command = std::make_unique<InsertImageCommand>(
-			100, 500, storage.AddImage("%TEMP%/image.jpg"), boost::none, storage);
-		command->Execute(control);
-		BOOST_CHECK(strm.is_equal("ii %TEMP%/image.jpg 100 500 end"));
+		auto image = std::make_shared<Image>(storage->AddImage("%TEMP%/image.jpg"), 100, 500, manager);
+		auto command = std::make_unique<InsertImageCommand>(boost::none, image, items, storage);
+		command->Execute();
 		return command;
 	}
 
-	ImageFileStorageMock storage;
-	DocumentCommandControlMock control;
+	std::shared_ptr<ImageFileStorageMock> storage;
+	CommandManager manager;
+	std::vector<std::shared_ptr<DocumentItem>> items;
 	boost::test_tools::output_test_stream strm;
 };
 }
@@ -34,7 +36,7 @@ BOOST_FIXTURE_TEST_SUITE(CInsertImageCommand, InsertImageCommandFixture)
 		{
 			auto command = CreateAndExecuteCommand();
 		}
-		storage.CopyTo("C:/Windows");
+		storage->CopyTo("C:/Windows");
 		BOOST_CHECK(strm.is_equal("%TEMP%/image.jpg copied to C:/Windows"));
 	}
 
@@ -42,11 +44,9 @@ BOOST_FIXTURE_TEST_SUITE(CInsertImageCommand, InsertImageCommandFixture)
 	{
 		{
 			auto command = CreateAndExecuteCommand();
-			command->Unexecute(control);
-			storage.CopyTo("C:/Windows");
-			BOOST_CHECK(strm.is_equal("d end"));
+			command->Unexecute();
+			storage->CopyTo("C:/Windows");
 		}
-		// Команда вставки была отменена и удалена, значит хранилище должно удалить ресурс
 		BOOST_CHECK(strm.is_equal("Delete %TEMP%/image.jpg"));
 	}
 
@@ -54,21 +54,16 @@ BOOST_FIXTURE_TEST_SUITE(CInsertImageCommand, InsertImageCommandFixture)
 	{
 		{
 			auto command = CreateAndExecuteCommand();
+			command->Unexecute();
 
-			command->Unexecute(control);
-			BOOST_CHECK(strm.is_equal("d end"));
-
-			storage.CopyTo("C:/Windows");
+			storage->CopyTo("C:/Windows");
 			BOOST_CHECK(strm.is_empty());
 
-			command->Execute(control);
-			BOOST_CHECK(strm.is_equal("ii %TEMP%/image.jpg 100 500 end"));
+			command->Execute();
 		}
-		// Команда вставки была отменена и затем выполнена снова, после удаления команды хранилще
-		//  ничего не должно делать
 		BOOST_CHECK(strm.is_empty());
 
-		storage.CopyTo("C:/Windows");
+		storage->CopyTo("C:/Windows");
 		BOOST_CHECK(strm.is_equal("%TEMP%/image.jpg copied to C:/Windows"));
 	}
 BOOST_AUTO_TEST_SUITE_END()

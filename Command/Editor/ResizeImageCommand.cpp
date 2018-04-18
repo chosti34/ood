@@ -1,19 +1,22 @@
 #include "stdafx.h"
 #include "ResizeImageCommand.h"
 
-ResizeImageCommand::ResizeImageCommand(IImage& image, const ImageSize& newSize)
-	: m_image(image)
-	, m_newSize(newSize)
-	, m_oldSize({ image.GetWidth(), image.GetHeight() })
+ResizeImageCommand::ResizeImageCommand(unsigned& width, unsigned& height, unsigned newWidth, unsigned newHeight)
+	: m_width(width)
+	, m_height(height)
+	, m_newWidth(newWidth)
+	, m_newHeight(newHeight)
 {
 }
 
 void ResizeImageCommand::ExecuteImpl()
 {
-	m_image.Resize(m_newSize.first, m_newSize.second);
+	std::swap(m_width, m_newWidth);
+	std::swap(m_height, m_newHeight);
 }
 
 void ResizeImageCommand::UnexecuteImpl()
 {
-	m_image.Resize(m_oldSize.first, m_oldSize.second);
+	std::swap(m_width, m_newWidth);
+	std::swap(m_height, m_newHeight);
 }

@@ -4,14 +4,31 @@
 
 namespace
 {
-constexpr unsigned MIN_DIMENSION_SIZE = 1u;
-constexpr unsigned MAX_DIMENSION_SIZE = 10000u;
+bool ImageSizeAllowed(unsigned size)
+{
+	return size >= 1u && size <= 10000u;
 }
 
-Image::Image(const std::string& path, unsigned width, unsigned height)
-	: m_path(path)
+void EnsureImageSizeAllowed(unsigned width, unsigned height)
 {
-	Resize(width, height);
+	if (!ImageSizeAllowed(width))
+	{
+		throw std::invalid_argument("image's width must be in range [1 .. 10000]");
+	}
+	if (!ImageSizeAllowed(height))
+	{
+		throw std::invalid_argument("image's height must be in range [1 .. 10000]");
+	}
+}
+}
+
+Image::Image(const std::string& path, unsigned width, unsigned height, ICommandManager& manager)
+	: m_path(path)
+	, m_manager(manager)
+{
+	EnsureImageSizeAllowed(width, height);
+	m_width = width;
+	m_height = height;
 }
 
 std::string Image::GetPath()const
@@ -31,14 +48,6 @@ unsigned Image::GetHeight()const
 
 void Image::Resize(unsigned width, unsigned height)
 {
-	if (width < MIN_DIMENSION_SIZE || width > MAX_DIMENSION_SIZE)
-	{
-		throw std::invalid_argument("image's width must be in range [1 .. 10000]");
-	}
-	if (height < MIN_DIMENSION_SIZE || height > MAX_DIMENSION_SIZE)
-	{
-		throw std::invalid_argument("image's height must be in range [1 .. 10000]");
-	}
-	m_width = width;
-	m_height = height;
+	EnsureImageSizeAllowed(width, height);
+	m_manager.ApplyCommand(std::make_unique<ResizeImageCommand>(m_width, m_height, width, height));
 }

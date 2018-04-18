@@ -27,42 +27,48 @@
     <ClInclude Include="ImageFileStorageMock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DocumentControlMock.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="DocumentMenuTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\AbstractCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Menu.cpp">
+    <ClCompile Include="..\AbstractDocumentSerializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\DocumentMenu.cpp">
+    <ClCompile Include="..\ChangeStringCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\DocumentSerializer.cpp">
+    <ClCompile Include="..\CommandManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DeleteItemCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Document.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\DocumentItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DocumentMenuTests.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="DocumentTests.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Document.cpp">
+    <ClCompile Include="..\DocumentMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\DocumentCommandManager.cpp">
+    <ClCompile Include="..\EscapeString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\DeleteItemCommand.cpp">
+    <ClCompile Include="..\HTMLDocumentSerializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImageFileStorage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\InsertImageCommand.cpp">
@@ -71,22 +77,28 @@
     <ClCompile Include="..\InsertParagraphCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\JSONDocumentSerializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Paragraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\ReplaceTextCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\ResizeImageCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\SetTitleCommand.cpp">
+    <ClCompile Include="..\XMLDocumentSerializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Image.cpp">
+    <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Paragraph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DocumentCommandManagerTests.cpp">
+    <ClCompile Include="DocumentTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="InsertParagraphCommandTests.cpp">

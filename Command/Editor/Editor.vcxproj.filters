@@ -27,9 +27,6 @@
     <ClInclude Include="Document.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SetTitleCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="InsertParagraphCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -54,16 +51,7 @@
     <ClInclude Include="DeleteItemCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DocumentCommandManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DocumentItem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DocumentSerializer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IDocumentCommandControl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DocumentMenu.h">
@@ -90,6 +78,27 @@
     <ClInclude Include="ICommandManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CommandManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractDocumentSerializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HTMLDocumentSerializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLDocumentSerializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JSONDocumentSerializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EscapeString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChangeStringCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -99,9 +108,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Document.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SetTitleCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InsertParagraphCommand.cpp">
@@ -122,13 +128,7 @@
     <ClCompile Include="DeleteItemCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DocumentCommandManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DocumentItem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DocumentSerializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DocumentMenu.cpp">
@@ -144,6 +144,27 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AbstractCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AbstractDocumentSerializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HTMLDocumentSerializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XMLDocumentSerializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JSONDocumentSerializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EscapeString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChangeStringCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
