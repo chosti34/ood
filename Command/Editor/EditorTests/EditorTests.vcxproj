@@ -159,6 +159,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CommandManagerMock.h" />
     <ClInclude Include="ImageFileStorageMock.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -186,9 +187,11 @@
     <ClCompile Include="..\XMLDocumentSerializer.cpp" />
     <ClCompile Include="DeleteItemCommandTests.cpp" />
     <ClCompile Include="DocumentTests.cpp" />
+    <ClCompile Include="ImageTests.cpp" />
     <ClCompile Include="InsertImageCommandTests.cpp" />
     <ClCompile Include="InsertParagraphCommandTests.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ParagraphTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

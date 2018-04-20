@@ -8,7 +8,7 @@ Paragraph::Paragraph(const std::string& text, ICommandManager& manager)
 {
 }
 
-std::string Paragraph::GetText() const
+std::string Paragraph::GetText()const
 {
 	return m_text;
 }

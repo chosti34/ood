@@ -8,7 +8,7 @@ public:
 	Paragraph(const std::string& text, ICommandManager& manager);
 
 	std::string GetText() const override;
-	void SetText(const std::string & text) override;
+	void SetText(const std::string& text) override;
 
 private:
 	std::string m_text;
