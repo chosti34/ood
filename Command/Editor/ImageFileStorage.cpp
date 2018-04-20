@@ -54,40 +54,25 @@ std::string GenerateUniqueFileName()
 	return newPath.string();
 }
 
-void RecursiveDirectoryContentCopy(const fs::path& from, const fs::path& to,
-	const std::unordered_map<std::string, bool>& copyFlags)
+void CopyFilesIntoDirectory(const std::unordered_set<std::string>& filePaths, const fs::path& to)
 {
-	if (fs::exists(to))
+	if (DirectoryExists(to))
 	{
-		throw std::runtime_error("folder \"" + from.generic_string() + "\" already exists");
+		throw std::runtime_error("folder '" + to.generic_string() + "' already exists");
 	}
 
-	if (fs::is_directory(from))
+	CreateDirectory(to);
+	for (const auto& filePath : filePaths)
 	{
-		fs::create_directories(to);
-		for (fs::directory_entry& item : fs::directory_iterator(from))
-		{
-			RecursiveDirectoryContentCopy(item.path(), to / item.path().filename(), copyFlags);
-		}
-	}
-	else if (fs::is_regular_file(from))
-	{
-		auto found = copyFlags.find(from.generic_string());
-		if (found != copyFlags.end() && found->second)
-		{
-			fs::copy(from, to);
-		}
-	}
-	else
-	{
-		throw std::runtime_error(from.generic_string() + " is neither directory or file");
+		assert(fs::exists(filePath));
+		assert(fs::is_regular_file(filePath));
+		fs::copy(filePath, to / fs::path(filePath).filename());
 	}
 }
 }
 
 ImageFileStorage::ImageFileStorage()
 	: m_directory("images")
-	, m_copyFileFlags()
 {
 	if (DirectoryExists(m_directory))
 	{
@@ -131,7 +116,7 @@ std::string ImageFileStorage::AddImage(const std::string& imagePath)
 		throw std::runtime_error("failed to copy file, code: " + std::to_string(code.value()));
 	}
 
-	m_copyFileFlags.emplace(m_directory + "/" + generatedFileName, true);
+	m_imagePaths.insert(m_directory + "/" + generatedFileName);
 	return m_directory + "/" + generatedFileName;
 }
 
@@ -143,22 +128,27 @@ void ImageFileStorage::Delete(const std::string& path)
 	{
 		throw std::runtime_error("failed to delete file, code: " + std::to_string(code.value()));
 	}
-	m_copyFileFlags.erase(path);
+	m_imagePaths.erase(path);
 }
 
 void ImageFileStorage::CopyTo(const std::string& documentPath)const
 {
-	if (DirectoryExists(m_directory))
+	// Нет смысла копировать картинки если список файлов для копирования пуст
+	//  или рабочая директория не была создана
+	if (DirectoryExists(m_directory) && !m_imagePaths.empty())
 	{
-		RecursiveDirectoryContentCopy(m_directory, fs::path(documentPath).parent_path() / m_directory, m_copyFileFlags);
+		CopyFilesIntoDirectory(m_imagePaths, fs::path(documentPath).parent_path() / m_directory);
 	}
 }
 
 void ImageFileStorage::SetCopyFlag(const std::string& filePath, bool copy)
 {
-	auto found = m_copyFileFlags.find(filePath);
-	if (found != m_copyFileFlags.end())
+	if (copy)
 	{
-		found->second = copy;
+		m_imagePaths.insert(filePath);
+	}
+	else
+	{
+		m_imagePaths.erase(filePath);
 	}
 }

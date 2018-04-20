@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "IImageFileStorage.h"
 #include <unordered_map>
+#include <unordered_set>
 
 /*
 Класс с помощью которого можно копировать картинки
@@ -19,6 +20,6 @@ public:
 	void SetCopyFlag(const std::string& filePath, bool copy) override;
 
 private:
-	std::unordered_map<std::string, bool> m_copyFileFlags;
+	std::unordered_set<std::string> m_imagePaths;
 	std::string m_directory;
 };
