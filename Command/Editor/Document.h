@@ -8,7 +8,7 @@ class Document : public IDocument
 {
 public:
 	Document(const std::string& title,
-		std::shared_ptr<IImageFileStorage> storage = std::make_shared<ImageFileStorage>());
+		const std::shared_ptr<IImageFileStorage>& storage = std::make_shared<ImageFileStorage>());
 
 	void InsertParagraph(const std::string& text, boost::optional<size_t> position) override;
 	void InsertImage(const std::string& path, unsigned width, unsigned height, boost::optional<size_t> position) override;

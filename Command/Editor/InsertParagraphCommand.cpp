@@ -4,7 +4,7 @@
 
 InsertParagraphCommand::InsertParagraphCommand(
 	boost::optional<size_t> index,
-	std::shared_ptr<IParagraph> paragraph,
+	const std::shared_ptr<IParagraph>& paragraph,
 	std::vector<std::shared_ptr<DocumentItem>>& items)
 	: m_index(index)
 	, m_item(std::make_shared<DocumentItem>(paragraph, nullptr))

@@ -9,7 +9,7 @@ public:
 	DeleteItemCommand(
 		size_t index,
 		std::vector<std::shared_ptr<DocumentItem>>& items,
-		std::shared_ptr<IImageFileStorage> storage);
+		const std::shared_ptr<IImageFileStorage>& storage);
 	~DeleteItemCommand();
 
 private:

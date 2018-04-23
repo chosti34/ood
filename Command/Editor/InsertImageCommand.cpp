@@ -8,7 +8,7 @@ InsertImageCommand::InsertImageCommand(
 	boost::optional<size_t> index,
 	std::shared_ptr<IImage> image,
 	std::vector<std::shared_ptr<DocumentItem>>& items,
-	std::shared_ptr<IImageFileStorage> storage)
+	const std::shared_ptr<IImageFileStorage>& storage)
 	: m_index(index)
 	, m_item(std::make_shared<DocumentItem>(nullptr, image))
 	, m_items(items)

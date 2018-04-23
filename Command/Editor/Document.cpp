@@ -17,7 +17,7 @@ namespace
 constexpr unsigned COMMAND_HISTORY_DEPTH = 10u;
 }
 
-Document::Document(const std::string& title, std::shared_ptr<IImageFileStorage> storage)
+Document::Document(const std::string& title, const std::shared_ptr<IImageFileStorage>& storage)
 	: m_title(title)
 	, m_items()
 	, m_commandManager(std::make_unique<CommandManager>(COMMAND_HISTORY_DEPTH))

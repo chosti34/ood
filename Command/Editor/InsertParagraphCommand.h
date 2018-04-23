@@ -9,7 +9,7 @@ class InsertParagraphCommand final : public AbstractCommand
 public:
 	InsertParagraphCommand(
 		boost::optional<size_t> index,
-		std::shared_ptr<IParagraph> paragraph,
+		const std::shared_ptr<IParagraph>& paragraph,
 		std::vector<std::shared_ptr<DocumentItem>>& items);
 
 private:
