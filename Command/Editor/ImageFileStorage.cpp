@@ -71,8 +71,8 @@ void CopyFilesIntoDirectory(const std::unordered_set<std::string>& filePaths, co
 }
 }
 
-ImageFileStorage::ImageFileStorage()
-	: m_directory("images")
+ImageFileStorage::ImageFileStorage(const std::string& directory)
+	: m_directory(directory)
 {
 	if (DirectoryExists(m_directory))
 	{
@@ -82,15 +82,15 @@ ImageFileStorage::ImageFileStorage()
 
 ImageFileStorage::~ImageFileStorage()
 {
-	if (DirectoryExists(m_directory))
+	try
 	{
-		try
+		if (DirectoryExists(m_directory))
 		{
 			fs::remove_all(m_directory);
 		}
-		catch (...)
-		{
-		}
+	}
+	catch (...)
+	{
 	}
 }
 

@@ -13,7 +13,7 @@ Vector2D::Vector2D(float x, float y)
 {
 }
 
-float Vector2D::GetLength() const
+float Vector2D::GetLength()const
 {
 	return std::sqrt(std::pow(x, 2) + std::pow(y, 2));
 }

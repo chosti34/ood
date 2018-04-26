@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "IImageFileStorage.h"
-#include <unordered_map>
 #include <unordered_set>
 
 /*
@@ -10,7 +9,7 @@
 class ImageFileStorage : public IImageFileStorage
 {
 public:
-	ImageFileStorage();
+	ImageFileStorage(const std::string& directory);
 	~ImageFileStorage();
 
 	std::string AddImage(const std::string& imagePath) override;
