@@ -1,7 +1,7 @@
 #pragma once
-#include "Shape.h"
+#include "LeafShape.h"
 
-class Rectangle : public Shape
+class Rectangle : public LeafShape
 {
 public:
 	Rectangle(const Point2D& leftTop, float width, float height);

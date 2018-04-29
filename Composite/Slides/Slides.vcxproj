@@ -144,20 +144,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CommonTypes.h" />
+    <ClInclude Include="CompositeFillStyle.h" />
+    <ClInclude Include="CompositeOutlineStyle.h" />
+    <ClInclude Include="ConsoleCanvas.h" />
     <ClInclude Include="Ellipse.h" />
     <ClInclude Include="ICanvas.h" />
     <ClInclude Include="ICanvasDrawable.h" />
+    <ClInclude Include="IFillStyle.h" />
     <ClInclude Include="IShape.h" />
-    <ClInclude Include="IShapeComposite.h" />
+    <ClInclude Include="ICompositeShape.h" />
     <ClInclude Include="IShapeCollection.h" />
-    <ClInclude Include="IShapeStyle.h" />
+    <ClInclude Include="IOutlineStyle.h" />
     <ClInclude Include="ISlide.h" />
+    <ClInclude Include="LeafFillStyle.h" />
     <ClInclude Include="Point2D.h" />
     <ClInclude Include="Rectangle.h" />
-    <ClInclude Include="Shape.h" />
-    <ClInclude Include="ShapeComposite.h" />
+    <ClInclude Include="LeafShape.h" />
+    <ClInclude Include="CompositeShape.h" />
     <ClInclude Include="ShapeCollection.h" />
-    <ClInclude Include="ShapeStyle.h" />
+    <ClInclude Include="LeafOutlineStyle.h" />
     <ClInclude Include="Slide.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -165,14 +170,18 @@
     <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CompositeFillStyle.cpp" />
+    <ClCompile Include="CompositeOutlineStyle.cpp" />
+    <ClCompile Include="ConsoleCanvas.cpp" />
     <ClCompile Include="Ellipse.cpp" />
+    <ClCompile Include="LeafFillStyle.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Point2D.cpp" />
     <ClCompile Include="Rectangle.cpp" />
-    <ClCompile Include="Shape.cpp" />
-    <ClCompile Include="ShapeComposite.cpp" />
+    <ClCompile Include="LeafShape.cpp" />
+    <ClCompile Include="CompositeShape.cpp" />
     <ClCompile Include="ShapeCollection.cpp" />
-    <ClCompile Include="ShapeStyle.cpp" />
+    <ClCompile Include="LeafOutlineStyle.cpp" />
     <ClCompile Include="Slide.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

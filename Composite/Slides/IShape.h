@@ -1,10 +1,10 @@
 #pragma once
-#include "ICanvasDrawable.h"
 #include "CommonTypes.h"
-#include "IShapeStyle.h"
-#include <memory>
+#include "ICanvasDrawable.h"
 
-class IShapeComposite;
+class IFillStyle;
+class IOutlineStyle;
+class ICompositeShape;
 
 class IShape : public ICanvasDrawable
 {
@@ -14,12 +14,12 @@ public:
 	virtual RectF GetFrame()const = 0;
 	virtual void SetFrame(const RectF& frame) = 0;
 
-	virtual const IShapeStyle& GetFillStyle()const = 0;
-	virtual IShapeStyle& GetFillStyle() = 0;
+	virtual IFillStyle& GetFillStyle() = 0;
+	virtual const IFillStyle& GetFillStyle()const = 0;
 
-	virtual const IShapeStyle& GetOutlineStyle()const = 0;
-	virtual IShapeStyle& GetOutlineStyle() = 0;
+	virtual IOutlineStyle& GetOutlineStyle() = 0;
+	virtual const IOutlineStyle& GetOutlineStyle()const = 0;
 
-	virtual IShapeComposite* GetComposite() = 0;
-	virtual const IShapeComposite* GetComposite()const = 0;
+	virtual ICompositeShape* GetComposite() = 0;
+	virtual const ICompositeShape* GetComposite()const = 0;
 };

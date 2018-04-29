@@ -14,7 +14,7 @@ std::vector<Point2D> GetRectangleBoundingPoints(const Point2D& leftTop, float wi
 }
 }
 
-Rectangle::Rectangle(const Point2D & leftTop, float width, float height)
+Rectangle::Rectangle(const Point2D& leftTop, float width, float height)
 	: m_leftTop(leftTop)
 	, m_width(width)
 	, m_height(height)

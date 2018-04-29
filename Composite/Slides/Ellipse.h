@@ -1,7 +1,7 @@
 #pragma once
-#include "Shape.h"
+#include "LeafShape.h"
 
-class Ellipse : public Shape
+class Ellipse : public LeafShape
 {
 public:
 	Ellipse(const Point2D& center, float horizontalRadius, float verticalRadius);

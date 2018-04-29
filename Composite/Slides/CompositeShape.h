@@ -1,11 +1,11 @@
 #pragma once
-#include "IShapeComposite.h"
+#include "ICompositeShape.h"
 #include "ShapeCollection.h"
 
-class ShapeComposite : public IShapeComposite
+class CompositeShape : public ICompositeShape
 {
 public:
-	ShapeComposite();
+	CompositeShape();
 
 	/* Ìועמהû טםעונפויסא IShape */
 	void Draw(ICanvas& canvas)const override;
@@ -13,14 +13,14 @@ public:
 	RectF GetFrame()const override;
 	void SetFrame(const RectF& frame) override;
 
-	IShapeStyle& GetFillStyle() override;
-	const IShapeStyle& GetFillStyle()const override;
+	IFillStyle& GetFillStyle() override;
+	const IFillStyle& GetFillStyle()const override;
 
-	IShapeStyle& GetOutlineStyle() override;
-	const IShapeStyle& GetOutlineStyle()const override;
+	IOutlineStyle& GetOutlineStyle() override;
+	const IOutlineStyle& GetOutlineStyle()const override;
 
-	IShapeComposite* GetComposite() override;
-	const IShapeComposite* GetComposite()const override;
+	ICompositeShape* GetComposite() override;
+	const ICompositeShape* GetComposite()const override;
 
 	/* Ìועמהû טםעונפויסא IShapeCollection */
 	void InsertShape(
@@ -34,7 +34,7 @@ public:
 	size_t GetShapesCount()const override;
 
 private:
-	std::unique_ptr<IShapeStyle> m_fillStyle;
-	std::unique_ptr<IShapeStyle> m_outlineStyle;
+	std::unique_ptr<IFillStyle> m_fillStyle;
+	std::unique_ptr<IOutlineStyle> m_outlineStyle;
 	ShapeCollection m_shapes;
 };

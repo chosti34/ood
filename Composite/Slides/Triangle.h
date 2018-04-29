@@ -1,7 +1,7 @@
 #pragma once
-#include "Shape.h"
+#include "LeafShape.h"
 
-class Triangle : public Shape
+class Triangle : public LeafShape
 {
 public:
 	Triangle(const Point2D& vertex1, const Point2D& vertex2, const Point2D& vertex3);
