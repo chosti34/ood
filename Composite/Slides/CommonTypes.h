@@ -8,3 +8,5 @@ struct Rect
 	T width;
 	T height;
 };
+
+typedef Rect<float> RectF;
