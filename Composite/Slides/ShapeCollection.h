@@ -1,7 +1,7 @@
 #pragma once
-#include "IShapes.h"
+#include "IShapeCollection.h"
 
-class Shapes : public IShapes
+class ShapeCollection : public IShapeCollection
 {
 public:
 	void InsertShape(

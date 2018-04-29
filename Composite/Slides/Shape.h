@@ -6,17 +6,23 @@ class Shape : public IShape
 public:
 	Shape();
 
-	virtual RectF GetFrame()const override;
-	virtual void SetFrame(const RectF& frame) override;
+	void Draw(ICanvas& canvas)const override;
 
-	virtual IShapeStyle& GetFillStyle() override;
-	virtual const IShapeStyle& GetFillStyle()const override;
+	RectF GetFrame()const override;
+	void SetFrame(const RectF& frame) override;
 
-	virtual IShapeStyle& GetOutlineStyle() override;
-	virtual const IShapeStyle& GetOutlineStyle()const override;
+	IShapeStyle& GetFillStyle() override;
+	const IShapeStyle& GetFillStyle()const override;
 
-	virtual IShapeGroup* GetGroup() override;
-	virtual const IShapeGroup* GetGroup()const override;
+	IShapeStyle& GetOutlineStyle() override;
+	const IShapeStyle& GetOutlineStyle()const override;
+
+	IShapeComposite* GetComposite() override;
+	const IShapeComposite* GetComposite()const override;
+
+protected:
+	virtual void StrokeDrawImpl(ICanvas& canvas)const = 0;
+	virtual void FillDrawImpl(ICanvas& canvas)const = 0;
 
 private:
 	std::unique_ptr<IShapeStyle> m_fillStyle;

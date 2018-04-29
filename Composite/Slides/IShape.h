@@ -4,7 +4,7 @@
 #include "IShapeStyle.h"
 #include <memory>
 
-class IShapeGroup;
+class IShapeComposite;
 
 class IShape : public ICanvasDrawable
 {
@@ -20,6 +20,6 @@ public:
 	virtual const IShapeStyle& GetOutlineStyle()const = 0;
 	virtual IShapeStyle& GetOutlineStyle() = 0;
 
-	virtual IShapeGroup* GetGroup() = 0;
-	virtual const IShapeGroup* GetGroup()const = 0;
+	virtual IShapeComposite* GetComposite() = 0;
+	virtual const IShapeComposite* GetComposite()const = 0;
 };

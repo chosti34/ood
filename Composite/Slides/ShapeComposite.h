@@ -1,16 +1,17 @@
 #pragma once
-#include "IShapeGroup.h"
-#include <vector>
+#include "IShapeComposite.h"
+#include "ShapeCollection.h"
 
-class ShapeGroup : public IShapeGroup
+class ShapeComposite : public IShapeComposite
 {
 public:
-	ShapeGroup();
+	ShapeComposite();
 
+	/* Ìועמהû טםעונפויסא IShape */
 	void Draw(ICanvas& canvas)const override;
 
 	RectF GetFrame()const override;
-	void SetFrame(const RectF & frame) override;
+	void SetFrame(const RectF& frame) override;
 
 	IShapeStyle& GetFillStyle() override;
 	const IShapeStyle& GetFillStyle()const override;
@@ -18,9 +19,10 @@ public:
 	IShapeStyle& GetOutlineStyle() override;
 	const IShapeStyle& GetOutlineStyle()const override;
 
-	IShapeGroup* GetGroup() override;
-	const IShapeGroup* GetGroup()const override;
+	IShapeComposite* GetComposite() override;
+	const IShapeComposite* GetComposite()const override;
 
+	/* Ìועמהû טםעונפויסא IShapeCollection */
 	void InsertShape(
 		const std::shared_ptr<IShape>& shape,
 		size_t index = std::numeric_limits<size_t>::max()) override;
@@ -28,10 +30,11 @@ public:
 
 	std::shared_ptr<IShape> GetShape(size_t index) override;
 	std::shared_ptr<const IShape> GetShape(size_t index)const override;
+
 	size_t GetShapesCount()const override;
 
 private:
 	std::unique_ptr<IShapeStyle> m_fillStyle;
 	std::unique_ptr<IShapeStyle> m_outlineStyle;
-	std::vector<std::shared_ptr<IShape>> m_shapes;
+	ShapeCollection m_shapes;
 };

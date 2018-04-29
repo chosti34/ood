@@ -3,10 +3,10 @@
 
 class IShape;
 
-class IShapes
+class IShapeCollection
 {
 public:
-	virtual ~IShapes() = default;
+	virtual ~IShapeCollection() = default;
 
 	virtual void InsertShape(
 		const std::shared_ptr<IShape>& shape,

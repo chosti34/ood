@@ -8,13 +8,29 @@ Shape::Shape()
 {
 }
 
-RectF Shape::GetFrame() const
+void Shape::Draw(ICanvas& canvas)const
+{
+	if (m_outlineStyle->IsEnabled())
+	{
+		canvas.SetOutlineThickness(*m_outlineStyle->GetThickness());
+		canvas.SetOutlineColor(*m_outlineStyle->GetColor());
+		StrokeDrawImpl(canvas);
+	}
+	if (m_fillStyle->IsEnabled())
+	{
+		canvas.SetFillColor(*m_fillStyle->GetColor());
+		FillDrawImpl(canvas);
+	}
+}
+
+RectF Shape::GetFrame()const
 {
 	return RectF();
 }
 
 void Shape::SetFrame(const RectF& frame)
 {
+	(void)frame;
 }
 
 IShapeStyle& Shape::GetFillStyle()
@@ -37,12 +53,12 @@ const IShapeStyle& Shape::GetOutlineStyle()const
 	return *m_outlineStyle;
 }
 
-IShapeGroup* Shape::GetGroup()
+IShapeComposite* Shape::GetComposite()
 {
 	return nullptr;
 }
 
-const IShapeGroup* Shape::GetGroup()const
+const IShapeComposite* Shape::GetComposite()const
 {
 	return nullptr;
 }

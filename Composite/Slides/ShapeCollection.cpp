@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "Shapes.h"
+#include "ShapeCollection.h"
 
-void Shapes::InsertShape(const std::shared_ptr<IShape>& shape, size_t index)
+void ShapeCollection::InsertShape(const std::shared_ptr<IShape>& shape, size_t index)
 {
 	if (index >= m_shapes.size())
 	{
@@ -13,7 +13,7 @@ void Shapes::InsertShape(const std::shared_ptr<IShape>& shape, size_t index)
 	}
 }
 
-void Shapes::RemoveShape(size_t index)
+void ShapeCollection::RemoveShape(size_t index)
 {
 	if (m_shapes.empty())
 	{
@@ -30,7 +30,7 @@ void Shapes::RemoveShape(size_t index)
 	}
 }
 
-std::shared_ptr<IShape> Shapes::GetShape(size_t index)
+std::shared_ptr<IShape> ShapeCollection::GetShape(size_t index)
 {
 	if (index >= m_shapes.size())
 	{
@@ -39,7 +39,7 @@ std::shared_ptr<IShape> Shapes::GetShape(size_t index)
 	return m_shapes[index];
 }
 
-std::shared_ptr<const IShape> Shapes::GetShape(size_t index)const
+std::shared_ptr<const IShape> ShapeCollection::GetShape(size_t index)const
 {
 	if (index >= m_shapes.size())
 	{
@@ -48,7 +48,7 @@ std::shared_ptr<const IShape> Shapes::GetShape(size_t index)const
 	return m_shapes[index];
 }
 
-size_t Shapes::GetShapesCount()const
+size_t ShapeCollection::GetShapesCount()const
 {
 	return m_shapes.size();
 }

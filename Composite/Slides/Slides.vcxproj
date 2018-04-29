@@ -85,7 +85,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -98,7 +98,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -111,7 +111,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -128,7 +128,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -144,34 +144,43 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CommonTypes.h" />
+    <ClInclude Include="Ellipse.h" />
     <ClInclude Include="ICanvas.h" />
     <ClInclude Include="ICanvasDrawable.h" />
     <ClInclude Include="IShape.h" />
-    <ClInclude Include="IShapeGroup.h" />
-    <ClInclude Include="IShapes.h" />
+    <ClInclude Include="IShapeComposite.h" />
+    <ClInclude Include="IShapeCollection.h" />
     <ClInclude Include="IShapeStyle.h" />
+    <ClInclude Include="ISlide.h" />
     <ClInclude Include="Point2D.h" />
+    <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Shape.h" />
-    <ClInclude Include="ShapeGroup.h" />
-    <ClInclude Include="Shapes.h" />
+    <ClInclude Include="ShapeComposite.h" />
+    <ClInclude Include="ShapeCollection.h" />
     <ClInclude Include="ShapeStyle.h" />
+    <ClInclude Include="Slide.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Ellipse.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Point2D.cpp" />
+    <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="Shape.cpp" />
-    <ClCompile Include="ShapeGroup.cpp" />
-    <ClCompile Include="Shapes.cpp" />
+    <ClCompile Include="ShapeComposite.cpp" />
+    <ClCompile Include="ShapeCollection.cpp" />
     <ClCompile Include="ShapeStyle.cpp" />
+    <ClCompile Include="Slide.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Vector2D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

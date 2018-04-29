@@ -9,4 +9,4 @@ struct Rect
 	T height;
 };
 
-typedef Rect<float> RectF;
+using RectF = Rect<float>;
