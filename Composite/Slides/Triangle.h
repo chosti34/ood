@@ -9,9 +9,9 @@ public:
 	RectF GetFrame()const override;
 	void SetFrame(const RectF& frame) override;
 
-	const Point2D GetVertex1()const;
-	const Point2D GetVertex2()const;
-	const Point2D GetVertex3()const;
+	const Point2D& GetVertex1()const;
+	const Point2D& GetVertex2()const;
+	const Point2D& GetVertex3()const;
 
 private:
 	virtual void StrokeDrawImpl(ICanvas& canvas)const override;
