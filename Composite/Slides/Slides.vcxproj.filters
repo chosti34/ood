@@ -90,6 +90,9 @@
     <ClInclude Include="CompositeFillStyle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GetCompositePropertyValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

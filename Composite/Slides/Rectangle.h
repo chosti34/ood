@@ -6,6 +6,9 @@ class Rectangle : public LeafShape
 public:
 	Rectangle(const Point2D& leftTop, float width, float height);
 
+	RectF GetFrame()const override;
+	void SetFrame(const RectF& frame) override;
+
 	const Point2D& GetLeftTop()const;
 	float GetWidth()const;
 	float GetHeight()const;

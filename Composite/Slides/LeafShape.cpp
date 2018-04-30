@@ -9,9 +9,7 @@ LeafShape::LeafShape()
 {
 }
 
-LeafShape::~LeafShape()
-{
-}
+LeafShape::~LeafShape() = default;
 
 void LeafShape::Draw(ICanvas& canvas)const
 {
@@ -26,16 +24,6 @@ void LeafShape::Draw(ICanvas& canvas)const
 		canvas.SetFillColor(*m_fillStyle->GetColor());
 		FillDrawImpl(canvas);
 	}
-}
-
-RectF LeafShape::GetFrame()const
-{
-	return RectF();
-}
-
-void LeafShape::SetFrame(const RectF& frame)
-{
-	(void)frame;
 }
 
 IFillStyle& LeafShape::GetFillStyle()

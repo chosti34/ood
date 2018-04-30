@@ -21,6 +21,18 @@ Rectangle::Rectangle(const Point2D& leftTop, float width, float height)
 {
 }
 
+RectF Rectangle::GetFrame()const
+{
+	return RectF{ m_leftTop.x, m_leftTop.y, m_width, m_height };
+}
+
+void Rectangle::SetFrame(const RectF& frame)
+{
+	m_leftTop = { frame.left, frame.top };
+	m_width = frame.width;
+	m_height = frame.height;
+}
+
 const Point2D& Rectangle::GetLeftTop()const
 {
 	return m_leftTop;

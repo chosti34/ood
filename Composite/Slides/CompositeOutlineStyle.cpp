@@ -1,28 +1,18 @@
 #include "stdafx.h"
 #include "CompositeOutlineStyle.h"
 #include "ICompositeShape.h"
+#include "GetCompositePropertyValue.h"
 
 CompositeOutlineStyle::CompositeOutlineStyle(ICompositeShape& composite)
 	: m_composite(composite)
 {
 }
 
-boost::optional<bool> CompositeOutlineStyle::IsEnabled() const
+boost::optional<bool> CompositeOutlineStyle::IsEnabled()const
 {
-	if (m_composite.GetShapesCount() == 0u)
-	{
-		return boost::none;
-	}
-
-	boost::optional<bool> enabled = m_composite.GetShape(0)->GetOutlineStyle().IsEnabled();
-	for (size_t i = 1; i < m_composite.GetShapesCount(); ++i)
-	{
-		if (m_composite.GetShape(i)->GetOutlineStyle().IsEnabled() != enabled)
-		{
-			return boost::none;
-		}
-	}
-	return enabled;
+	return GetCompositePropertyValueIfChildrenAreSame<bool>(m_composite.GetShapesCount(), [this](size_t index) {
+		return m_composite.GetShape(index)->GetOutlineStyle().IsEnabled();
+	});
 }
 
 void CompositeOutlineStyle::Enable(bool enable)
@@ -33,22 +23,11 @@ void CompositeOutlineStyle::Enable(bool enable)
 	}
 }
 
-boost::optional<uint32_t> CompositeOutlineStyle::GetColor() const
+boost::optional<uint32_t> CompositeOutlineStyle::GetColor()const
 {
-	if (m_composite.GetShapesCount() == 0u)
-	{
-		return boost::none;
-	}
-
-	boost::optional<uint32_t> color = m_composite.GetShape(0)->GetOutlineStyle().GetColor();
-	for (size_t i = 1; i < m_composite.GetShapesCount(); ++i)
-	{
-		if (m_composite.GetShape(i)->GetOutlineStyle().GetColor() != color)
-		{
-			return boost::none;
-		}
-	}
-	return color;
+	return GetCompositePropertyValueIfChildrenAreSame<uint32_t>(m_composite.GetShapesCount(), [this](size_t index) {
+		return m_composite.GetShape(index)->GetOutlineStyle().GetColor();
+	});
 }
 
 void CompositeOutlineStyle::SetColor(uint32_t color)
@@ -59,22 +38,11 @@ void CompositeOutlineStyle::SetColor(uint32_t color)
 	}
 }
 
-boost::optional<unsigned> CompositeOutlineStyle::GetThickness() const
+boost::optional<unsigned> CompositeOutlineStyle::GetThickness()const
 {
-	if (m_composite.GetShapesCount() == 0u)
-	{
-		return boost::none;
-	}
-
-	boost::optional<unsigned> thickness = m_composite.GetShape(0)->GetOutlineStyle().GetThickness();
-	for (size_t i = 1; i < m_composite.GetShapesCount(); ++i)
-	{
-		if (m_composite.GetShape(i)->GetOutlineStyle().GetThickness() != thickness)
-		{
-			return boost::none;
-		}
-	}
-	return thickness;
+	return GetCompositePropertyValueIfChildrenAreSame<unsigned>(m_composite.GetShapesCount(), [this](size_t index) {
+		return m_composite.GetShape(index)->GetOutlineStyle().GetThickness();
+	});
 }
 
 void CompositeOutlineStyle::SetThickness(unsigned thickness)

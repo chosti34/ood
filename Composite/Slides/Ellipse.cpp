@@ -8,6 +8,20 @@ Ellipse::Ellipse(const Point2D& center, float horizontalRadius, float verticalRa
 {
 }
 
+RectF Ellipse::GetFrame()const
+{
+	Point2D leftTop = { m_center.x - m_horizontalRadius, m_center.y - m_verticalRadius };
+	return RectF{ leftTop.x, leftTop.y, 2 * m_horizontalRadius, 2 * m_verticalRadius };
+}
+
+void Ellipse::SetFrame(const RectF& frame)
+{
+	m_center.x = frame.left + frame.width / 2;
+	m_center.y = frame.top + frame.height / 2;
+	m_horizontalRadius = frame.width / 2;
+	m_verticalRadius = frame.height / 2;
+}
+
 const Point2D& Ellipse::GetCenter()const
 {
 	return m_center;

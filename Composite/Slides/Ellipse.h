@@ -6,6 +6,9 @@ class Ellipse : public LeafShape
 public:
 	Ellipse(const Point2D& center, float horizontalRadius, float verticalRadius);
 
+	RectF GetFrame()const override;
+	void SetFrame(const RectF& frame) override;
+
 	const Point2D& GetCenter()const;
 	float GetHorizontalRadius()const;
 	float GetVerticalRadius()const;

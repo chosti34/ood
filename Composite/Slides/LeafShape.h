@@ -9,8 +9,8 @@ public:
 
 	void Draw(ICanvas& canvas)const override;
 
-	RectF GetFrame()const override;
-	void SetFrame(const RectF& frame) override;
+	// RectF GetFrame()const override;
+	// void SetFrame(const RectF& frame) override;
 
 	IFillStyle& GetFillStyle() override;
 	const IFillStyle& GetFillStyle()const override;

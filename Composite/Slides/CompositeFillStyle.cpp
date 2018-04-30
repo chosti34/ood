@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CompositeFillStyle.h"
 #include "ICompositeShape.h"
+#include "GetCompositePropertyValue.h"
 
 CompositeFillStyle::CompositeFillStyle(ICompositeShape& composite)
 	: m_composite(composite)
@@ -9,20 +10,9 @@ CompositeFillStyle::CompositeFillStyle(ICompositeShape& composite)
 
 boost::optional<bool> CompositeFillStyle::IsEnabled()const
 {
-	if (m_composite.GetShapesCount() == 0u)
-	{
-		return boost::none;
-	}
-
-	boost::optional<bool> enabled = m_composite.GetShape(0)->GetFillStyle().IsEnabled();
-	for (size_t i = 1; i < m_composite.GetShapesCount(); ++i)
-	{
-		if (m_composite.GetShape(i)->GetFillStyle().IsEnabled() != enabled)
-		{
-			return boost::none;
-		}
-	}
-	return enabled;
+	return GetCompositePropertyValueIfChildrenAreSame<bool>(m_composite.GetShapesCount(), [this](size_t index) {
+		return m_composite.GetShape(index)->GetFillStyle().IsEnabled();
+	});
 }
 
 void CompositeFillStyle::Enable(bool enable)
@@ -35,20 +25,9 @@ void CompositeFillStyle::Enable(bool enable)
 
 boost::optional<uint32_t> CompositeFillStyle::GetColor()const
 {
-	if (m_composite.GetShapesCount() == 0u)
-	{
-		return boost::none;
-	}
-
-	boost::optional<uint32_t> color = m_composite.GetShape(0)->GetFillStyle().GetColor();
-	for (size_t i = 1; i < m_composite.GetShapesCount(); ++i)
-	{
-		if (m_composite.GetShape(i)->GetFillStyle().GetColor() != color)
-		{
-			return boost::none;
-		}
-	}
-	return color;
+	return GetCompositePropertyValueIfChildrenAreSame<uint32_t>(m_composite.GetShapesCount(), [this](size_t index) {
+		return m_composite.GetShape(index)->GetFillStyle().GetColor();
+	});
 }
 
 void CompositeFillStyle::SetColor(uint32_t color)
