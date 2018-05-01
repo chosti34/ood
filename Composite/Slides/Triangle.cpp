@@ -25,7 +25,6 @@ RectF Triangle::GetFrame()const
 
 void Triangle::SetFrame(const RectF& frame)
 {
-	// TODO: make evaluation of GetFrame lazy or something
 	std::vector<std::pair<float, float>> percentages;
 	percentages.reserve(3);
 

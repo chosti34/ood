@@ -19,15 +19,57 @@ void CompositeShape::Draw(ICanvas& canvas)const
 
 RectF CompositeShape::GetFrame()const
 {
-	// вернуть прямоугольник, ограничивающий находящиеся внутри группы фигуры
-	return RectF();
+	if (m_shapes.GetShapesCount() == 0)
+	{
+		return RectF{};
+	}
+
+	auto innerFrame = m_shapes.GetShape(0)->GetFrame();
+	float minX = innerFrame.left;
+	float minY = innerFrame.top;
+	float maxX = innerFrame.left + innerFrame.width;
+	float maxY = innerFrame.top + innerFrame.height;
+
+	for (size_t i = 1; i < m_shapes.GetShapesCount(); ++i)
+	{
+		innerFrame = m_shapes.GetShape(i)->GetFrame();
+		if (innerFrame.left < minX)
+		{
+			minX = innerFrame.left;
+		}
+		if (innerFrame.top < minY)
+		{
+			minY = innerFrame.top;
+		}
+		if (innerFrame.left + innerFrame.width > maxX)
+		{
+			maxX = innerFrame.left + innerFrame.width;
+		}
+		if (innerFrame.top + innerFrame.height > maxY)
+		{
+			maxY = innerFrame.top + innerFrame.height;
+		}
+	}
+	return RectF{ minX, minY, maxX - minX, maxY - minY };
 }
 
 void CompositeShape::SetFrame(const RectF& frame)
 {
-	// изменить координаты и размеры фигур внутри группы
-	//  пропорционально их координатам и размерам внутри фигуры
-	(void)frame;
+	const auto oldCompositeFrame = GetFrame();
+	const std::pair<float, float> percentage = {
+		frame.width / oldCompositeFrame.width, frame.height / oldCompositeFrame.height };
+
+	for (size_t i = 0; i < m_shapes.GetShapesCount(); ++i)
+	{
+		const auto oldInnerFrame = m_shapes.GetShape(i)->GetFrame();
+		const float newX = frame.left + (oldInnerFrame.left - oldCompositeFrame.left);
+		const float newY = frame.top + (oldInnerFrame.top - oldCompositeFrame.top);
+		m_shapes.GetShape(i)->SetFrame(RectF{
+			newX * percentage.first,
+			newY * percentage.second,
+			oldInnerFrame.width * percentage.first,
+			oldInnerFrame.height * percentage.second});
+	}
 }
 
 IFillStyle& CompositeShape::GetFillStyle()
