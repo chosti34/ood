@@ -1,5 +1,6 @@
 #pragma once
 #include "IShape.h"
+#include <memory>
 
 class LeafShape : public IShape
 {

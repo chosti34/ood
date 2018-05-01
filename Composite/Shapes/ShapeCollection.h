@@ -1,5 +1,6 @@
 #pragma once
 #include "IShapeCollection.h"
+#include <vector>
 
 class ShapeCollection : public IShapeCollection
 {

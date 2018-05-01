@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Vector2D.h"
+#include <cmath>
 
 Vector2D::Vector2D(const Point2D& from, const Point2D& to)
 	: x(to.x - from.x)

@@ -13,16 +13,16 @@ LeafShape::~LeafShape() = default;
 
 void LeafShape::Draw(ICanvas& canvas)const
 {
+	if (*m_fillStyle->IsEnabled())
+	{
+		canvas.SetFillColor(*m_fillStyle->GetColor());
+		FillDrawImpl(canvas);
+	}
 	if (*m_outlineStyle->IsEnabled())
 	{
 		canvas.SetOutlineThickness(*m_outlineStyle->GetThickness());
 		canvas.SetOutlineColor(*m_outlineStyle->GetColor());
 		StrokeDrawImpl(canvas);
-	}
-	if (*m_fillStyle->IsEnabled())
-	{
-		canvas.SetFillColor(*m_fillStyle->GetColor());
-		FillDrawImpl(canvas);
 	}
 }
 
