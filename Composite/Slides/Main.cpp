@@ -1,104 +1,67 @@
-#include <afxwin.h>
+#include "stdafx.h"
+#include <wx/wxprec.h>
 
-#define IDC_MYBUTTON 100
-#define IDC_MYEDIT 102
-
-class CMyButton : public CButton
+enum
 {
-public:
-	afx_msg void OnLButtonDblClk(UINT, CPoint);
-	afx_msg void OnRButtonDblClk(UINT, CPoint);
-private:
-	DECLARE_MESSAGE_MAP(); // таблица откликов кнопки
+	ID_Hello
 };
 
-void CMyButton::OnLButtonDblClk(UINT, CPoint)
-{
-	MoveWindow(CRect(120, 100, 220, 150), TRUE);
-}
-
-void CMyButton::OnRButtonDblClk(UINT, CPoint)
-{
-	MoveWindow(CRect(120, 10, 220, 50), TRUE);
-}
-
-BEGIN_MESSAGE_MAP(CMyButton, CButton) // таблица откликов на сообщения
-	ON_WM_LBUTTONDBLCLK()
-	ON_WM_RBUTTONDBLCLK()
-END_MESSAGE_MAP()
-
-class CMainWnd : public CFrameWnd
+class MyFrame : public wxFrame
 {
 public:
-	CMainWnd()
+	MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
+		: wxFrame(NULL, wxID_ANY, title, pos, size)
 	{
-		Create(NULL, _T("Slides"), WS_OVERLAPPEDWINDOW, rectDefault, NULL, NULL);
-		m_static = new CStatic;
-		if (m_static != nullptr)
-		{
-			m_static->Create(_T("static"), WS_CHILD | WS_VISIBLE | SS_CENTER, CRect(10, 10, 100, 50), this);
-		}
-		m_button = new CMyButton;
-		if (m_button != nullptr)
-		{
-			m_button->Create(_T("button"), WS_CHILD | WS_VISIBLE | SS_CENTER, CRect(120, 10, 220, 50), this, IDC_MYBUTTON);
-		}
-		m_edit = new CEdit;
-		if (m_edit != nullptr)
-		{
-			m_edit->Create(WS_CHILD | WS_VISIBLE | WS_BORDER, CRect(240, 10, 340, 50), this, IDC_MYEDIT);
-		}
+		wxMenu *menuFile = new wxMenu;
+		menuFile->Append(ID_Hello, "&Hello...\tCtrl-H",
+			"Help string shown in status bar for this menu item");
+		menuFile->AppendSeparator();
+		menuFile->Append(wxID_EXIT);
+		wxMenu *menuHelp = new wxMenu;
+		menuHelp->Append(wxID_ABOUT);
+		wxMenuBar *menuBar = new wxMenuBar;
+		menuBar->Append(menuFile, "&File");
+		menuBar->Append(menuHelp, "&Help");
+		SetMenuBar(menuBar);
+		CreateStatusBar();
+		SetStatusText("Welcome to wxWidgets!");
 	}
-
-	~CMainWnd()
-	{
-		if (m_static) delete m_static;
-		if (m_button) delete m_button;
-		if (m_edit) delete m_edit;
-	}
-
-	afx_msg void CMainWnd::OnKeyDown(UINT, UINT, UINT)
-	{
-		AfxMessageBox(_T(" Key Button Down "));
-	}
-	afx_msg void CMainWnd::OnRButtonDblClk(UINT, CPoint)
-	{
-		AfxMessageBox(_T(" Rigth Button Click "));
-	}
-	afx_msg void CMainWnd::OnLButtonDblClk(UINT, CPoint)
-	{
-		AfxMessageBox(_T(" Left Button Click "));
-	}
-
-	DECLARE_MESSAGE_MAP(); // таблица откликов
 
 private:
-	CStatic* m_static;
-	CMyButton* m_button;
-	CEdit* m_edit;
+	void OnHello(wxCommandEvent& event)
+	{
+		wxLogMessage("Hello world from wxWidgets!");
+	}
+
+	void OnExit(wxCommandEvent& event)
+	{
+		Close(true);
+	}
+
+	void OnAbout(wxCommandEvent& event)
+	{
+		wxMessageBox("This is a wxWidgets' Hello world sample",
+			"About Hello World", wxOK | wxICON_INFORMATION);
+	}
+
+	wxDECLARE_EVENT_TABLE();
 };
 
-BEGIN_MESSAGE_MAP(CMainWnd, CFrameWnd)	// таблица откликов на сообщения
-	ON_WM_LBUTTONDBLCLK(OnLeftButtonDoubleClick)		// реакция на нажатие левой кнопки мыши
-	ON_WM_RBUTTONDBLCLK()		// реакция на нажатие правой кнопки мышки
-	ON_WM_KEYDOWN()			// реакция на нажатие клавиши
-END_MESSAGE_MAP()
+wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
+	EVT_MENU(ID_Hello, MyFrame::OnHello)
+	EVT_MENU(wxID_EXIT, MyFrame::OnExit)
+	EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
+wxEND_EVENT_TABLE()
 
-class CMyApp : public CWinApp
+class App : public wxApp
 {
 public:
-	CMyApp()
+	bool OnInit()wxOVERRIDE
 	{
-	}
-
-	BOOL InitInstance()override
-	{
-		m_pMainWnd = new CMainWnd();
-		ASSERT(m_pMainWnd);
-		m_pMainWnd->ShowWindow(SW_SHOW);
-		m_pMainWnd->UpdateWindow();
-		return TRUE;
+		MyFrame* frame = new MyFrame("Hello World", wxPoint(50, 50), wxSize(450, 340));
+		frame->Show(true);
+		return true;
 	}
 };
 
-CMyApp app;
+wxIMPLEMENT_APP(App);
