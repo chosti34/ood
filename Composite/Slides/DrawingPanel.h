@@ -9,7 +9,6 @@ class DrawingPanel : public wxPanel
 {
 public:
 	DrawingPanel(wxFrame* frame);
-
 	void AddDrawable(const std::shared_ptr<ICanvasDrawable>& drawable);
 
 private:
@@ -17,6 +16,5 @@ private:
 	void OnPaint(wxPaintEvent& event);
 
 private:
-	std::unique_ptr<ICanvas> m_canvas;
 	std::vector<std::shared_ptr<ICanvasDrawable>> m_drawables;
 };

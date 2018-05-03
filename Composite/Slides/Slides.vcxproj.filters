@@ -41,5 +41,8 @@
     <ClInclude Include="Canvas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MinMaxFix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
