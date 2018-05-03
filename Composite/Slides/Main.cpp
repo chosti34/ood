@@ -1,13 +1,19 @@
 #include "stdafx.h"
 #include "MainFrm.h"
+#include "DrawingPanel.h"
 
 class App : public wxApp
 {
 public:
 	bool OnInit()wxOVERRIDE
 	{
-		MainFrm* frame = new MainFrm("Slides", wxPoint(50, 50), wxSize(450, 340));
+		wxFrame* frame = new MainFrm("Slides");
+		wxPanel* panel = new DrawingPanel(frame);
+
+		frame->SetClientSize(wxRect(0, 0, 800, 600));
+		frame->Centre();
 		frame->Show(true);
+
 		return true;
 	}
 };

@@ -9,8 +9,8 @@ enum
 };
 }
 
-MainFrm::MainFrm(const wxString& title, const wxPoint& pos, const wxSize& size)
-	: wxFrame(NULL, wxID_ANY, title, pos, size)
+MainFrm::MainFrm(const wxString& title)
+	: wxFrame(NULL, wxID_ANY, title)
 {
 	wxMenu* menuFileItem = new wxMenu;
 	menuFileItem->Append(MenuFileHelloItemID, "&Hello...\tCtrl-H",

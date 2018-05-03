@@ -4,7 +4,7 @@
 class MainFrm : public wxFrame
 {
 public:
-	MainFrm(const wxString& title, const wxPoint& pos, const wxSize& size);
+	MainFrm(const wxString& title);
 
 private:
 	void OnHello(wxCommandEvent& event);
