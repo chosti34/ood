@@ -87,6 +87,12 @@
     <ClInclude Include="ShapeCollection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ISlide.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Slide.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -129,6 +135,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ShapeCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Slide.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

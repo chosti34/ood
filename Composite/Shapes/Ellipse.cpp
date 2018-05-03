@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Ellipse.h"
 
+using namespace shapelib;
+
 Ellipse::Ellipse(const Point2D& center, float horizontalRadius, float verticalRadius)
 	: m_center(center)
 	, m_horizontalRadius(horizontalRadius)

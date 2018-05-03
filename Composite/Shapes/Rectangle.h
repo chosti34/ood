@@ -1,6 +1,8 @@
 #pragma once
 #include "LeafShape.h"
 
+namespace shapelib
+{
 class Rectangle : public LeafShape
 {
 public:
@@ -22,3 +24,4 @@ private:
 	float m_width;
 	float m_height;
 };
+}

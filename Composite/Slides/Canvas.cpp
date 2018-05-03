@@ -44,7 +44,7 @@ void Canvas::DrawEllipse(const Point2D& center, float horizontalRadius, float ve
 {
 	m_gfx.DrawEllipse(&m_pen, Gdiplus::RectF(
 		center.x - horizontalRadius,
-		center.y - horizontalRadius,
+		center.y - verticalRadius,
 		2 * horizontalRadius,
 		2 * verticalRadius));
 }

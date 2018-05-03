@@ -1,6 +1,8 @@
 #pragma once
 #include "LeafShape.h"
 
+namespace shapelib
+{
 class Ellipse : public LeafShape
 {
 public:
@@ -22,3 +24,4 @@ private:
 	float m_horizontalRadius;
 	float m_verticalRadius;
 };
+}

@@ -71,9 +71,6 @@ void DrawingPanel::OnPaint(wxPaintEvent& WXUNUSED(event))
 	gfx.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
 
 	Canvas canvas(gfx);
-	canvas.DrawEllipse({ 0, 0 }, 100, 50);
-	canvas.SetFillColor(0xff0cf0cc);
-	canvas.FillEllipse({ 0, 0 }, 100, 50);
 	for (const auto& drawable : m_drawables)
 	{
 		drawable->Draw(canvas);

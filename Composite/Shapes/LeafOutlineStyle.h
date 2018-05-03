@@ -4,7 +4,9 @@
 class LeafOutlineStyle : public IOutlineStyle
 {
 public:
-	LeafOutlineStyle(bool enabled = true, uint32_t color = 0, unsigned thickness = 1);
+	LeafOutlineStyle(bool enabled = true,
+		uint32_t color = std::numeric_limits<uint32_t>::max(),
+		unsigned thickness = 1);
 
 	boost::optional<bool> IsEnabled()const override;
 	void Enable(bool enable) override;

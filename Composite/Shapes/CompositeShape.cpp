@@ -21,7 +21,7 @@ RectF CompositeShape::GetFrame()const
 {
 	if (m_shapes.GetShapesCount() == 0)
 	{
-		return RectF{};
+		throw std::logic_error("can't get frame of empty composite shape");
 	}
 
 	auto innerFrame = m_shapes.GetShape(0)->GetFrame();
@@ -55,6 +55,11 @@ RectF CompositeShape::GetFrame()const
 
 void CompositeShape::SetFrame(const RectF& frame)
 {
+	if (m_shapes.GetShapesCount() == 0)
+	{
+		throw std::logic_error("can't set frame to composite shape that has no children");
+	}
+
 	const auto oldCompositeFrame = GetFrame();
 	const std::pair<float, float> percentage = {
 		frame.width / oldCompositeFrame.width, frame.height / oldCompositeFrame.height };

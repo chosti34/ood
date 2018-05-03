@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Rectangle.h"
 
+using namespace shapelib;
+
 namespace
 {
 std::vector<Point2D> GetRectangleBoundingPoints(const Point2D& leftTop, float width, float height)
