@@ -12,7 +12,7 @@ public:
 
 		frame->SetClientSize(wxRect(0, 0, 800, 600));
 		frame->Centre();
-		frame->Show(true);
+		frame->Show();
 
 		return true;
 	}

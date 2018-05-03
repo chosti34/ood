@@ -7,9 +7,8 @@ public:
 	MainFrm(const wxString& title);
 
 private:
+	wxDECLARE_EVENT_TABLE();
 	void OnHello(wxCommandEvent& event);
 	void OnExit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
-
-	wxDECLARE_EVENT_TABLE();
 };
