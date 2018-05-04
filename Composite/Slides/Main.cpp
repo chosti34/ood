@@ -55,7 +55,7 @@ std::shared_ptr<ISlide> CreateBeautifulSlide(float width, float height)
 	house->InsertShape(roof);
 
 	auto frame = house->GetFrame();
-	house->SetFrame(RectF{ frame.left, frame.top, frame.width - 15, frame.height + 5 });
+	house->SetFrame(RectF{ frame.left, frame.top, frame.width, frame.height });
 
 	slide->GetShapes().InsertShape(ground);
 	slide->GetShapes().InsertShape(sun);

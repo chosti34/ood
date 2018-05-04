@@ -67,11 +67,11 @@ void CompositeShape::SetFrame(const RectF& frame)
 	for (size_t i = 0; i < m_shapes.GetShapesCount(); ++i)
 	{
 		const auto oldInnerFrame = m_shapes.GetShape(i)->GetFrame();
-		const float newX = frame.left + (oldInnerFrame.left - oldCompositeFrame.left);
-		const float newY = frame.top + (oldInnerFrame.top - oldCompositeFrame.top);
+		const float newX = frame.left + (oldInnerFrame.left - oldCompositeFrame.left) * percentage.first;
+		const float newY = frame.top + (oldInnerFrame.top - oldCompositeFrame.top) * percentage.second;
 		m_shapes.GetShape(i)->SetFrame(RectF{
-			newX * percentage.first,
-			newY * percentage.second,
+			newX,
+			newY,
 			oldInnerFrame.width * percentage.first,
 			oldInnerFrame.height * percentage.second});
 	}

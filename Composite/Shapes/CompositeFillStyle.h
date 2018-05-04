@@ -1,7 +1,6 @@
 #pragma once
 #include "IFillStyle.h"
-
-class ICompositeShape;
+#include "ICompositeShape.h"
 
 class CompositeFillStyle : public IFillStyle
 {
