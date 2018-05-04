@@ -13,7 +13,7 @@ public:
 	virtual void FillEllipse(const Point2D& center, float horizontalRadius, float verticalRadius) override;
 	virtual void SetFillColor(uint32_t fillColor) override;
 	virtual void SetOutlineColor(uint32_t outlineColor) override;
-	virtual void SetOutlineThickness(unsigned thickness) override;
+	virtual void SetOutlineThickness(float thickness) override;
 
 private:
 	Gdiplus::Graphics& m_gfx;

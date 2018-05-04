@@ -12,38 +12,38 @@ enum
 MainFrm::MainFrm(const wxString& title)
 	: wxFrame(NULL, wxID_ANY, title)
 {
-	wxMenu* menuFileItem = new wxMenu;
-	menuFileItem->Append(MenuFileHelloItemID, "&Hello...\tCtrl-H",
+	wxMenu* fileItem = new wxMenu;
+	fileItem->Append(MenuFileHelloItemID, "&Hello...\tCtrl-H",
 		"Help string shown in status bar for this menu item");
-	menuFileItem->AppendSeparator();
-	menuFileItem->Append(wxID_EXIT);
+	fileItem->AppendSeparator();
+	fileItem->Append(wxID_EXIT);
 
-	wxMenu* menuHelpItem = new wxMenu;
-	menuHelpItem->Append(wxID_ABOUT);
+	wxMenu* helpItem = new wxMenu;
+	helpItem->Append(wxID_ABOUT);
 
 	wxMenuBar* menuBar = new wxMenuBar;
-	menuBar->Append(menuFileItem, "&File");
-	menuBar->Append(menuHelpItem, "&Help");
+	menuBar->Append(fileItem, "&File");
+	menuBar->Append(helpItem, "&Help");
 
 	SetMenuBar(menuBar);
 	CreateStatusBar();
 	SetStatusText("Welcome to wxWidgets!");
 }
 
-void MainFrm::OnHello(wxCommandEvent& event)
+void MainFrm::OnHello(wxCommandEvent& WXUNUSED(event))
 {
 	wxLogMessage("Hello world from wxWidgets!");
 }
 
-void MainFrm::OnExit(wxCommandEvent& event)
+void MainFrm::OnExit(wxCommandEvent& WXUNUSED(event))
 {
 	Close(true);
 }
 
-void MainFrm::OnAbout(wxCommandEvent& event)
+void MainFrm::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-	wxMessageBox("This is a wxWidgets' Hello world sample",
-		"About Hello World", wxOK | wxICON_INFORMATION);
+	wxMessageBox("Composite pattern with shapes example",
+		"About Slides", wxOK | wxICON_INFORMATION);
 }
 
 wxBEGIN_EVENT_TABLE(MainFrm, wxFrame)

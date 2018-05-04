@@ -14,8 +14,8 @@ public:
 	boost::optional<uint32_t> GetColor()const override;
 	void SetColor(uint32_t color) override;
 
-	boost::optional<unsigned> GetThickness()const override;
-	void SetThickness(unsigned thickness) override;
+	boost::optional<float> GetThickness()const override;
+	void SetThickness(float thickness) override;
 
 private:
 	ICompositeShape& m_composite;

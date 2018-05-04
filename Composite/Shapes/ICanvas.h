@@ -16,5 +16,5 @@ public:
 
 	virtual void SetFillColor(uint32_t fillColor) = 0;
 	virtual void SetOutlineColor(uint32_t outlineColor) = 0;
-	virtual void SetOutlineThickness(unsigned thickness) = 0;
+	virtual void SetOutlineThickness(float thickness) = 0;
 };

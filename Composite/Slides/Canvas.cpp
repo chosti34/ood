@@ -68,7 +68,7 @@ void Canvas::SetOutlineColor(uint32_t outlineColor)
 	m_pen.SetColor(GetColorFromUint32(outlineColor));
 }
 
-void Canvas::SetOutlineThickness(unsigned thickness)
+void Canvas::SetOutlineThickness(float thickness)
 {
 	m_pen.SetWidth(thickness);
 }

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "LeafOutlineStyle.h"
 
-LeafOutlineStyle::LeafOutlineStyle(bool enabled, uint32_t color, unsigned thickness)
+LeafOutlineStyle::LeafOutlineStyle(bool enabled, uint32_t color, float thickness)
 	: m_enabled(enabled)
 	, m_color(color)
 	, m_thickness(thickness)
@@ -28,12 +28,12 @@ void LeafOutlineStyle::SetColor(uint32_t color)
 	m_color = color;
 }
 
-boost::optional<unsigned> LeafOutlineStyle::GetThickness()const
+boost::optional<float> LeafOutlineStyle::GetThickness()const
 {
 	return m_thickness;
 }
 
-void LeafOutlineStyle::SetThickness(unsigned thickness)
+void LeafOutlineStyle::SetThickness(float thickness)
 {
 	m_thickness = thickness;
 }

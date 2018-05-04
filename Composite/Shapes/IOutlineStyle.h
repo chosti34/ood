@@ -13,6 +13,6 @@ public:
 	virtual boost::optional<uint32_t> GetColor()const = 0;
 	virtual void SetColor(uint32_t color) = 0;
 
-	virtual boost::optional<unsigned> GetThickness()const = 0;
-	virtual void SetThickness(unsigned thickness) = 0;
+	virtual boost::optional<float> GetThickness()const = 0;
+	virtual void SetThickness(float thickness) = 0;
 };

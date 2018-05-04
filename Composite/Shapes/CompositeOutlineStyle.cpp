@@ -38,14 +38,14 @@ void CompositeOutlineStyle::SetColor(uint32_t color)
 	}
 }
 
-boost::optional<unsigned> CompositeOutlineStyle::GetThickness()const
+boost::optional<float> CompositeOutlineStyle::GetThickness()const
 {
-	return GetCompositePropertyValueIfChildrenAreSame<unsigned>(m_composite.GetShapesCount(), [this](size_t index) {
+	return GetCompositePropertyValueIfChildrenAreSame<float>(m_composite.GetShapesCount(), [this](size_t index) {
 		return m_composite.GetShape(index)->GetOutlineStyle().GetThickness();
 	});
 }
 
-void CompositeOutlineStyle::SetThickness(unsigned thickness)
+void CompositeOutlineStyle::SetThickness(float thickness)
 {
 	for (size_t i = 0; i < m_composite.GetShapesCount(); ++i)
 	{
