@@ -1,54 +1,49 @@
 #include "stdafx.h"
 #include "CompositeOutlineStyle.h"
-#include "ICompositeShape.h"
-#include "GetCompositePropertyValue.h"
 
-CompositeOutlineStyle::CompositeOutlineStyle(ICompositeShape& composite)
-	: m_composite(composite)
+CompositeOutlineStyle::CompositeOutlineStyle(StyleEnumerator<IOutlineStyle> && enumerate)
+	: m_enumerate(enumerate)
 {
 }
 
 boost::optional<bool> CompositeOutlineStyle::IsEnabled()const
 {
-	return GetCompositePropertyValueIfChildrenAreSame<bool>(m_composite.GetShapesCount(), [this](size_t index) {
-		return m_composite.GetShape(index)->GetOutlineStyle().IsEnabled();
+	return GetValueIfAllSame<IOutlineStyle, bool>(m_enumerate, [](const IOutlineStyle& style) {
+		return style.IsEnabled();
 	});
 }
 
 void CompositeOutlineStyle::Enable(bool enable)
 {
-	for (size_t i = 0; i < m_composite.GetShapesCount(); ++i)
-	{
-		m_composite.GetShape(i)->GetOutlineStyle().Enable(enable);
-	}
+	m_enumerate([&enable](IOutlineStyle& style) {
+		style.Enable(enable);
+	});
 }
 
 boost::optional<uint32_t> CompositeOutlineStyle::GetColor()const
 {
-	return GetCompositePropertyValueIfChildrenAreSame<uint32_t>(m_composite.GetShapesCount(), [this](size_t index) {
-		return m_composite.GetShape(index)->GetOutlineStyle().GetColor();
+	return GetValueIfAllSame<IOutlineStyle, uint32_t>(m_enumerate, [](const IOutlineStyle& style) {
+		return style.GetColor();
 	});
 }
 
 void CompositeOutlineStyle::SetColor(uint32_t color)
 {
-	for (size_t i = 0; i < m_composite.GetShapesCount(); ++i)
-	{
-		m_composite.GetShape(i)->GetOutlineStyle().SetColor(color);
-	}
+	m_enumerate([&color](IOutlineStyle& style) {
+		style.SetColor(color);
+	});
 }
 
 boost::optional<float> CompositeOutlineStyle::GetThickness()const
 {
-	return GetCompositePropertyValueIfChildrenAreSame<float>(m_composite.GetShapesCount(), [this](size_t index) {
-		return m_composite.GetShape(index)->GetOutlineStyle().GetThickness();
+	return GetValueIfAllSame<IOutlineStyle, float>(m_enumerate, [](const IOutlineStyle& style) {
+		return style.GetThickness();
 	});
 }
 
 void CompositeOutlineStyle::SetThickness(float thickness)
 {
-	for (size_t i = 0; i < m_composite.GetShapesCount(); ++i)
-	{
-		m_composite.GetShape(i)->GetOutlineStyle().SetThickness(thickness);
-	}
+	m_enumerate([&thickness](IOutlineStyle& style) {
+		style.SetThickness(thickness);
+	});
 }

@@ -1,12 +1,11 @@
 #pragma once
 #include "IOutlineStyle.h"
-
-class ICompositeShape;
+#include "StyleEnumerator.h"
 
 class CompositeOutlineStyle : public IOutlineStyle
 {
 public:
-	CompositeOutlineStyle(ICompositeShape& composite);
+	CompositeOutlineStyle(StyleEnumerator<IOutlineStyle>&& enumerate);
 
 	boost::optional<bool> IsEnabled()const override;
 	void Enable(bool enable) override;
@@ -18,5 +17,5 @@ public:
 	void SetThickness(float thickness) override;
 
 private:
-	ICompositeShape& m_composite;
+	StyleEnumerator<IOutlineStyle> m_enumerate;
 };

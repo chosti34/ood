@@ -2,11 +2,22 @@
 #include "CompositeShape.h"
 #include "CompositeOutlineStyle.h"
 #include "CompositeFillStyle.h"
+#include "StyleEnumerator.h"
 
 CompositeShape::CompositeShape()
-	: m_fillStyle(std::make_unique<CompositeFillStyle>(*this))
-	, m_outlineStyle(std::make_unique<CompositeOutlineStyle>(*this))
 {
+	m_fillStyle = std::make_unique<CompositeFillStyle>([this](StyleCallback<IFillStyle>&& callback) {
+		for (size_t i = 0; i < m_shapes.GetShapesCount(); ++i)
+		{
+			callback(m_shapes.GetShape(i)->GetFillStyle());
+		}
+	});
+	m_outlineStyle = std::make_unique<CompositeOutlineStyle>([this](StyleCallback<IOutlineStyle>&& callback) {
+		for (size_t i = 0; i < m_shapes.GetShapesCount(); ++i)
+		{
+			callback(m_shapes.GetShape(i)->GetOutlineStyle());
+		}
+	});
 }
 
 void CompositeShape::Draw(ICanvas& canvas)const

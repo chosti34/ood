@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <vector>
 
+using namespace shapelib;
+
 Triangle::Triangle(const Point2D& vertex1, const Point2D& vertex2, const Point2D& vertex3)
 	: m_vertex1(vertex1)
 	, m_vertex2(vertex2)

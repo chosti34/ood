@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_SUITE(CCompositeShape)
 		{
 			composite.InsertShape(std::make_shared<shapelib::Ellipse>(Point2D{ 0, 0 }, 10.f, 10.f));
 			composite.InsertShape(std::make_shared<shapelib::Rectangle>(Point2D{ 10, 10 }, 15.f, 15.f));
-			composite.InsertShape(std::make_shared<Triangle>(Point2D{ 0, 0 }, Point2D{ 1, 1 }, Point2D{0, 3}));
+			composite.InsertShape(std::make_shared<shapelib::Triangle>(Point2D{ 0, 0 }, Point2D{ 1, 1 }, Point2D{0, 3}));
 		}
 
 		CompositeShape composite;

@@ -1,6 +1,8 @@
 #pragma once
 #include "LeafShape.h"
 
+namespace shapelib
+{
 class Triangle : public LeafShape
 {
 public:
@@ -14,11 +16,12 @@ public:
 	const Point2D& GetVertex3()const;
 
 private:
-	virtual void StrokeDrawImpl(ICanvas& canvas)const override;
-	virtual void FillDrawImpl(ICanvas& canvas)const override;
+	void StrokeDrawImpl(ICanvas& canvas)const override;
+	void FillDrawImpl(ICanvas& canvas)const override;
 
 private:
 	Point2D m_vertex1;
 	Point2D m_vertex2;
 	Point2D m_vertex3;
 };
+}

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Canvas.h"
+#include "../Shapes/Color.h"
 
 namespace
 {
@@ -11,15 +12,6 @@ std::vector<Gdiplus::PointF> ToGdiplusPoints(const std::vector<Point2D>& points)
 	});
 	return gdiPoints;
 }
-
-Gdiplus::Color GetColorFromUint32(uint32_t color)
-{
-	uint8_t r = (color >> 24) & 0xFF;
-	uint8_t g = (color >> 16) & 0xFF;
-	uint8_t b = (color >> 8) & 0xFF;
-	uint8_t a = color & 0xFF;
-	return Gdiplus::Color(a, r, g, b);
-}
 }
 
 Canvas::Canvas(Gdiplus::Graphics& gfx)
@@ -27,6 +19,7 @@ Canvas::Canvas(Gdiplus::Graphics& gfx)
 	, m_pen(Gdiplus::Color())
 	, m_brush(Gdiplus::Color())
 {
+	m_pen.SetLineJoin(Gdiplus::LineJoinRound);
 }
 
 void Canvas::DrawLine(const Point2D& from, const Point2D& to)
@@ -36,7 +29,7 @@ void Canvas::DrawLine(const Point2D& from, const Point2D& to)
 
 void Canvas::FillPolygon(const std::vector<Point2D>& points)
 {
-	auto gdiplusPoints = ToGdiplusPoints(points);
+	const std::vector<Gdiplus::PointF> gdiplusPoints = ToGdiplusPoints(points);
 	m_gfx.FillPolygon(&m_brush, gdiplusPoints.data(), points.size());
 }
 
@@ -60,12 +53,14 @@ void Canvas::FillEllipse(const Point2D& center, float horizontalRadius, float ve
 
 void Canvas::SetFillColor(uint32_t fillColor)
 {
-	m_brush.SetColor(GetColorFromUint32(fillColor));
+	const RGBAColor rgba = GetColorComponents(fillColor);
+	m_brush.SetColor(Gdiplus::Color(rgba.a, rgba.r, rgba.g, rgba.b));
 }
 
 void Canvas::SetOutlineColor(uint32_t outlineColor)
 {
-	m_pen.SetColor(GetColorFromUint32(outlineColor));
+	const RGBAColor rgba = GetColorComponents(outlineColor);
+	m_pen.SetColor(Gdiplus::Color(rgba.a, rgba.r, rgba.g, rgba.b));
 }
 
 void Canvas::SetOutlineThickness(float thickness)

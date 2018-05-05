@@ -1,11 +1,11 @@
 #pragma once
 #include "IFillStyle.h"
-#include "IStyleEnumerator.h"
+#include "StyleEnumerator.h"
 
 class CompositeFillStyle : public IFillStyle
 {
 public:
-	CompositeFillStyle(IStyleEnumerator<IFillStyle>& enumerator);
+	CompositeFillStyle(StyleEnumerator<IFillStyle> && enumerate);
 
 	boost::optional<bool> IsEnabled()const override;
 	void Enable(bool enable) override;
@@ -14,5 +14,5 @@ public:
 	void SetColor(uint32_t color) override;
 
 private:
-	IStyleEnumerator<IFillStyle>& m_enumerator;
+	StyleEnumerator<IFillStyle> m_enumerate;
 };
