@@ -114,7 +114,7 @@ class CHasQuarterState : public IState
 {
 public:
 	CHasQuarterState(IGumballMachine& gumballMachine)
-		:m_gumballMachine(gumballMachine)
+		: m_gumballMachine(gumballMachine)
 	{
 	}
 
@@ -190,7 +190,7 @@ private:
 class CGumballMachine : private IGumballMachine
 {
 public:
-	CGumballMachine(unsigned numBalls)
+	CGumballMachine(unsigned numBalls = 0)
 		: m_soldState(*this)
 		, m_soldOutState(*this)
 		, m_noQuarterState(*this)
@@ -222,12 +222,10 @@ public:
 
 	std::string ToString()const
 	{
-		auto fmt = boost::format(R"(
-Mighty Gumball, Inc.
+		auto fmt = boost::format(R"(Mighty Gumball, Inc.
 C++-enabled Standing Gumball Model #2016 (with state)
 Inventory: %1% gumball%2%
-Machine is %3%
-)");
+Machine is %3%)");
 		return (fmt % m_count % (m_count != 1 ? "s" : "") % m_state->ToString()).str();
 	}
 

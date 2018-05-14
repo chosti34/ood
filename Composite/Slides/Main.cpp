@@ -57,7 +57,7 @@ std::shared_ptr<ISlide> CreateBeautifulSlide(float width, float height)
 	house->InsertShape(roof);
 
 	auto frame = house->GetFrame();
-	house->SetFrame(RectF{ frame.left, frame.top + 40, frame.width, frame.height });
+	house->SetFrame(RectF{ frame.left, frame.top - 100, frame.width * 2, frame.height });
 	house->GetOutlineStyle().SetColor(MapRGB(0xff, 0xff, 0x00));
 	house->GetOutlineStyle().SetThickness(2.f);
 
