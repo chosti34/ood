@@ -1,4 +1,4 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 
 #include "../GumballMachineWithState.h"
 #include "../NaiveGumballMachine.h"
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_SUITE(CGumballMachine)
 			AssertGumballMachineState(*machine, 0, 0, State::SoldOut);
 			BOOST_CHECK(output.is_equal("You can't eject, you haven't inserted a coin yet\n"));
 
-			// Вставляем две монетки в автомат, в котором только одна жвачка
+			// Р’СЃС‚Р°РІР»СЏРµРј РґРІРµ РјРѕРЅРµС‚РєРё РІ Р°РІС‚РѕРјР°С‚, РІ РєРѕС‚РѕСЂРѕРј С‚РѕР»СЊРєРѕ РѕРґРЅР° Р¶РІР°С‡РєР°
 			GumballMachine filledMachine(output, 1);
 			filledMachine.InsertCoin();
 			filledMachine.InsertCoin();
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_SUITE(CGumballMachine)
 			filledMachine.TurnCrank();
 			output.flush();
 
-			// Находимся в состоянии SoldOut и имеем одну монетку внутри
+			// РќР°С…РѕРґРёРјСЃСЏ РІ СЃРѕСЃС‚РѕСЏРЅРёРё SoldOut Рё РёРјРµРµРј РѕРґРЅСѓ РјРѕРЅРµС‚РєСѓ РІРЅСѓС‚СЂРё
 			AssertGumballMachineState(filledMachine, 0, 1, State::SoldOut);
 			filledMachine.EjectCoin();
 			BOOST_CHECK(output.is_equal("All coins returned\n"));
@@ -105,6 +105,30 @@ BOOST_AUTO_TEST_SUITE(CGumballMachine)
 			machine->TurnCrank();
 			AssertGumballMachineState(*machine, 0, 0, State::SoldOut);
 			BOOST_CHECK(output.is_equal("You turned but there's no gumballs\nNo gumball dispensed\n"));
+		}
+
+		BOOST_FIXTURE_TEST_CASE_TEMPLATE(can_be_refilled, GumballMachine,
+			GumballMachineTypeList, GumballMachineFixture)
+		{
+			auto machine = MakeGumballMachine<GumballMachine>();
+			AssertGumballMachineState(*machine, 0, 0, State::SoldOut);
+
+			machine->Refill(3);
+			AssertGumballMachineState(*machine, 3, 0, State::NoCoin);
+
+			for (unsigned i = 0; i < 5; ++i)
+			{
+				machine->InsertCoin();
+			}
+
+			// РљСѓРїРёРј РІСЃРµ 3 Р¶РІР°С‡РєРё, РїСЂРё СЌС‚РѕРј РІ Р°РІС‚РѕРјР°С‚Рµ РѕСЃС‚Р°РЅРµС‚СЃСЏ 2 РјРѕРЅРµС‚С‹ Рё РѕРЅ Р±СѓРґРµС‚ РІ СЃРѕСЃС‚РѕСЏРЅРёРё SoldOut
+			machine->TurnCrank();
+			machine->TurnCrank();
+			machine->TurnCrank();
+			AssertGumballMachineState(*machine, 0, 2, State::SoldOut);
+
+			machine->Refill(5);
+			AssertGumballMachineState(*machine, 5, 2, State::HasCoin);
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 
@@ -124,7 +148,7 @@ BOOST_AUTO_TEST_SUITE(CGumballMachine)
 			BOOST_CHECK(output.is_equal("You inserted a coin\n"));
 			AssertGumballMachineState(*machine, 5, 1, State::HasCoin);
 
-			// Проверяем, что вставлено может быть до 5 монеток
+			// РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РІСЃС‚Р°РІР»РµРЅРѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РґРѕ 5 РјРѕРЅРµС‚РѕРє
 			for (unsigned i = 0; i < 4; ++i)
 			{
 				machine->InsertCoin();
@@ -132,7 +156,7 @@ BOOST_AUTO_TEST_SUITE(CGumballMachine)
 				BOOST_CHECK(output.is_equal("You inserted a coin\n"));
 			}
 
-			// Шестая монетка не вставится
+			// РЁРµСЃС‚Р°СЏ РјРѕРЅРµС‚РєР° РЅРµ РІСЃС‚Р°РІРёС‚СЃСЏ
 			machine->InsertCoin();
 			AssertGumballMachineState(*machine, 5, 5, State::HasCoin);
 			BOOST_CHECK(output.is_equal("You can't insert more than 5 coins\n"));
@@ -154,6 +178,21 @@ BOOST_AUTO_TEST_SUITE(CGumballMachine)
 			machine->TurnCrank();
 			AssertGumballMachineState(*machine, 5, 0, State::NoCoin);
 			BOOST_CHECK(output.is_equal("You turned but there's no coin\nYou need to pay first\n"));
+		}
+
+		BOOST_FIXTURE_TEST_CASE_TEMPLATE(can_be_refilled, GumballMachine, GumballMachineTypeList, GumballMachineFixture)
+		{
+			auto machine = MakeGumballMachine<GumballMachine>(5);
+			AssertGumballMachineState(*machine, 5, 0, State::NoCoin);
+
+			machine->Refill(0);
+			AssertGumballMachineState(*machine, 0, 0, State::SoldOut);
+
+			machine = MakeGumballMachine<GumballMachine>(5);
+			AssertGumballMachineState(*machine, 5, 0, State::NoCoin);
+
+			machine->Refill(10);
+			AssertGumballMachineState(*machine, 10, 0, State::NoCoin);
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 
@@ -179,7 +218,7 @@ BOOST_AUTO_TEST_SUITE(CGumballMachine)
 				BOOST_CHECK(output.is_equal("You inserted a coin\n"));
 			}
 
-			// Пытаемся вставить шестую монетку
+			// РџС‹С‚Р°РµРјСЃСЏ РІСЃС‚Р°РІРёС‚СЊ С€РµСЃС‚СѓСЋ РјРѕРЅРµС‚РєСѓ
 			machine->InsertCoin();
 			AssertGumballMachineState(*machine, 5, 5, State::HasCoin);
 			BOOST_CHECK(output.is_equal("You can't insert more than 5 coins\n"));
@@ -205,22 +244,37 @@ BOOST_AUTO_TEST_SUITE(CGumballMachine)
 			auto machine = MakeGumballMachine<GumballMachine>(5, 1);
 			output.flush();
 
-			// Достаём 4 жвачки из автомата
+			// Р”РѕСЃС‚Р°С‘Рј 4 Р¶РІР°С‡РєРё РёР· Р°РІС‚РѕРјР°С‚Р°
 			for (int i = 0; i < 4; ++i)
 			{
 				machine->TurnCrank();
 				BOOST_CHECK(output.is_equal("You turned...\nA gumball comes rolling out the slot...\n"));
 				AssertGumballMachineState(*machine, 4 - i, 0, State::NoCoin);
 
-				// Возвращаемся в состояние HasCoin
+				// Р’РѕР·РІСЂР°С‰Р°РµРјСЃСЏ РІ СЃРѕСЃС‚РѕСЏРЅРёРµ HasCoin
 				machine->InsertCoin();
 				BOOST_CHECK(output.is_equal("You inserted a coin\n"));
 			}
 
-			// Достаём последнюю жвачку из автомата
+			// Р”РѕСЃС‚Р°С‘Рј РїРѕСЃР»РµРґРЅСЋСЋ Р¶РІР°С‡РєСѓ РёР· Р°РІС‚РѕРјР°С‚Р°
 			machine->TurnCrank();
 			BOOST_CHECK(output.is_equal("You turned...\nA gumball comes rolling out the slot...\nOops, out of gumballs\n"));
 			AssertGumballMachineState(*machine, 0, 0, State::SoldOut);
+		}
+
+		BOOST_FIXTURE_TEST_CASE_TEMPLATE(can_be_refilled, GumballMachine, GumballMachineTypeList, GumballMachineFixture)
+		{
+			auto machine = MakeGumballMachine<GumballMachine>(5, 1);
+			AssertGumballMachineState(*machine, 5, 1, State::HasCoin);
+
+			machine->Refill(0);
+			AssertGumballMachineState(*machine, 0, 1, State::SoldOut);
+
+			machine = MakeGumballMachine<GumballMachine>(5, 2);
+			AssertGumballMachineState(*machine, 5, 2, State::HasCoin);
+
+			machine->Refill(10);
+			AssertGumballMachineState(*machine, 10, 2, State::HasCoin);
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 
@@ -244,11 +298,11 @@ BOOST_AUTO_TEST_SUITE(CGumballMachine)
 	BOOST_FIXTURE_TEST_CASE_TEMPLATE(coins_can_be_returned_when_there_is_no_gumballs_left, GumballMachine,
 		GumballMachineTypeList, GumballMachineFixture)
 	{
-		// Создаём автомат с двумя жвачками внутри
+		// РЎРѕР·РґР°С‘Рј Р°РІС‚РѕРјР°С‚ СЃ РґРІСѓРјСЏ Р¶РІР°С‡РєР°РјРё РІРЅСѓС‚СЂРё
 		auto machine = MakeGumballMachine<GumballMachine>(2);
 		AssertGumballMachineState(*machine, 2, 0, State::NoCoin);
 
-		// Вставим пять монеток в автомат
+		// Р’СЃС‚Р°РІРёРј РїСЏС‚СЊ РјРѕРЅРµС‚РѕРє РІ Р°РІС‚РѕРјР°С‚
 		for (unsigned i = 0; i < 5; ++i)
 		{
 			machine->InsertCoin();
@@ -257,14 +311,14 @@ BOOST_AUTO_TEST_SUITE(CGumballMachine)
 
 		AssertGumballMachineState(*machine, 2, 5, State::HasCoin);
 
-		// Купим две жвачки
+		// РљСѓРїРёРј РґРІРµ Р¶РІР°С‡РєРё
 		machine->TurnCrank();
 		BOOST_REQUIRE(output.is_equal("You turned...\nA gumball comes rolling out the slot...\n"));
 
 		machine->TurnCrank();
 		BOOST_REQUIRE(output.is_equal("You turned...\nA gumball comes rolling out the slot...\nOops, out of gumballs\n"));
 
-		// Жвачек не осталось, однако в автомате лежат ещё три монетки!
+		// Р–РІР°С‡РµРє РЅРµ РѕСЃС‚Р°Р»РѕСЃСЊ, РѕРґРЅР°РєРѕ РІ Р°РІС‚РѕРјР°С‚Рµ Р»РµР¶Р°С‚ РµС‰С‘ С‚СЂРё РјРѕРЅРµС‚РєРё!
 		AssertGumballMachineState(*machine, 0, 3, State::SoldOut);
 
 		machine->EjectCoin();

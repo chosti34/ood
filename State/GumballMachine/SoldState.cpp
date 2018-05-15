@@ -45,6 +45,11 @@ void SoldState::Dispense()
 	}
 }
 
+void SoldState::Refill(unsigned count)
+{
+	m_output << "Can't refill gumballs in sold state\n";
+}
+
 std::string SoldState::ToString() const
 {
 	return "delivering a gumball";

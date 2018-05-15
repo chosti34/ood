@@ -109,8 +109,41 @@ void GumballMachine::TurnCrank()
 
 void GumballMachine::Refill(unsigned count)
 {
-	m_gumballs = count;
-	m_state = count > 0 ? State::NoCoin : State::NoCoin;
+	switch (m_state)
+	{
+	case GumballMachine::State::NoCoin:
+		m_gumballs = count;
+		if (count == 0)
+		{
+			m_state = State::SoldOut;
+		}
+		break;
+	case GumballMachine::State::HasCoin:
+		m_gumballs = count;
+		if (count == 0)
+		{
+			m_state = State::SoldOut;
+		}
+		break;
+	case GumballMachine::State::Sold:
+		m_output << "Can't refill gumballs in sold state\n";
+		break;
+	case GumballMachine::State::SoldOut:
+		assert(m_machine.GetGumballsCount() == 0);
+		m_gumballs = count;
+		if (count != 0)
+		{
+			if (m_coins == 0)
+			{
+				m_state = State::NoCoin;
+			}
+			else
+			{
+				m_state = State::HasCoin;
+			}
+		}
+		break;
+	}
 }
 
 std::string GumballMachine::ToString() const

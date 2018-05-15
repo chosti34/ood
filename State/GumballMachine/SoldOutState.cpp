@@ -40,7 +40,24 @@ void SoldOutState::Dispense()
 	m_output << "No gumball dispensed\n";
 }
 
-std::string with_state::SoldOutState::ToString() const
+void SoldOutState::Refill(unsigned count)
+{
+	assert(m_machine.GetGumballsCount() == 0);
+	m_machine.SetBallsCount(count);
+	if (count != 0)
+	{
+		if (m_machine.GetCoinsCount() == 0)
+		{
+			m_machine.SetNoCoinState();
+		}
+		else
+		{
+			m_machine.SetHasCoinState();
+		}
+	}
+}
+
+std::string SoldOutState::ToString() const
 {
 	return "sold out";
 }

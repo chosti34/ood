@@ -15,9 +15,12 @@ public:
 	void EjectCoin();
 
 	void TurnCrank();
+	void Refill(unsigned count);
+
 	std::string ToString() const;
 
 private:
+	void SetBallsCount(unsigned count) override;
 	void ReleaseBall() override;
 	unsigned GetGumballsCount() const override;
 

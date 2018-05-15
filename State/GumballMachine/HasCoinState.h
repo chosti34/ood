@@ -14,6 +14,7 @@ public:
 
 	void TurnCrank() override;
 	void Dispense() override;
+	void Refill(unsigned count) override;
 
 	std::string ToString() const override;
 

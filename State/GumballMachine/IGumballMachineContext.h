@@ -7,6 +7,7 @@ class IGumballMachineContext
 public:
 	virtual ~IGumballMachineContext() = default;
 
+	virtual void SetBallsCount(unsigned count) = 0;
 	virtual void ReleaseBall() = 0;
 	virtual unsigned GetGumballsCount()const = 0;
 

@@ -35,6 +35,11 @@ void GumballMachine::TurnCrank()
 	m_state->Dispense();
 }
 
+void GumballMachine::Refill(unsigned count)
+{
+	m_state->Refill(count);
+}
+
 std::string GumballMachine::ToString() const
 {
 	auto fmt = boost::format(R"(Mighty Gumball, Inc.
@@ -43,6 +48,11 @@ Inventory: %1% gumball%2%, %3% coin%4%
 Machine is %5%)");
 	return (fmt % m_gumballs % (m_gumballs != 1 ? "s" : "") %
 		m_coins % (m_coins != 1 ? "s" : "") % m_state->ToString()).str();
+}
+
+void GumballMachine::SetBallsCount(unsigned count)
+{
+	m_gumballs = count;
 }
 
 void GumballMachine::ReleaseBall()

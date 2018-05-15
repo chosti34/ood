@@ -32,6 +32,15 @@ void NoCoinState::Dispense()
 	m_output << "You need to pay first\n";
 }
 
+void NoCoinState::Refill(unsigned count)
+{
+	m_machine.SetBallsCount(count);
+	if (count == 0)
+	{
+		m_machine.SetSoldOutState();
+	}
+}
+
 std::string NoCoinState::ToString() const
 {
 	return "waiting for coin";

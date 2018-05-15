@@ -55,6 +55,15 @@ void HasCoinState::Dispense()
 	m_output << "No gumball dispensed\n";
 }
 
+void HasCoinState::Refill(unsigned count)
+{
+	m_machine.SetBallsCount(count);
+	if (count == 0)
+	{
+		m_machine.SetSoldOutState();
+	}
+}
+
 std::string HasCoinState::ToString() const
 {
 	return "waiting for turn of crank";
