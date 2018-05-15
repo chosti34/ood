@@ -160,6 +160,11 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\GumballMachineWithState.cpp" />
+    <ClCompile Include="..\HasCoinState.cpp" />
+    <ClCompile Include="..\NoCoinState.cpp" />
+    <ClCompile Include="..\SoldOutState.cpp" />
+    <ClCompile Include="..\SoldState.cpp" />
     <ClCompile Include="GumballMachineTests.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="stdafx.cpp">

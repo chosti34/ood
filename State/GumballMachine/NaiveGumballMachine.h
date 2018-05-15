@@ -8,16 +8,18 @@ class GumballMachine
 {
 	enum class State
 	{
-		NoBalls, // Нет жвачек
-		NoQuarter, // Нет монеток
-		HasQuarter, // Есть монетка
-		Sold, // Жвачка продана
+		NoCoin,
+		HasCoin,
+		Sold,
+		SoldOut
 	};
 
 public:
-	GumballMachine(unsigned count = 0)
-		: m_count(count)
-		, m_state(count > 0 ? State::NoQuarter : State::NoBalls)
+	GumballMachine(std::ostream& output, unsigned count = 0)
+		: m_gumballs(count)
+		, m_state(count > 0 ? State::NoCoin : State::SoldOut)
+		, m_coins(0)
+		, m_output(output)
 	{
 	}
 
@@ -25,14 +27,14 @@ public:
 	{
 		switch (m_state)
 		{
-		case State::NoBalls:
+		case State::SoldOut:
 			std::cout << "You can't insert a quarter, the machine is sold out\n";
 			break;
-		case State::NoQuarter:
+		case State::NoCoin:
 			std::cout << "You inserted a quarter\n";
-			m_state = State::HasQuarter;
+			m_state = State::HasCoin;
 			break;
-		case State::HasQuarter:
+		case State::HasCoin:
 			std::cout << "You can't insert another quarter\n";
 			break;
 		case State::Sold:
@@ -45,15 +47,15 @@ public:
 	{
 		switch (m_state)
 		{
-		case State::NoBalls:
+		case State::SoldOut:
 			std::cout << "You can't eject, you haven't inserted a quarter yet\n";
 			break;
-		case State::NoQuarter:
+		case State::NoCoin:
 			std::cout << "You haven't inserted a quarter\n";
 			break;
-		case State::HasQuarter:
+		case State::HasCoin:
 			std::cout << "Quarter returned\n";
-			m_state = State::NoQuarter;
+			m_state = State::NoCoin;
 			break;
 		case State::Sold:
 			std::cout << "Sorry you already turned the crank\n";
@@ -65,13 +67,13 @@ public:
 	{
 		switch (m_state)
 		{
-		case State::NoBalls:
+		case State::SoldOut:
 			std::cout << "You turned but there's no gumballs\n";
 			break;
-		case State::NoQuarter:
+		case State::NoCoin:
 			std::cout << "You turned but there's no quarter\n";
 			break;
-		case State::HasQuarter:
+		case State::HasCoin:
 			std::cout << "You turned...\n";
 			m_state = State::Sold;
 			Dispense();
@@ -84,25 +86,25 @@ public:
 
 	void Refill(unsigned count)
 	{
-		m_count = count;
-		m_state = count > 0 ? State::NoQuarter : State::NoQuarter;
+		m_gumballs = count;
+		m_state = count > 0 ? State::NoCoin : State::NoCoin;
 	}
 
 	std::string ToString() const
 	{
 		std::string state =
-			(m_state == State::NoBalls)		? "sold out" :
-			(m_state == State::NoQuarter)	? "waiting for quarter" :
-			(m_state == State::HasQuarter)	? "waiting for turn of crank"
+			(m_state == State::SoldOut)		? "sold out" :
+			(m_state == State::NoCoin)		? "waiting for quarter" :
+			(m_state == State::HasCoin)		? "waiting for turn of crank"
 											: "delivering a gumball";
 
-		auto format = boost::format(R"(Mighty Gumball, Inc.
+		auto fmt = boost::format(R"(Mighty Gumball, Inc.
 C++-enabled Standing Gumball Model #2016
 Inventory: %1% gumball%2%
 Machine is %3%
 )");
 
-		return (format % m_count % (m_count != 1 ? "s" : "") % state).str();
+		return (fmt % m_gumballs % (m_gumballs != 1 ? "s" : "") % state).str();
 	}
 
 private:
@@ -110,33 +112,35 @@ private:
 	{
 		switch (m_state)
 		{
-		case State::NoBalls:
+		case State::SoldOut:
 			std::cout << "This is impossible\n";
 			break;
-		case State::NoQuarter:
+		case State::NoCoin:
 			std::cout << "You need to pay first\n";
 			break;
-		case State::HasQuarter:
+		case State::HasCoin:
 			std::cout << "This is impossible\n";
 			break;
 		case State::Sold:
 			std::cout << "A gumball comes rolling out the slot\n";
-			--m_count;
-			if (m_count == 0)
+			--m_gumballs;
+			if (m_gumballs == 0)
 			{
 				std::cout << "Oops, out of gumballs\n";
-				m_state = State::NoBalls;
+				m_state = State::SoldOut;
 			}
 			else
 			{
-				m_state = State::NoQuarter;
+				m_state = State::NoCoin;
 			}
 			break;
 		}
 	}
 
 private:
-	unsigned m_count;
+	unsigned m_gumballs;
+	unsigned m_coins;
 	State m_state;
+	std::ostream& m_output;
 };
 }

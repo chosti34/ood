@@ -21,6 +21,7 @@ void HasCoinState::InsertCoin()
 	if (m_machine.GetCoinsCount() < MAX_COINS_COUNT)
 	{
 		m_machine.AddCoin();
+		m_output << "You inserted a coin\n";
 	}
 	else
 	{
@@ -41,9 +42,12 @@ void HasCoinState::EjectCoin()
 void HasCoinState::TurnCrank()
 {
 	assert(m_machine.GetCoinsCount() != 0);
-	m_output << "You turned...\n";
-	m_machine.ReleaseCoin();
-	m_machine.SetSoldState();
+	if (m_machine.GetGumballsCount() != 0)
+	{
+		m_output << "You turned...\n";
+		m_machine.ReleaseCoin();
+		m_machine.SetSoldState();
+	}
 }
 
 void HasCoinState::Dispense()

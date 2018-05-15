@@ -11,12 +11,23 @@ SoldOutState::SoldOutState(IGumballMachineContext& machine, std::ostream& output
 
 void SoldOutState::InsertCoin()
 {
-	m_output << "You can't insert a quarter, the machine is sold out\n";
+	m_output << "You can't insert a coin, the machine is sold out\n";
 }
 
 void SoldOutState::EjectCoin()
 {
-	m_output << "You can't eject, you haven't inserted a quarter yet\n";
+	if (m_machine.GetCoinsCount() == 0)
+	{
+		m_output << "You can't eject, you haven't inserted a coin yet\n";
+	}
+	else
+	{
+		while (m_machine.GetCoinsCount() != 0)
+		{
+			m_machine.ReleaseCoin();
+		}
+		m_output << "All coins returned\n";
+	}
 }
 
 void SoldOutState::TurnCrank()
