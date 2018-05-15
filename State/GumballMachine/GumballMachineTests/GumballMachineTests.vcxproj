@@ -162,6 +162,7 @@
   <ItemGroup>
     <ClCompile Include="..\GumballMachineWithState.cpp" />
     <ClCompile Include="..\HasCoinState.cpp" />
+    <ClCompile Include="..\NaiveGumballMachine.cpp" />
     <ClCompile Include="..\NoCoinState.cpp" />
     <ClCompile Include="..\SoldOutState.cpp" />
     <ClCompile Include="..\SoldState.cpp" />
