@@ -47,6 +47,7 @@ void SoldState::Dispense()
 
 void SoldState::Refill(unsigned count)
 {
+	(void)count;
 	m_output << "Can't refill gumballs in sold state\n";
 }
 
