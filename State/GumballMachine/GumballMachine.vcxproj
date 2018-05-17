@@ -149,8 +149,10 @@
   <ItemGroup>
     <ClInclude Include="GumballMachineWithState.h" />
     <ClInclude Include="HasCoinState.h" />
+    <ClInclude Include="IGumballMachine.h" />
     <ClInclude Include="IGumballMachineContext.h" />
     <ClInclude Include="IState.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="NaiveGumballMachine.h" />
     <ClInclude Include="NoCoinState.h" />
     <ClInclude Include="SoldOutState.h" />

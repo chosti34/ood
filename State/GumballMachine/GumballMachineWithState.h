@@ -3,21 +3,24 @@
 #include "HasCoinState.h"
 #include "SoldState.h"
 #include "SoldOutState.h"
+#include "IGumballMachine.h"
 
 namespace with_state
 {
-class GumballMachine : private IGumballMachineContext
+class GumballMachine
+	: public IGumballMachine
+	, private IGumballMachineContext
 {
 public:
 	GumballMachine(std::ostream& output, unsigned gumballs = 0);
 
-	void InsertCoin();
-	void EjectCoin();
+	void InsertCoin() override;
+	void EjectCoin() override;
 
-	void TurnCrank();
-	void Refill(unsigned count);
+	void TurnCrank() override;
+	void Refill(unsigned count) override;
 
-	std::string ToString() const;
+	std::string ToString() const override;
 
 private:
 	void SetBallsCount(unsigned count) override;

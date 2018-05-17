@@ -1,10 +1,10 @@
 #pragma once
-#include <iostream>
-#include <boost/format.hpp>
+#include <ostream>
+#include "IGumballMachine.h"
 
 namespace naive
 {
-class GumballMachine
+class GumballMachine : public IGumballMachine
 {
 	enum class State
 	{
@@ -17,13 +17,13 @@ class GumballMachine
 public:
 	GumballMachine(std::ostream& output, unsigned gumballs = 0);
 
-	void InsertCoin();
-	void EjectCoin();
+	void InsertCoin() override;
+	void EjectCoin() override;
 
-	void TurnCrank();
-	void Refill(unsigned count);
+	void TurnCrank() override;
+	void Refill(unsigned count) override;
 
-	std::string ToString() const;
+	std::string ToString() const override;
 
 private:
 	void Dispense();

@@ -4,6 +4,7 @@
 #include "../NaiveGumballMachine.h"
 
 #include <unordered_map>
+#include <boost/format.hpp>
 #include <boost/test/tools/output_test_stream.hpp>
 #include <boost/mpl/list.hpp>
 
@@ -29,7 +30,7 @@ void AssertGumballMachineState(
 	const GumballMachineType& machine, unsigned gumballs, unsigned coins, State state)
 {
 	auto fmt = boost::format(R"(Mighty Gumball, Inc.
-C++-enabled Standing Gumball Model #2016 (with state)
+C++-enabled Standing Gumball Model #2016
 Inventory: %1% gumball%2%, %3% coin%4%
 Machine is %5%)")
 	% gumballs % (gumballs != 1 ? "s" : "")

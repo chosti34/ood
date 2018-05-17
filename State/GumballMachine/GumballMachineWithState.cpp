@@ -43,7 +43,7 @@ void GumballMachine::Refill(unsigned count)
 std::string GumballMachine::ToString() const
 {
 	auto fmt = boost::format(R"(Mighty Gumball, Inc.
-C++-enabled Standing Gumball Model #2016 (with state)
+C++-enabled Standing Gumball Model #2016
 Inventory: %1% gumball%2%, %3% coin%4%
 Machine is %5%)");
 	return (fmt % m_gumballs % (m_gumballs != 1 ? "s" : "") %
