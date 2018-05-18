@@ -130,7 +130,6 @@ void GumballMachine::Refill(unsigned count)
 		m_output << "Can't refill gumballs in sold state\n";
 		break;
 	case GumballMachine::State::SoldOut:
-		assert(m_machine.GetGumballsCount() == 0);
 		m_gumballs = count;
 		if (count != 0)
 		{
