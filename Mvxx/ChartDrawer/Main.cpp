@@ -1,23 +1,14 @@
 #include "stdafx.h"
-#include <wx/wx.h>
-
-class Simple : public wxFrame
-{
-public:
-	Simple(const wxString& title)
-		: wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(250, 150))
-	{
-		Centre();
-	}
-};
+#include "MainFrame.h"
+#include <wx/app.h>
 
 class MyApp : public wxApp
 {
 public:
 	bool OnInit() wxOVERRIDE
 	{
-		Simple *simple = new Simple(wxT("Simple"));
-		simple->Show(true);
+		MainFrame* frame = new MainFrame(wxT("ChartDrawer"));
+		frame->Show(true);
 		return true;
 	}
 };
