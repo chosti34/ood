@@ -23,7 +23,7 @@
     <ProjectGuid>{C0CBDF0B-7BB4-4A46-83D9-D9D3FA27BA47}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ChartDrawer</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -156,6 +156,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddNewHarmonicDialog.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="MainPanel.cpp" />

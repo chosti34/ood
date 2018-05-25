@@ -9,6 +9,8 @@
 #include <wx/radiobut.h>
 #include <wx/statline.h>
 
+#include "AddNewHarmonicDialog.h"
+
 MainPanel::MainPanel(wxFrame* frame)
 	: wxPanel(frame)
 {
@@ -16,7 +18,7 @@ MainPanel::MainPanel(wxFrame* frame)
 
 	// HARMONIC SELECTION PANEL
 	wxPanel* selectHarmonicPanel = new wxPanel(this);
-	selectHarmonicPanel->SetBackgroundColour(wxColour(200, 200, 200));
+	// selectHarmonicPanel->SetBackgroundColour(wxColour(200, 200, 200));
 
 	wxStaticText* listBoxTitle = new wxStaticText(selectHarmonicPanel, wxID_ANY, wxT("Harmonics"));
 	wxStaticLine* line = new wxStaticLine(selectHarmonicPanel);
@@ -41,7 +43,7 @@ MainPanel::MainPanel(wxFrame* frame)
 	// HARMONIC EDITOR PANEL
 	wxBoxSizer* harmonicEditorSizer = new wxBoxSizer(wxVERTICAL);
 	wxPanel* harmonicEditorPanel = new wxPanel(this);
-	harmonicEditorPanel->SetBackgroundColour(wxColour(155, 155, 155));
+	//harmonicEditorPanel->SetBackgroundColour(wxColour(155, 155, 155));
 
 	wxBoxSizer* hbox1 = new wxBoxSizer(wxHORIZONTAL);
 	wxStaticText* amplitudeTextLabel = new wxStaticText(harmonicEditorPanel, wxID_ANY, wxT("Amplitude:"));
@@ -78,9 +80,11 @@ MainPanel::MainPanel(wxFrame* frame)
 	// HARMONIC VIEW PANEL
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	wxPanel* harmonicViewPanel = new wxPanel(this);
-	harmonicViewPanel->SetBackgroundColour(wxColour(100, 100, 100));
+	//harmonicViewPanel->SetBackgroundColour(wxColour(100, 100, 100));
 	mainSizer->Add(editorPartSizer, 1, wxEXPAND, 0);
 	mainSizer->Add(harmonicViewPanel, 1, wxEXPAND | wxALL, 5);
+
+	harmonicEditorPanel->Disable();
 
 	SetSizerAndFit(mainSizer);
 
@@ -90,11 +94,29 @@ MainPanel::MainPanel(wxFrame* frame)
 
 void MainPanel::OnAddHarmonicButtonClick(wxCommandEvent&)
 {
-	wxString input = wxGetTextFromUser(wxT("Add new item"));
+	std::string amplitude;
+	std::string phase;
+	std::string frequency;
+
+	AddNewHarmonicDialog* dialog = new AddNewHarmonicDialog(wxT("Add New Harmonic"));
+
+	int choice = dialog->ShowModal();
+	if (choice == wxID_OK)
+	{
+		std::cout << "OK\n";
+	}
+	else if (choice == wxID_CANCEL)
+	{
+		std::cout << "CANCEL\n";
+	}
+
+	dialog->Destroy();
+
+	/*wxString input = wxGetTextFromUser(wxT("Add new item"));
 	if (!input.IsEmpty())
 	{
 		m_listBox->Append(input);
-	}
+	}*/
 }
 
 void MainPanel::OnDeleteHarmonicButtonClick(wxCommandEvent&)
