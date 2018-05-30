@@ -10,6 +10,7 @@ private:
 	wxDECLARE_EVENT_TABLE();
 	void OnAddHarmonicButtonClick(wxCommandEvent&);
 	void OnDeleteHarmonicButtonClick(wxCommandEvent&);
+	void OnSelectionChange(wxCommandEvent&);
 
 private:
 	wxListBox* m_list;

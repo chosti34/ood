@@ -22,7 +22,7 @@ HarmonicSelectionPanel::HarmonicSelectionPanel(wxWindow* parent)
 
 	wxStaticText* title = new wxStaticText(this, wxID_ANY, "Harmonics");
 	wxStaticLine* line = new wxStaticLine(this);
-	m_list = new wxListBox(this, ListBox);
+	m_list = new wxListBox(this, ListBox, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxLB_ALWAYS_SB);
 	m_addButton = new wxButton(this, AddHarmonic, "Add new");
 	m_deleteButton = new wxButton(this, DeleteHarmonic, "Delete selected");
 
@@ -60,7 +60,13 @@ void HarmonicSelectionPanel::OnDeleteHarmonicButtonClick(wxCommandEvent&)
 	}
 }
 
+void HarmonicSelectionPanel::OnSelectionChange(wxCommandEvent&)
+{
+	std::cout << "Selection changed: " << m_list->GetSelection() << std::endl;
+}
+
 wxBEGIN_EVENT_TABLE(HarmonicSelectionPanel, wxPanel)
 	EVT_BUTTON(AddHarmonic, HarmonicSelectionPanel::OnAddHarmonicButtonClick)
 	EVT_BUTTON(DeleteHarmonic, HarmonicSelectionPanel::OnDeleteHarmonicButtonClick)
+	EVT_LISTBOX(ListBox, HarmonicSelectionPanel::OnSelectionChange)
 wxEND_EVENT_TABLE()
