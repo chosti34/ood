@@ -149,16 +149,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AddNewHarmonicDialog.h" />
-    <ClInclude Include="MainFrame.h" />
+    <ClInclude Include="AddHarmonicDlg.h" />
+    <ClInclude Include="HarmonicEditorPanel.h" />
+    <ClInclude Include="HarmonicSelectionPanel.h" />
+    <ClInclude Include="HarmonicViewPanel.h" />
+    <ClInclude Include="MainFrm.h" />
     <ClInclude Include="MainPanel.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AddNewHarmonicDialog.cpp" />
+    <ClCompile Include="AddHarmonicDlg.cpp" />
+    <ClCompile Include="HarmonicEditorPanel.cpp" />
+    <ClCompile Include="HarmonicSelectionPanel.cpp" />
+    <ClCompile Include="HarmonicViewPanel.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MainFrame.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="MainPanel.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

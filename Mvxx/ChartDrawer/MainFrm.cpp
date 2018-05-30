@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "MainFrame.h"
+#include "MainFrm.h"
 
-MainFrame::MainFrame(const wxString& title, const wxSize& size)
+MainFrm::MainFrm(const wxString& title, const wxSize& size)
 	: wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition, size)
 {
 	m_panel = new MainPanel(this);

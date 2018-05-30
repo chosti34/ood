@@ -1,22 +1,18 @@
 #include "stdafx.h"
-#include "MainFrame.h"
-#include <wx/app.h>
+#include "MainFrm.h"
 
-class X
+namespace
 {
-public:
-	~X()
-	{
-		delete this;
-	}
-};
+const wxSize MAIN_FRAME_SIZE = { 640, 480 };
+const wxString MAIN_FRAME_TITLE = "ChartDrawer";
+}
 
 class MyApp : public wxApp
 {
 public:
 	bool OnInit() wxOVERRIDE
 	{
-		MainFrame* frame = new MainFrame(wxT("ChartDrawer"), wxSize(640, 480));
+		MainFrm* frame = new MainFrm(MAIN_FRAME_TITLE, MAIN_FRAME_SIZE);
 		frame->Show(true);
 		return true;
 	}

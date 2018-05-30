@@ -3,10 +3,10 @@
 #include <wx/string.h>
 #include "MainPanel.h"
 
-class MainFrame : public wxFrame
+class MainFrm : public wxFrame
 {
 public:
-	MainFrame(const wxString& title, const wxSize& size = wxDefaultSize);
+	MainFrm(const wxString& title, const wxSize& size);
 
 private:
 	MainPanel* m_panel;
