@@ -10,11 +10,9 @@ MainPanel::MainPanel(wxFrame* frame)
 {
 	wxBoxSizer* editorPartSizer = new wxBoxSizer(wxHORIZONTAL);
 
-	// Список добавленных гармоник
 	HarmonicSelectionPanel* selection = new HarmonicSelectionPanel(this);
 	editorPartSizer->Add(selection, 1, wxEXPAND | wxLEFT | wxTOP, 5);
 
-	// Панель редактирования выбранной гармоники
 	HarmonicEditorPanel* editor = new HarmonicEditorPanel(this);
 	editor->Disable();
 	editorPartSizer->Add(editor, 1, wxEXPAND | wxLEFT | wxTOP | wxRIGHT, 5);
@@ -22,7 +20,6 @@ MainPanel::MainPanel(wxFrame* frame)
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	mainSizer->Add(editorPartSizer, 1, wxEXPAND, 0);
 
-	// Панель для отрисовки гармоники
 	HarmonicViewPanel* view = new HarmonicViewPanel(this);
 	mainSizer->Add(view, 1, wxEXPAND | wxALL, 5);
 

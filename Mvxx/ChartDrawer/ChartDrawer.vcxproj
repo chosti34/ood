@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AddHarmonicDlg.h" />
+    <ClInclude Include="Harmonic.h" />
     <ClInclude Include="HarmonicEditorPanel.h" />
     <ClInclude Include="HarmonicSelectionPanel.h" />
     <ClInclude Include="HarmonicViewPanel.h" />
@@ -160,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddHarmonicDlg.cpp" />
+    <ClCompile Include="Harmonic.cpp" />
     <ClCompile Include="HarmonicEditorPanel.cpp" />
     <ClCompile Include="HarmonicSelectionPanel.cpp" />
     <ClCompile Include="HarmonicViewPanel.cpp" />

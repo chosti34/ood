@@ -39,6 +39,9 @@
     <ClInclude Include="HarmonicViewPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Harmonic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -63,6 +66,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HarmonicViewPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Harmonic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

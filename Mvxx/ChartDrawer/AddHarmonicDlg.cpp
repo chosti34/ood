@@ -5,19 +5,30 @@ namespace
 {
 enum IDs
 {
-	AddHarmonic = 1 // Add button id
+	SelectSinRadioButton,
+	SelectCosRadioButton
 };
+
+std::string FloatToString(float value, unsigned precision)
+{
+	std::ostringstream strm;
+	strm << std::fixed << std::setprecision(precision) << value;
+	return strm.str();
+}
 }
 
-AddHarmonicDlg::AddHarmonicDlg(const wxString& title, const wxSize& size)
+AddHarmonicDlg::AddHarmonicDlg(const wxString& title, const wxSize& size, Harmonic& harmonic)
 	: wxDialog(nullptr, wxID_ANY, title, wxDefaultPosition, size, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+	, m_harmonic(harmonic)
 {
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	wxPanel* mainPanel = new wxPanel(this);
 
 	// Amplitude
 	wxStaticText* amplitudeText = new wxStaticText(mainPanel, wxID_ANY, "Amplitude:");
-	m_amplitudeCtrl = new wxTextCtrl(mainPanel, wxID_ANY);
+	m_amplitudeCtrl = new wxTextCtrl(
+		mainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0l,
+		wxFloatingPointValidator<float>(3, &m_harmonic.amplitude));
 	wxBoxSizer* amplitudeSizer = new wxBoxSizer(wxVERTICAL);
 	amplitudeSizer->Add(amplitudeText, 0, wxALIGN_LEFT);
 	amplitudeSizer->Add(m_amplitudeCtrl, 0, wxALIGN_LEFT | wxTOP, 2);
@@ -25,7 +36,8 @@ AddHarmonicDlg::AddHarmonicDlg(const wxString& title, const wxSize& size)
 
 	// Frequency
 	wxStaticText* frequencyText = new wxStaticText(mainPanel, wxID_ANY, "Frequency:");
-	m_frequencyCtrl = new wxTextCtrl(mainPanel, wxID_ANY);
+	m_frequencyCtrl = new wxTextCtrl(mainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0l,
+		wxFloatingPointValidator<float>(3, &m_harmonic.frequency));
 	wxBoxSizer* frequencySizer = new wxBoxSizer(wxVERTICAL);
 	frequencySizer->Add(frequencyText, 0, wxALIGN_LEFT);
 	frequencySizer->Add(m_frequencyCtrl, 0, wxALIGN_LEFT | wxTOP, 2);
@@ -33,7 +45,8 @@ AddHarmonicDlg::AddHarmonicDlg(const wxString& title, const wxSize& size)
 
 	// Phase
 	wxStaticText* phaseText = new wxStaticText(mainPanel, wxID_ANY, "Phase:");
-	m_phaseCtrl = new wxTextCtrl(mainPanel, wxID_ANY);
+	m_phaseCtrl = new wxTextCtrl(mainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0l,
+		wxFloatingPointValidator<float>(3, &m_harmonic.phase));
 	wxBoxSizer* phaseSizer = new wxBoxSizer(wxVERTICAL);
 	phaseSizer->Add(phaseText, 0, wxALIGN_LEFT);
 	phaseSizer->Add(m_phaseCtrl, 0, wxALIGN_LEFT | wxTOP, 2);
@@ -41,15 +54,15 @@ AddHarmonicDlg::AddHarmonicDlg(const wxString& title, const wxSize& size)
 
 	// Harmonic type
 	wxBoxSizer* radioSizer = new wxBoxSizer(wxHORIZONTAL);
-	m_sinButton = new wxRadioButton(mainPanel, wxID_ANY, wxT("Sin"));
-	m_cosButton = new wxRadioButton(mainPanel, wxID_ANY, wxT("Cos"));
+	m_sinButton = new wxRadioButton(mainPanel, SelectSinRadioButton, wxT("Sin"));
+	m_cosButton = new wxRadioButton(mainPanel, SelectCosRadioButton, wxT("Cos"));
 	radioSizer->Add(m_sinButton, 0);
 	radioSizer->Add(m_cosButton, 0, wxLEFT, 5);
 	mainSizer->Add(radioSizer, 0, wxALIGN_CENTER | wxTOP, 10);
 
 	// Buttons
 	wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxButton* addButton = new wxButton(mainPanel, AddHarmonic, wxT("Add"),
+	wxButton* addButton = new wxButton(mainPanel, wxID_OK, wxT("Add"),
 		wxDefaultPosition, wxSize(70, 30));
 	wxButton* closeButton = new wxButton(mainPanel, wxID_CANCEL, wxT("Cancel"),
 		wxDefaultPosition, wxSize(70, 30));
@@ -60,11 +73,32 @@ AddHarmonicDlg::AddHarmonicDlg(const wxString& title, const wxSize& size)
 	mainPanel->SetSizerAndFit(mainSizer);
 }
 
-void AddHarmonicDlg::OnAddButtonClick(wxCommandEvent&)
+bool AddHarmonicDlg::TransferDataFromWindow()
 {
-	// TODO: implement this
+	double amplitude = 0;
+	double frequency = 0;
+	double phase = 0;
+
+	if (!m_amplitudeCtrl->GetValue().ToDouble(&amplitude) ||
+		!m_frequencyCtrl->GetValue().ToDouble(&frequency) ||
+		!m_phaseCtrl->GetValue().ToDouble(&phase))
+	{
+		return false;
+	}
+
+	m_harmonic.amplitude = float(amplitude);
+	m_harmonic.frequency = float(frequency);
+	m_harmonic.phase = float(phase);
+	m_harmonic.type = m_sinButton->GetValue() ? HarmonicType::Sin : HarmonicType::Cos;
+	return true;
 }
 
-wxBEGIN_EVENT_TABLE(AddHarmonicDlg, wxDialog)
-	EVT_BUTTON(AddHarmonic, AddHarmonicDlg::OnAddButtonClick)
-wxEND_EVENT_TABLE()
+bool AddHarmonicDlg::TransferDataToWindow()
+{
+	m_amplitudeCtrl->SetValue(FloatToString(m_harmonic.amplitude, 3));
+	m_frequencyCtrl->SetValue(FloatToString(m_harmonic.frequency, 3));
+	m_phaseCtrl->SetValue(FloatToString(m_harmonic.phase, 3));
+	m_sinButton->SetValue(m_harmonic.type == HarmonicType::Sin);
+	m_cosButton->SetValue(m_harmonic.type == HarmonicType::Cos);
+	return true;
+}

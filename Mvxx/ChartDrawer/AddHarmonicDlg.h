@@ -3,15 +3,16 @@
 #include <wx/string.h>
 #include <wx/radiobut.h>
 #include <wx/textctrl.h>
+#include <wx/valnum.h>
+#include "Harmonic.h"
 
 class AddHarmonicDlg : public wxDialog
 {
 public:
-	AddHarmonicDlg(const wxString& title, const wxSize& size);
+	AddHarmonicDlg(const wxString& title, const wxSize& size, Harmonic& harmonic);
 
-private:
-	wxDECLARE_EVENT_TABLE();
-	void OnAddButtonClick(wxCommandEvent&);
+	bool TransferDataFromWindow() override;
+	bool TransferDataToWindow() override;
 
 private:
 	wxTextCtrl* m_amplitudeCtrl;
@@ -19,4 +20,5 @@ private:
 	wxTextCtrl* m_frequencyCtrl;
 	wxRadioButton* m_sinButton;
 	wxRadioButton* m_cosButton;
+	Harmonic& m_harmonic;
 };

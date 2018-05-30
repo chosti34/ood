@@ -40,8 +40,13 @@ HarmonicSelectionPanel::HarmonicSelectionPanel(wxWindow* parent)
 
 void HarmonicSelectionPanel::OnAddHarmonicButtonClick(wxCommandEvent&)
 {
-	AddHarmonicDlg* dlg = new AddHarmonicDlg("Add New Harmonic", ADD_HARMONIC_DLG_SIZE);
-	dlg->ShowModal();
+	Harmonic harmonic;
+	AddHarmonicDlg* dlg = new AddHarmonicDlg("Add New Harmonic", ADD_HARMONIC_DLG_SIZE, harmonic);
+	if (dlg->ShowModal() == wxID_OK)
+	{
+		m_list->Append(ToString(harmonic));
+		// TODO: send harmonic created signal
+	}
 	dlg->Destroy();
 }
 
@@ -51,6 +56,7 @@ void HarmonicSelectionPanel::OnDeleteHarmonicButtonClick(wxCommandEvent&)
 	if (selection != -1)
 	{
 		m_list->Delete(selection);
+		// TODO: send harmonic deleted signal
 	}
 }
 
