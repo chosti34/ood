@@ -1,8 +1,5 @@
 #pragma once
 #include <wx/panel.h>
-#include <wx/listbox.h>
-#include <wx/button.h>
-
 #include "Harmonic.h"
 #include "HarmonicSelectionPanel.h"
 #include "HarmonicEditorPanel.h"
@@ -14,15 +11,16 @@ public:
 	MainPanel(wxFrame* frame);
 
 private:
+	void CreateControls();
+	void RegisterEventHandlers();
+
+private:
+	// TODO: store model outside of view
 	std::vector<Harmonic> m_harmonics;
 
 	HarmonicSelectionPanel* m_selectionPanel;
 	HarmonicEditorPanel* m_editorPanel;
 	HarmonicViewPanel* m_viewPanel;
-
-	boost::signals2::scoped_connection m_harmonicSelectionConnection;
-	boost::signals2::scoped_connection m_harmonicDeletionConnection;
-	boost::signals2::scoped_connection m_harmonicInsertionConnection;
 
 	std::vector<boost::signals2::scoped_connection> m_connections;
 };

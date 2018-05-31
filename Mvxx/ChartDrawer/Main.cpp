@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "MainFrm.h"
+#include "MainFrame.h"
 
 namespace
 {
@@ -12,7 +12,7 @@ class MyApp : public wxApp
 public:
 	bool OnInit() wxOVERRIDE
 	{
-		MainFrm* frame = new MainFrm(MAIN_FRAME_TITLE, MAIN_FRAME_SIZE);
+		MainFrame* frame = new MainFrame(MAIN_FRAME_TITLE, MAIN_FRAME_SIZE);
 		frame->Show(true);
 		return true;
 	}

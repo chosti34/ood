@@ -1,15 +1,15 @@
 #include "stdafx.h"
 #include "HarmonicSelectionPanel.h"
-#include "AddHarmonicDlg.h"
+#include "AddHarmonicDialog.h"
 #include <wx/statline.h>
 
 namespace
 {
 enum IDs
 {
-	ListBox = 1,
-	AddHarmonic,
-	DeleteHarmonic
+	ListBoxCtrl = 1,
+	AddHarmonicButton,
+	DeleteHarmonicButton
 };
 
 const wxSize ADD_HARMONIC_DLG_SIZE = { 280, 270 };
@@ -18,17 +18,50 @@ const wxSize ADD_HARMONIC_DLG_SIZE = { 280, 270 };
 HarmonicSelectionPanel::HarmonicSelectionPanel(wxWindow* parent)
 	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC)
 {
+	CreateControls();
+}
+
+boost::signals2::scoped_connection HarmonicSelectionPanel::DoOnHarmonicSelection(
+	boost::signals2::signal<void(int)>::slot_type callback)
+{
+	return m_selectionChangeSignal.connect(callback);
+}
+
+boost::signals2::scoped_connection HarmonicSelectionPanel::DoOnHarmonicDeletion(
+	boost::signals2::signal<void(int)>::slot_type callback)
+{
+	return m_harmonicDeletionSignal.connect(callback);
+}
+
+boost::signals2::scoped_connection HarmonicSelectionPanel::DoOnHarmonicInsertion(
+	boost::signals2::signal<void(const Harmonic&)>::slot_type callback)
+{
+	return m_harmonicInsertionSignal.connect(callback);
+}
+
+int HarmonicSelectionPanel::GetListBoxSelectionIndex()const
+{
+	return m_listbox->GetSelection();
+}
+
+void HarmonicSelectionPanel::SetStringAtListBoxItem(const std::string& str, unsigned index)
+{
+	m_listbox->SetString(index, str);
+}
+
+void HarmonicSelectionPanel::CreateControls()
+{
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
 	wxStaticText* title = new wxStaticText(this, wxID_ANY, "Harmonics");
 	wxStaticLine* line = new wxStaticLine(this);
-	m_list = new wxListBox(this, ListBox, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxLB_ALWAYS_SB);
-	m_addButton = new wxButton(this, AddHarmonic, "Add new");
-	m_deleteButton = new wxButton(this, DeleteHarmonic, "Delete selected");
+	m_listbox = new wxListBox(this, ListBoxCtrl, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxLB_ALWAYS_SB);
+	m_addButton = new wxButton(this, AddHarmonicButton, "Add new");
+	m_deleteButton = new wxButton(this, DeleteHarmonicButton, "Delete selected");
 
 	mainSizer->Add(title, 0, wxLEFT | wxTOP, 5);
 	mainSizer->Add(line, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5);
-	mainSizer->Add(m_list, 1, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5);
+	mainSizer->Add(m_listbox, 1, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 5);
 
 	wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 	buttonSizer->Add(m_addButton);
@@ -38,63 +71,35 @@ HarmonicSelectionPanel::HarmonicSelectionPanel(wxWindow* parent)
 	SetSizerAndFit(mainSizer);
 }
 
-boost::signals2::scoped_connection HarmonicSelectionPanel::DoOnHarmonicSelection(
-	boost::signals2::signal<void(int)>::slot_type callback)
+void HarmonicSelectionPanel::OnSelectionChange(wxCommandEvent&)
 {
-	return m_onSelectionChange.connect(callback);
-}
-
-boost::signals2::scoped_connection HarmonicSelectionPanel::DoOnHarmonicDeletion(
-	boost::signals2::signal<void(int)>::slot_type callback)
-{
-	return m_onHarmonicDeletion.connect(callback);
-}
-
-boost::signals2::scoped_connection HarmonicSelectionPanel::DoOnHarmonicInsertion(
-	boost::signals2::signal<void(const Harmonic&)>::slot_type callback)
-{
-	return m_onHarmonicInsertion.connect(callback);
-}
-
-int HarmonicSelectionPanel::GetListBoxSelectionIndex()const
-{
-	return m_list->GetSelection();
-}
-
-void HarmonicSelectionPanel::SetStringAtListBoxItem(const std::string & str, unsigned index)
-{
-	m_list->SetString(index, str);
+	m_selectionChangeSignal(m_listbox->GetSelection());
 }
 
 void HarmonicSelectionPanel::OnAddHarmonicButtonClick(wxCommandEvent&)
 {
 	Harmonic harmonic;
-	AddHarmonicDlg* dlg = new AddHarmonicDlg("Add New Harmonic", ADD_HARMONIC_DLG_SIZE, harmonic);
+	AddHarmonicDialog* dlg = new AddHarmonicDialog("Add New Harmonic", ADD_HARMONIC_DLG_SIZE, harmonic);
 	if (dlg->ShowModal() == wxID_OK)
 	{
-		m_list->Append(harmonic.ToString());
-		m_onHarmonicInsertion(harmonic);
+		m_listbox->Append(harmonic.ToString());
+		m_harmonicInsertionSignal(harmonic);
 	}
 	dlg->Destroy();
 }
 
 void HarmonicSelectionPanel::OnDeleteHarmonicButtonClick(wxCommandEvent&)
 {
-	int selection = m_list->GetSelection();
+	int selection = m_listbox->GetSelection();
 	if (selection != -1)
 	{
-		m_list->Delete(selection);
-		m_onHarmonicDeletion(selection);
+		m_listbox->Delete(selection);
+		m_harmonicDeletionSignal(selection);
 	}
 }
 
-void HarmonicSelectionPanel::OnSelectionChange(wxCommandEvent&)
-{
-	m_onSelectionChange(m_list->GetSelection());
-}
-
 wxBEGIN_EVENT_TABLE(HarmonicSelectionPanel, wxPanel)
-	EVT_BUTTON(AddHarmonic, HarmonicSelectionPanel::OnAddHarmonicButtonClick)
-	EVT_BUTTON(DeleteHarmonic, HarmonicSelectionPanel::OnDeleteHarmonicButtonClick)
-	EVT_LISTBOX(ListBox, HarmonicSelectionPanel::OnSelectionChange)
+	EVT_LISTBOX(ListBoxCtrl, HarmonicSelectionPanel::OnSelectionChange)
+	EVT_BUTTON(AddHarmonicButton, HarmonicSelectionPanel::OnAddHarmonicButtonClick)
+	EVT_BUTTON(DeleteHarmonicButton, HarmonicSelectionPanel::OnDeleteHarmonicButtonClick)
 wxEND_EVENT_TABLE()

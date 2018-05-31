@@ -9,25 +9,8 @@ public:
 		Cos
 	};
 
-	Harmonic(
-		float amplitude = 0.f,
-		float frequency = 0.f,
-		float phase = 0.f,
-		Type type = Sin)
-		: amplitude(amplitude)
-		, frequency(frequency)
-		, phase(phase)
-		, type(type)
-	{
-	}
-
-	std::string ToString()const
-	{
-		std::ostringstream strm;
-		strm << amplitude << "*" << (type == Sin ? "sin" : "cos")
-			<< "(" << frequency << "*x + " << phase << ")";
-		return strm.str();
-	}
+	Harmonic(float amplitude = 0.f, float frequency = 0.f, float phase = 0.f, Type type = Sin);
+	std::string ToString()const;
 
 	float amplitude;
 	float frequency;
