@@ -24,8 +24,7 @@ MainPanel::MainPanel(wxFrame* frame)
 	m_harmonicSelectionConnection = m_selectionPanel->DoOnHarmonicSelection([this](int index) {
 		assert(index >= 0 && index < m_harmonics.size());
 		m_editorPanel->Enable();
-		m_editorPanel->SetHarmonic(&m_harmonics[index]);
-		m_editorPanel->TransferDataToWindow();
+		m_editorPanel->SetHarmonicData(m_harmonics[index]);
 		std::cout << m_harmonics.size() << std::endl;
 	});
 
@@ -40,4 +39,10 @@ MainPanel::MainPanel(wxFrame* frame)
 		m_harmonics.push_back(harmonic);
 		std::cout << m_harmonics.size() << std::endl;
 	});
+
+	m_connections.push_back(m_editorPanel->DoOnHarmonicAttributesChange([this]() {
+		int selection = m_selectionPanel->GetListBoxSelectionIndex();
+		assert(selection != -1); // при измении данных в панели редактирования гармоники должен быть выделен элемент списка
+		m_selectionPanel->SetStringAtListBoxItem(m_editorPanel->GetHarmonicData().ToString(), selection);
+	}));
 }

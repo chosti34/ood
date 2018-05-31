@@ -23,4 +23,6 @@ private:
 	boost::signals2::scoped_connection m_harmonicSelectionConnection;
 	boost::signals2::scoped_connection m_harmonicDeletionConnection;
 	boost::signals2::scoped_connection m_harmonicInsertionConnection;
+
+	std::vector<boost::signals2::scoped_connection> m_connections;
 };

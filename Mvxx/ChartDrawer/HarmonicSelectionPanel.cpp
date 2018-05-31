@@ -56,6 +56,16 @@ boost::signals2::scoped_connection HarmonicSelectionPanel::DoOnHarmonicInsertion
 	return m_onHarmonicInsertion.connect(callback);
 }
 
+int HarmonicSelectionPanel::GetListBoxSelectionIndex()const
+{
+	return m_list->GetSelection();
+}
+
+void HarmonicSelectionPanel::SetStringAtListBoxItem(const std::string & str, unsigned index)
+{
+	m_list->SetString(index, str);
+}
+
 void HarmonicSelectionPanel::OnAddHarmonicButtonClick(wxCommandEvent&)
 {
 	Harmonic harmonic;

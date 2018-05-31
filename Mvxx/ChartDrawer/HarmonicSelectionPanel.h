@@ -15,6 +15,9 @@ public:
 	boost::signals2::scoped_connection
 		DoOnHarmonicInsertion(boost::signals2::signal<void(const Harmonic&)>::slot_type callback);
 
+	int GetListBoxSelectionIndex()const;
+	void SetStringAtListBoxItem(const std::string& str, unsigned index);
+
 private:
 	wxDECLARE_EVENT_TABLE();
 	void OnAddHarmonicButtonClick(wxCommandEvent&);
