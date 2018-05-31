@@ -38,14 +38,32 @@ HarmonicSelectionPanel::HarmonicSelectionPanel(wxWindow* parent)
 	SetSizerAndFit(mainSizer);
 }
 
+boost::signals2::scoped_connection HarmonicSelectionPanel::DoOnHarmonicSelection(
+	boost::signals2::signal<void(int)>::slot_type callback)
+{
+	return m_onSelectionChange.connect(callback);
+}
+
+boost::signals2::scoped_connection HarmonicSelectionPanel::DoOnHarmonicDeletion(
+	boost::signals2::signal<void(int)>::slot_type callback)
+{
+	return m_onHarmonicDeletion.connect(callback);
+}
+
+boost::signals2::scoped_connection HarmonicSelectionPanel::DoOnHarmonicInsertion(
+	boost::signals2::signal<void(const Harmonic&)>::slot_type callback)
+{
+	return m_onHarmonicInsertion.connect(callback);
+}
+
 void HarmonicSelectionPanel::OnAddHarmonicButtonClick(wxCommandEvent&)
 {
 	Harmonic harmonic;
 	AddHarmonicDlg* dlg = new AddHarmonicDlg("Add New Harmonic", ADD_HARMONIC_DLG_SIZE, harmonic);
 	if (dlg->ShowModal() == wxID_OK)
 	{
-		m_list->Append(ToString(harmonic));
-		// TODO: send harmonic created signal
+		m_list->Append(harmonic.ToString());
+		m_onHarmonicInsertion(harmonic);
 	}
 	dlg->Destroy();
 }
@@ -56,13 +74,13 @@ void HarmonicSelectionPanel::OnDeleteHarmonicButtonClick(wxCommandEvent&)
 	if (selection != -1)
 	{
 		m_list->Delete(selection);
-		// TODO: send harmonic deleted signal
+		m_onHarmonicDeletion(selection);
 	}
 }
 
 void HarmonicSelectionPanel::OnSelectionChange(wxCommandEvent&)
 {
-	std::cout << "Selection changed: " << m_list->GetSelection() << std::endl;
+	m_onSelectionChange(m_list->GetSelection());
 }
 
 wxBEGIN_EVENT_TABLE(HarmonicSelectionPanel, wxPanel)

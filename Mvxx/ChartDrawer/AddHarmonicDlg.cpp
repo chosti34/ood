@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AddHarmonicDlg.h"
+#include "StringUtils.h"
 
 namespace
 {
@@ -8,13 +9,6 @@ enum IDs
 	SelectSinRadioButton,
 	SelectCosRadioButton
 };
-
-std::string FloatToString(float value, unsigned precision)
-{
-	std::ostringstream strm;
-	strm << std::fixed << std::setprecision(precision) << value;
-	return strm.str();
-}
 }
 
 AddHarmonicDlg::AddHarmonicDlg(const wxString& title, const wxSize& size, Harmonic& harmonic)
@@ -89,16 +83,16 @@ bool AddHarmonicDlg::TransferDataFromWindow()
 	m_harmonic.amplitude = float(amplitude);
 	m_harmonic.frequency = float(frequency);
 	m_harmonic.phase = float(phase);
-	m_harmonic.type = m_sinButton->GetValue() ? HarmonicType::Sin : HarmonicType::Cos;
+	m_harmonic.type = m_sinButton->GetValue() ? Harmonic::Sin : Harmonic::Cos;
 	return true;
 }
 
 bool AddHarmonicDlg::TransferDataToWindow()
 {
-	m_amplitudeCtrl->SetValue(FloatToString(m_harmonic.amplitude, 3));
-	m_frequencyCtrl->SetValue(FloatToString(m_harmonic.frequency, 3));
-	m_phaseCtrl->SetValue(FloatToString(m_harmonic.phase, 3));
-	m_sinButton->SetValue(m_harmonic.type == HarmonicType::Sin);
-	m_cosButton->SetValue(m_harmonic.type == HarmonicType::Cos);
+	m_amplitudeCtrl->SetValue(StringUtils::FloatToString(m_harmonic.amplitude, 3));
+	m_frequencyCtrl->SetValue(StringUtils::FloatToString(m_harmonic.frequency, 3));
+	m_phaseCtrl->SetValue(StringUtils::FloatToString(m_harmonic.phase, 3));
+	m_sinButton->SetValue(m_harmonic.type == Harmonic::Sin);
+	m_cosButton->SetValue(m_harmonic.type == Harmonic::Cos);
 	return true;
 }

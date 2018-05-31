@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "HarmonicEditorPanel.h"
+#include "StringUtils.h"
 
 HarmonicEditorPanel::HarmonicEditorPanel(wxWindow* parent)
 	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC)
@@ -39,4 +40,23 @@ HarmonicEditorPanel::HarmonicEditorPanel(wxWindow* parent)
 	mainSizer->Add(radioSizer, 0, wxALIGN_CENTER | wxTOP, 10);
 
 	SetSizerAndFit(mainSizer);
+}
+
+void HarmonicEditorPanel::SetHarmonic(const Harmonic* pHarmonic)
+{
+	m_pHarmonic = pHarmonic;
+}
+
+bool HarmonicEditorPanel::TransferDataToWindow()
+{
+	if (m_pHarmonic)
+	{
+		m_amplitudeCtrl->SetValue(StringUtils::FloatToString(m_pHarmonic->amplitude, 3));
+		m_frequencyCtrl->SetValue(StringUtils::FloatToString(m_pHarmonic->frequency, 3));
+		m_phaseCtrl->SetValue(StringUtils::FloatToString(m_pHarmonic->phase, 3));
+		m_sinButton->SetValue(m_pHarmonic->type == Harmonic::Sin);
+		m_cosButton->SetValue(m_pHarmonic->type == Harmonic::Cos);
+		return true;
+	}
+	return false;
 }
