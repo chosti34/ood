@@ -40,11 +40,15 @@ void MainPanel::RegisterEventHandlers()
 		assert(index >= 0 && index < m_harmonics.size());
 		m_editorPanel->Disable();
 		m_harmonics.erase(m_harmonics.begin() + index);
+		m_viewPanel->SetPoints(CalculatePoints(0.f, 20.f, 0.02f));
+		m_viewPanel->Refresh();
 		std::cout << "Harmonics count: " << m_harmonics.size() << std::endl;
 	}));
 
 	m_connections.push_back(m_selectionPanel->DoOnHarmonicInsertion([this](const Harmonic& harmonic) {
 		m_harmonics.push_back(harmonic);
+		m_viewPanel->SetPoints(CalculatePoints(0.f, 20.f, 0.02f));
+		m_viewPanel->Refresh();
 		std::cout << "Harmonics count: " << m_harmonics.size() << std::endl;
 	}));
 
@@ -53,5 +57,27 @@ void MainPanel::RegisterEventHandlers()
 		assert(selection != -1); // при измении данных в панели редактирования гармоники должен быть выделен элемент списка
 		m_selectionPanel->SetStringAtListBoxItem(m_editorPanel->GetHarmonicData().ToString(), selection);
 		m_harmonics[selection] = m_editorPanel->GetHarmonicData();
+		m_viewPanel->SetPoints(CalculatePoints(0.f, 20.f, 0.02f));
+		m_viewPanel->Refresh();
 	}));
+}
+
+std::vector<wxRealPoint> MainPanel::CalculatePoints(float lowerBound, float upperBound, float eps)
+{
+	std::vector<wxRealPoint> points;
+	if (m_harmonics.empty())
+	{
+		return points;
+	}
+
+	for (float x = lowerBound; x <= upperBound; x += eps)
+	{
+		float value = 0.f;
+		for (const auto& harmonic : m_harmonics)
+		{
+			value += harmonic.GetValue(x);
+		}
+		points.push_back(wxRealPoint(x, value));
+	}
+	return points;
 }

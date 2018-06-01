@@ -10,6 +10,8 @@ public:
 	};
 
 	Harmonic(float amplitude = 0.f, float frequency = 0.f, float phase = 0.f, Type type = Sin);
+
+	float GetValue(float x)const;
 	std::string ToString()const;
 
 	float amplitude;

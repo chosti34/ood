@@ -14,6 +14,8 @@ private:
 	void CreateControls();
 	void RegisterEventHandlers();
 
+	std::vector<wxRealPoint> CalculatePoints(float lowerBound, float upperBound, float eps);
+
 private:
 	// TODO: store model outside of view
 	std::vector<Harmonic> m_harmonics;
