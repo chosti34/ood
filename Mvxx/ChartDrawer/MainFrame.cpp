@@ -7,6 +7,9 @@ MainFrame::MainFrame(const wxString& title, const wxSize& size)
 	m_panel = new MainPanel(this);
 	CreateStatusBar();
 	Center();
-	wxInitAllImageHandlers();
-	SetIcon(wxIcon("icon.png", wxBITMAP_TYPE_PNG));
+}
+
+MainPanel* MainFrame::GetMainPanel()
+{
+	return m_panel;
 }

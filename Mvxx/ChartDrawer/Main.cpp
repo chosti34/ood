@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "MainFrame.h"
+#include "Harmonics.h"
+#include "Controller.h"
 
 namespace
 {
@@ -12,10 +14,16 @@ class MyApp : public wxApp
 public:
 	bool OnInit() wxOVERRIDE
 	{
-		MainFrame* frame = new MainFrame(MAIN_FRAME_TITLE, MAIN_FRAME_SIZE);
-		frame->Show(true);
+		m_frame = new MainFrame(MAIN_FRAME_TITLE, MAIN_FRAME_SIZE);
+		m_frame->Show(true);
+		m_controller = std::make_unique<Controller>(m_frame, m_harmonics);
 		return true;
 	}
+
+private:
+	MainFrame* m_frame;
+	std::shared_ptr<Harmonics> m_harmonics;
+	std::unique_ptr<Controller> m_controller;
 };
 
 #ifndef _DEBUG

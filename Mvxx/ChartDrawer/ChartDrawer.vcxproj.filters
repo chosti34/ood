@@ -45,6 +45,15 @@
     <ClInclude Include="MainFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SignalsAliases.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Harmonics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -75,6 +84,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Harmonic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Harmonics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

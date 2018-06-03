@@ -7,6 +7,7 @@ class MainFrame : public wxFrame
 {
 public:
 	MainFrame(const wxString& title, const wxSize& size);
+	MainPanel* GetMainPanel();
 
 private:
 	MainPanel* m_panel;

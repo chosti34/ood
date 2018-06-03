@@ -8,6 +8,26 @@ MainPanel::MainPanel(wxFrame* frame)
 	RegisterEventHandlers();
 }
 
+void MainPanel::SetHarmonics(const std::shared_ptr<Harmonics>& harmonics)
+{
+	m_harmonicsX = harmonics;
+}
+
+HarmonicSelectionPanel* MainPanel::GetSelectionPanel()
+{
+	return m_selectionPanel;
+}
+
+HarmonicEditorPanel* MainPanel::GetEditorPanel()
+{
+	return m_editorPanel;
+}
+
+HarmonicViewPanel* MainPanel::GetViewPanel()
+{
+	return m_viewPanel;
+}
+
 void MainPanel::CreateControls()
 {
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
