@@ -9,14 +9,17 @@ public:
 	HarmonicSelectionView(wxWindow* parent);
 
 	boost::signals2::scoped_connection
-		DoOnHarmonicSelection(boost::signals2::signal<void(int)>::slot_type callback);
+		DoOnHarmonicInsertionClick(boost::signals2::signal<void()>::slot_type callback);
 	boost::signals2::scoped_connection
-		DoOnHarmonicDeletion(boost::signals2::signal<void(int)>::slot_type callback);
+		DoOnHarmonicDeletionClick(boost::signals2::signal<void()>::slot_type callback);
 	boost::signals2::scoped_connection
-		DoOnHarmonicInsertion(boost::signals2::signal<void(const Harmonic&)>::slot_type callback);
+		DoOnHarmonicSelectionClick(boost::signals2::signal<void()>::slot_type callback);
 
 	int GetListBoxSelectionIndex()const;
 	void SetStringAtListBoxItem(const std::string& str, unsigned index);
+	void Append(const std::string& str);
+
+	wxListBox* GetListBox();
 
 private:
 	void CreateControls();
@@ -31,7 +34,7 @@ private:
 	wxButton* m_addButton;
 	wxButton* m_deleteButton;
 
-	boost::signals2::signal<void(int)> m_selectionChangeSignal;
-	boost::signals2::signal<void(int)> m_harmonicDeletionSignal;
-	boost::signals2::signal<void(const Harmonic&)> m_harmonicInsertionSignal;
+	boost::signals2::signal<void()> m_harmonicInsertionSignal;
+	boost::signals2::signal<void()> m_harmonicDeletionSignal;
+	boost::signals2::signal<void()> m_selectionChangeSignal;
 };

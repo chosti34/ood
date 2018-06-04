@@ -1,10 +1,29 @@
 #include "stdafx.h"
 #include "HarmonicsCollection.h"
 
+boost::signals2::connection HarmonicsCollection::DoOnHarmonicInsertion(
+	boost::signals2::signal<void()>::slot_type slot)
+{
+	return m_insertionSignal.connect(slot);
+}
+
+boost::signals2::connection HarmonicsCollection::DoOnHarmonicDeletion(
+	boost::signals2::signal<void()>::slot_type slot)
+{
+	return m_deletionSignal.connect(slot);
+}
+
 void HarmonicsCollection::InsertHarmonic(const Harmonic& harmonic, size_t index)
 {
-	auto position = index < m_harmonics.size() ? m_harmonics.begin() + index : m_harmonics.end();
-	m_harmonics.insert(position, harmonic);
+	if (index < m_harmonics.size())
+	{
+		m_harmonics.insert(m_harmonics.begin() + index, harmonic);
+	}
+	else
+	{
+		m_harmonics.push_back(harmonic);
+	}
+	m_insertionSignal();
 }
 
 void HarmonicsCollection::DeleteHarmonic(size_t index)
@@ -22,6 +41,7 @@ void HarmonicsCollection::DeleteHarmonic(size_t index)
 	{
 		m_harmonics.pop_back();
 	}
+	m_deletionSignal();
 }
 
 void HarmonicsCollection::SetHarmonic(const Harmonic& harmonic, size_t index)

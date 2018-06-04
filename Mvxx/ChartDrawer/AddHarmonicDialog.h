@@ -14,10 +14,6 @@ public:
 	bool TransferDataToWindow() override;
 
 private:
-	void CreateControls();
-
-private:
-	// this harmonic will be modified by dialog
 	Harmonic& m_harmonic;
 
 	wxTextCtrl* m_amplitudeCtrl;

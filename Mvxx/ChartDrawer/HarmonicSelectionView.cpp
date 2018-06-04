@@ -11,8 +11,6 @@ enum IDs
 	AddHarmonicButton,
 	DeleteHarmonicButton
 };
-
-const wxSize ADD_HARMONIC_DLG_SIZE = { 280, 270 };
 }
 
 HarmonicSelectionView::HarmonicSelectionView(wxWindow* parent)
@@ -21,22 +19,22 @@ HarmonicSelectionView::HarmonicSelectionView(wxWindow* parent)
 	CreateControls();
 }
 
-boost::signals2::scoped_connection HarmonicSelectionView::DoOnHarmonicSelection(
-	boost::signals2::signal<void(int)>::slot_type callback)
+boost::signals2::scoped_connection HarmonicSelectionView::DoOnHarmonicInsertionClick(
+	boost::signals2::signal<void()>::slot_type callback)
 {
-	return m_selectionChangeSignal.connect(callback);
+	return m_harmonicInsertionSignal.connect(callback);
 }
 
-boost::signals2::scoped_connection HarmonicSelectionView::DoOnHarmonicDeletion(
-	boost::signals2::signal<void(int)>::slot_type callback)
+boost::signals2::scoped_connection HarmonicSelectionView::DoOnHarmonicDeletionClick(
+	boost::signals2::signal<void()>::slot_type callback)
 {
 	return m_harmonicDeletionSignal.connect(callback);
 }
 
-boost::signals2::scoped_connection HarmonicSelectionView::DoOnHarmonicInsertion(
-	boost::signals2::signal<void(const Harmonic&)>::slot_type callback)
+boost::signals2::scoped_connection HarmonicSelectionView::DoOnHarmonicSelectionClick(
+	boost::signals2::signal<void()>::slot_type callback)
 {
-	return m_harmonicInsertionSignal.connect(callback);
+	return m_selectionChangeSignal.connect(callback);
 }
 
 int HarmonicSelectionView::GetListBoxSelectionIndex()const
@@ -47,6 +45,16 @@ int HarmonicSelectionView::GetListBoxSelectionIndex()const
 void HarmonicSelectionView::SetStringAtListBoxItem(const std::string& str, unsigned index)
 {
 	m_listbox->SetString(index, str);
+}
+
+void HarmonicSelectionView::Append(const std::string& str)
+{
+	m_listbox->Append(str);
+}
+
+wxListBox* HarmonicSelectionView::GetListBox()
+{
+	return m_listbox;
 }
 
 void HarmonicSelectionView::CreateControls()
@@ -73,29 +81,17 @@ void HarmonicSelectionView::CreateControls()
 
 void HarmonicSelectionView::OnSelectionChange(wxCommandEvent&)
 {
-	m_selectionChangeSignal(m_listbox->GetSelection());
+	m_selectionChangeSignal();
 }
 
 void HarmonicSelectionView::OnAddHarmonicButtonClick(wxCommandEvent&)
 {
-	Harmonic harmonic;
-	AddHarmonicDialog* dlg = new AddHarmonicDialog("Add New Harmonic", ADD_HARMONIC_DLG_SIZE, harmonic);
-	if (dlg->ShowModal() == wxID_OK)
-	{
-		m_listbox->Append(harmonic.ToString());
-		m_harmonicInsertionSignal(harmonic);
-	}
-	dlg->Destroy();
+	m_harmonicInsertionSignal();
 }
 
 void HarmonicSelectionView::OnDeleteHarmonicButtonClick(wxCommandEvent&)
 {
-	int selection = m_listbox->GetSelection();
-	if (selection != -1)
-	{
-		m_listbox->Delete(selection);
-		m_harmonicDeletionSignal(selection);
-	}
+	m_harmonicDeletionSignal();
 }
 
 wxBEGIN_EVENT_TABLE(HarmonicSelectionView, wxPanel)

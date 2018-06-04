@@ -15,8 +15,9 @@ public:
 	bool OnInit() wxOVERRIDE
 	{
 		m_frame = new MainFrame(MAIN_FRAME_TITLE, MAIN_FRAME_SIZE);
-		m_frame->Show(true);
+		m_harmonics = std::make_shared<HarmonicsCollection>();
 		m_controller = std::make_unique<HarmonicsController>(m_frame, m_harmonics);
+		m_frame->Show(true);
 		return true;
 	}
 
