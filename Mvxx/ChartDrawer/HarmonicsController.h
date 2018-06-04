@@ -11,6 +11,7 @@ private:
 	void OnHarmonicInsertionButtonClick();
 	void OnHarmonicDeletionButtonClick();
 	void OnHarmonicSelectionClick();
+	void OnHarmonicDeselectionClick();
 	void OnHarmonicPropertiesChange();
 	void OnHarmonicInsertion();
 	void OnHarmonicDeletion();

@@ -1,36 +1,35 @@
 #pragma once
 #include <wx/panel.h>
-#include <boost/signals2.hpp>
 #include "Harmonic.h"
+#include "Listbox.h"
 
 class HarmonicSelectionView : public wxPanel
 {
 public:
 	HarmonicSelectionView(wxWindow* parent);
 
-	boost::signals2::scoped_connection
-		DoOnHarmonicInsertionClick(boost::signals2::signal<void()>::slot_type callback);
-	boost::signals2::scoped_connection
-		DoOnHarmonicDeletionClick(boost::signals2::signal<void()>::slot_type callback);
-	boost::signals2::scoped_connection
-		DoOnHarmonicSelectionClick(boost::signals2::signal<void()>::slot_type callback);
+	boost::signals2::connection DoOnHarmonicInsertionClick(
+		boost::signals2::signal<void()>::slot_type callback);
+	boost::signals2::connection DoOnHarmonicDeletionClick(
+		boost::signals2::signal<void()>::slot_type callback);
+	boost::signals2::connection DoOnHarmonicSelectionClick(
+		boost::signals2::signal<void()>::slot_type callback);
+	boost::signals2::connection DoOnHarmonicDeselectionClick(
+		boost::signals2::signal<void()>::slot_type callback);
 
-	int GetListBoxSelectionIndex()const;
-	void SetStringAtListBoxItem(const std::string& str, unsigned index);
-	void Append(const std::string& str);
-
-	wxListBox* GetListBox();
+	void AppendHarmonic(const Harmonic& harmonic);
+	void SetHarmonic(const Harmonic& harmonic, unsigned index);
+	void DeleteHarmonic(unsigned index);
+	int GetSelection()const;
 
 private:
-	void CreateControls();
-
 	wxDECLARE_EVENT_TABLE();
 	void OnSelectionChange(wxCommandEvent&);
 	void OnAddHarmonicButtonClick(wxCommandEvent&);
 	void OnDeleteHarmonicButtonClick(wxCommandEvent&);
 
 private:
-	wxListBox* m_listbox;
+	Listbox* m_listbox;
 	wxButton* m_addButton;
 	wxButton* m_deleteButton;
 

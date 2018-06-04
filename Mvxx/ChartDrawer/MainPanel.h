@@ -9,12 +9,12 @@ class MainPanel : public wxPanel
 public:
 	MainPanel(wxFrame* frame);
 
-	HarmonicSelectionView* GetSelectionPanel();
-	HarmonicPropertiesView* GetEditorPanel();
-	HarmonicCanvasView* GetViewPanel();
+	HarmonicSelectionView* GetSelectionView();
+	HarmonicPropertiesView* GetPropertiesView();
+	HarmonicCanvasView* GetCanvasView();
 
 private:
-	HarmonicSelectionView* m_selectionPanel;
-	HarmonicPropertiesView* m_editorPanel;
-	HarmonicCanvasView* m_viewPanel;
+	HarmonicSelectionView* m_selectionView;
+	HarmonicPropertiesView* m_propertiesView;
+	HarmonicCanvasView* m_canvasView;
 };

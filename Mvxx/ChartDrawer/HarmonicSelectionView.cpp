@@ -16,54 +16,11 @@ enum IDs
 HarmonicSelectionView::HarmonicSelectionView(wxWindow* parent)
 	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC)
 {
-	CreateControls();
-}
-
-boost::signals2::scoped_connection HarmonicSelectionView::DoOnHarmonicInsertionClick(
-	boost::signals2::signal<void()>::slot_type callback)
-{
-	return m_harmonicInsertionSignal.connect(callback);
-}
-
-boost::signals2::scoped_connection HarmonicSelectionView::DoOnHarmonicDeletionClick(
-	boost::signals2::signal<void()>::slot_type callback)
-{
-	return m_harmonicDeletionSignal.connect(callback);
-}
-
-boost::signals2::scoped_connection HarmonicSelectionView::DoOnHarmonicSelectionClick(
-	boost::signals2::signal<void()>::slot_type callback)
-{
-	return m_selectionChangeSignal.connect(callback);
-}
-
-int HarmonicSelectionView::GetListBoxSelectionIndex()const
-{
-	return m_listbox->GetSelection();
-}
-
-void HarmonicSelectionView::SetStringAtListBoxItem(const std::string& str, unsigned index)
-{
-	m_listbox->SetString(index, str);
-}
-
-void HarmonicSelectionView::Append(const std::string& str)
-{
-	m_listbox->Append(str);
-}
-
-wxListBox* HarmonicSelectionView::GetListBox()
-{
-	return m_listbox;
-}
-
-void HarmonicSelectionView::CreateControls()
-{
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
 	wxStaticText* title = new wxStaticText(this, wxID_ANY, "Harmonics");
 	wxStaticLine* line = new wxStaticLine(this);
-	m_listbox = new wxListBox(this, ListBoxCtrl, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxLB_ALWAYS_SB);
+	m_listbox = new Listbox(this, ListBoxCtrl);
 	m_addButton = new wxButton(this, AddHarmonicButton, "Add new");
 	m_deleteButton = new wxButton(this, DeleteHarmonicButton, "Delete selected");
 
@@ -77,6 +34,52 @@ void HarmonicSelectionView::CreateControls()
 	mainSizer->Add(buttonSizer, 0, wxTOP | wxBOTTOM | wxLEFT, 5);
 
 	SetSizerAndFit(mainSizer);
+}
+
+boost::signals2::connection HarmonicSelectionView::DoOnHarmonicInsertionClick(
+	boost::signals2::signal<void()>::slot_type callback)
+{
+	return m_harmonicInsertionSignal.connect(callback);
+}
+
+boost::signals2::connection HarmonicSelectionView::DoOnHarmonicDeletionClick(
+	boost::signals2::signal<void()>::slot_type callback)
+{
+	return m_harmonicDeletionSignal.connect(callback);
+}
+
+boost::signals2::connection HarmonicSelectionView::DoOnHarmonicSelectionClick(
+	boost::signals2::signal<void()>::slot_type callback)
+{
+	return m_selectionChangeSignal.connect(callback);
+}
+
+boost::signals2::connection HarmonicSelectionView::DoOnHarmonicDeselectionClick(
+	boost::signals2::signal<void()>::slot_type callback)
+{
+	return m_listbox->DoOnDeselection(callback);
+}
+
+void HarmonicSelectionView::AppendHarmonic(const Harmonic& harmonic)
+{
+	m_listbox->Append(harmonic.ToString());
+}
+
+void HarmonicSelectionView::SetHarmonic(const Harmonic& harmonic, unsigned index)
+{
+	assert(index != wxNOT_FOUND);
+	m_listbox->SetString(index, harmonic.ToString());
+}
+
+void HarmonicSelectionView::DeleteHarmonic(unsigned index)
+{
+	assert(index != wxNOT_FOUND);
+	m_listbox->Delete(index);
+}
+
+int HarmonicSelectionView::GetSelection() const
+{
+	return m_listbox->GetSelection();
 }
 
 void HarmonicSelectionView::OnSelectionChange(wxCommandEvent&)
