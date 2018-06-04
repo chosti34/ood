@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "HarmonicViewPanel.h"
+#include "HarmonicCanvasView.h"
 
 namespace
 {
@@ -7,18 +7,18 @@ const std::pair<float, float> SCALE_X = { 1.f, 50.f };
 const std::pair<float, float> SCALE_Y = { 1.f, 50.f };
 }
 
-HarmonicViewPanel::HarmonicViewPanel(wxWindow* parent)
+HarmonicCanvasView::HarmonicCanvasView(wxWindow* parent)
 	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC)
 {
 	SetBackgroundColour(*wxWHITE);
 }
 
-void HarmonicViewPanel::SetPoints(const std::vector<wxRealPoint>& points)
+void HarmonicCanvasView::SetPoints(const std::vector<wxRealPoint>& points)
 {
 	m_points = points;
 }
 
-void HarmonicViewPanel::OnPaint(wxPaintEvent&)
+void HarmonicCanvasView::OnPaint(wxPaintEvent&)
 {
 	wxPaintDC dc(this);
 	dc.SetPen(wxPen(wxColour(255, 0, 0), 3, wxPENSTYLE_SOLID));
@@ -32,12 +32,12 @@ void HarmonicViewPanel::OnPaint(wxPaintEvent&)
 	}
 }
 
-void HarmonicViewPanel::OnResize(wxSizeEvent&)
+void HarmonicCanvasView::OnResize(wxSizeEvent&)
 {
 	Refresh();
 }
 
-wxBEGIN_EVENT_TABLE(HarmonicViewPanel, wxPanel)
-	EVT_PAINT(HarmonicViewPanel::OnPaint)
-	EVT_SIZE(HarmonicViewPanel::OnResize)
+wxBEGIN_EVENT_TABLE(HarmonicCanvasView, wxPanel)
+	EVT_PAINT(HarmonicCanvasView::OnPaint)
+	EVT_SIZE(HarmonicCanvasView::OnResize)
 wxEND_EVENT_TABLE()

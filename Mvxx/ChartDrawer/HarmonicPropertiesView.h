@@ -3,16 +3,16 @@
 #include <boost/signals2.hpp>
 #include "Harmonic.h"
 
-class HarmonicEditorPanel : public wxPanel
+class HarmonicPropertiesView : public wxPanel
 {
 public:
-	HarmonicEditorPanel(wxWindow* parent);
+	HarmonicPropertiesView(wxWindow* parent);
 
 	boost::signals2::scoped_connection
 		DoOnHarmonicAttributesChange(boost::signals2::signal<void()>::slot_type callback);
 
-	void SetHarmonicData(const Harmonic& harmonic);
-	Harmonic GetHarmonicData()const;
+	void SetHarmonicProperties(const Harmonic& harmonic);
+	Harmonic GetHarmonicProperties()const;
 
 private:
 	void CreateControls();

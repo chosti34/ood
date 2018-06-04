@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MainFrame.h"
-#include "Harmonics.h"
-#include "Controller.h"
+#include "HarmonicsCollection.h"
+#include "HarmonicsController.h"
 
 namespace
 {
@@ -16,14 +16,14 @@ public:
 	{
 		m_frame = new MainFrame(MAIN_FRAME_TITLE, MAIN_FRAME_SIZE);
 		m_frame->Show(true);
-		m_controller = std::make_unique<Controller>(m_frame, m_harmonics);
+		m_controller = std::make_unique<HarmonicsController>(m_frame, m_harmonics);
 		return true;
 	}
 
 private:
 	MainFrame* m_frame;
-	std::shared_ptr<Harmonics> m_harmonics;
-	std::unique_ptr<Controller> m_controller;
+	std::shared_ptr<HarmonicsCollection> m_harmonics;
+	std::unique_ptr<HarmonicsController> m_controller;
 };
 
 #ifndef _DEBUG

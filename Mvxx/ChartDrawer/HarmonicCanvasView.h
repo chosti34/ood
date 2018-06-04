@@ -2,10 +2,10 @@
 #include <wx/panel.h>
 #include <vector>
 
-class HarmonicViewPanel : public wxPanel
+class HarmonicCanvasView : public wxPanel
 {
 public:
-	HarmonicViewPanel(wxWindow* parent);
+	HarmonicCanvasView(wxWindow* parent);
 	void SetPoints(const std::vector<wxRealPoint>& points);
 
 private:

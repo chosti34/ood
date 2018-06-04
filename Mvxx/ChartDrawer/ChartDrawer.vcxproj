@@ -150,12 +150,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AddHarmonicDialog.h" />
-    <ClInclude Include="Controller.h" />
+    <ClInclude Include="HarmonicsController.h" />
     <ClInclude Include="Harmonic.h" />
-    <ClInclude Include="HarmonicEditorPanel.h" />
-    <ClInclude Include="Harmonics.h" />
-    <ClInclude Include="HarmonicSelectionPanel.h" />
-    <ClInclude Include="HarmonicViewPanel.h" />
+    <ClInclude Include="HarmonicPropertiesView.h" />
+    <ClInclude Include="HarmonicsCollection.h" />
+    <ClInclude Include="HarmonicSelectionView.h" />
+    <ClInclude Include="HarmonicCanvasView.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="MainPanel.h" />
     <ClInclude Include="SignalsAliases.h" />
@@ -165,12 +165,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddHarmonicDialog.cpp" />
-    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="HarmonicsController.cpp" />
     <ClCompile Include="Harmonic.cpp" />
-    <ClCompile Include="HarmonicEditorPanel.cpp" />
-    <ClCompile Include="Harmonics.cpp" />
-    <ClCompile Include="HarmonicSelectionPanel.cpp" />
-    <ClCompile Include="HarmonicViewPanel.cpp" />
+    <ClCompile Include="HarmonicPropertiesView.cpp" />
+    <ClCompile Include="HarmonicsCollection.cpp" />
+    <ClCompile Include="HarmonicSelectionView.cpp" />
+    <ClCompile Include="HarmonicCanvasView.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="MainPanel.cpp" />

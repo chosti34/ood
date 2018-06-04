@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "HarmonicEditorPanel.h"
+#include "HarmonicPropertiesView.h"
 #include "StringUtils.h"
 #include <wx/valnum.h>
 
@@ -15,19 +15,19 @@ enum IDs
 };
 }
 
-HarmonicEditorPanel::HarmonicEditorPanel(wxWindow* parent)
+HarmonicPropertiesView::HarmonicPropertiesView(wxWindow* parent)
 	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC)
 {
 	CreateControls();
 }
 
 boost::signals2::scoped_connection
-HarmonicEditorPanel::DoOnHarmonicAttributesChange(boost::signals2::signal<void()>::slot_type callback)
+HarmonicPropertiesView::DoOnHarmonicAttributesChange(boost::signals2::signal<void()>::slot_type callback)
 {
 	return m_attributesChangedSignal.connect(callback);
 }
 
-void HarmonicEditorPanel::SetHarmonicData(const Harmonic& harmonic)
+void HarmonicPropertiesView::SetHarmonicProperties(const Harmonic& harmonic)
 {
 	m_harmonic = harmonic;
 	m_amplitudeCtrl->SetValue(StringUtils::FloatToString(m_harmonic.amplitude, 3));
@@ -37,12 +37,12 @@ void HarmonicEditorPanel::SetHarmonicData(const Harmonic& harmonic)
 	m_cosButton->SetValue(m_harmonic.type == Harmonic::Cos);
 }
 
-Harmonic HarmonicEditorPanel::GetHarmonicData()const
+Harmonic HarmonicPropertiesView::GetHarmonicProperties()const
 {
 	return m_harmonic;
 }
 
-void HarmonicEditorPanel::CreateControls()
+void HarmonicPropertiesView::CreateControls()
 {
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -84,7 +84,7 @@ void HarmonicEditorPanel::CreateControls()
 	SetSizerAndFit(mainSizer);
 }
 
-void HarmonicEditorPanel::OnAmplitudeCtrlChange(wxCommandEvent&)
+void HarmonicPropertiesView::OnAmplitudeCtrlChange(wxCommandEvent&)
 {
 	double value = 0;
 	if (m_amplitudeCtrl->GetValue().ToDouble(&value))
@@ -94,7 +94,7 @@ void HarmonicEditorPanel::OnAmplitudeCtrlChange(wxCommandEvent&)
 	}
 }
 
-void HarmonicEditorPanel::OnFrequencyCtrlChange(wxCommandEvent&)
+void HarmonicPropertiesView::OnFrequencyCtrlChange(wxCommandEvent&)
 {
 	double value = 0;
 	if (m_frequencyCtrl->GetValue().ToDouble(&value))
@@ -104,7 +104,7 @@ void HarmonicEditorPanel::OnFrequencyCtrlChange(wxCommandEvent&)
 	}
 }
 
-void HarmonicEditorPanel::OnPhaseCtrlChange(wxCommandEvent&)
+void HarmonicPropertiesView::OnPhaseCtrlChange(wxCommandEvent&)
 {
 	double value = 0;
 	if (m_phaseCtrl->GetValue().ToDouble(&value))
@@ -114,22 +114,22 @@ void HarmonicEditorPanel::OnPhaseCtrlChange(wxCommandEvent&)
 	}
 }
 
-void HarmonicEditorPanel::OnSinButtonClick(wxCommandEvent&)
+void HarmonicPropertiesView::OnSinButtonClick(wxCommandEvent&)
 {
 	m_harmonic.type = Harmonic::Sin;
 	m_attributesChangedSignal();
 }
 
-void HarmonicEditorPanel::OnCosButtonClick(wxCommandEvent&)
+void HarmonicPropertiesView::OnCosButtonClick(wxCommandEvent&)
 {
 	m_harmonic.type = Harmonic::Cos;
 	m_attributesChangedSignal();
 }
 
-wxBEGIN_EVENT_TABLE(HarmonicEditorPanel, wxPanel)
-	EVT_TEXT_ENTER(AmplitudeCtrl, HarmonicEditorPanel::OnAmplitudeCtrlChange)
-	EVT_TEXT_ENTER(FrequencyCtrl, HarmonicEditorPanel::OnFrequencyCtrlChange)
-	EVT_TEXT_ENTER(PhaseCtrl, HarmonicEditorPanel::OnPhaseCtrlChange)
-	EVT_RADIOBUTTON(SinButton, HarmonicEditorPanel::OnSinButtonClick)
-	EVT_RADIOBUTTON(CosButton, HarmonicEditorPanel::OnCosButtonClick)
+wxBEGIN_EVENT_TABLE(HarmonicPropertiesView, wxPanel)
+	EVT_TEXT_ENTER(AmplitudeCtrl, HarmonicPropertiesView::OnAmplitudeCtrlChange)
+	EVT_TEXT_ENTER(FrequencyCtrl, HarmonicPropertiesView::OnFrequencyCtrlChange)
+	EVT_TEXT_ENTER(PhaseCtrl, HarmonicPropertiesView::OnPhaseCtrlChange)
+	EVT_RADIOBUTTON(SinButton, HarmonicPropertiesView::OnSinButtonClick)
+	EVT_RADIOBUTTON(CosButton, HarmonicPropertiesView::OnCosButtonClick)
 wxEND_EVENT_TABLE()

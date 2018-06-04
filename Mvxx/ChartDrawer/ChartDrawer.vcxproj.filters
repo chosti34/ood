@@ -24,15 +24,6 @@
     <ClInclude Include="MainPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HarmonicSelectionPanel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HarmonicEditorPanel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HarmonicViewPanel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Harmonic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -48,10 +39,19 @@
     <ClInclude Include="SignalsAliases.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Harmonics.h">
+    <ClInclude Include="HarmonicsCollection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Controller.h">
+    <ClInclude Include="HarmonicsController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HarmonicPropertiesView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HarmonicCanvasView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HarmonicSelectionView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -63,15 +63,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MainPanel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HarmonicSelectionPanel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HarmonicEditorPanel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HarmonicViewPanel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StringUtils.cpp">
@@ -86,10 +77,19 @@
     <ClCompile Include="Harmonic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Harmonics.cpp">
+    <ClCompile Include="HarmonicsCollection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Controller.cpp">
+    <ClCompile Include="HarmonicsController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HarmonicPropertiesView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HarmonicCanvasView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HarmonicSelectionView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

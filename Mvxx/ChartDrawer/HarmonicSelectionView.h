@@ -3,10 +3,10 @@
 #include <boost/signals2.hpp>
 #include "Harmonic.h"
 
-class HarmonicSelectionPanel : public wxPanel
+class HarmonicSelectionView : public wxPanel
 {
 public:
-	HarmonicSelectionPanel(wxWindow* parent);
+	HarmonicSelectionView(wxWindow* parent);
 
 	boost::signals2::scoped_connection
 		DoOnHarmonicSelection(boost::signals2::signal<void(int)>::slot_type callback);
