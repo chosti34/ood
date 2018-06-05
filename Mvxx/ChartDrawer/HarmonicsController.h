@@ -23,5 +23,5 @@ private:
 	HarmonicCanvasView* m_canvasView;
 
 	std::shared_ptr<HarmonicsCollection> m_harmonics;
-	std::vector<boost::signals2::scoped_connection> m_connections;
+	std::vector<ScopedSignalConnection> m_connections;
 };

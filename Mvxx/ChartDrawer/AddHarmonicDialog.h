@@ -15,7 +15,6 @@ public:
 
 private:
 	Harmonic& m_harmonic;
-
 	wxTextCtrl* m_amplitudeCtrl;
 	wxTextCtrl* m_phaseCtrl;
 	wxTextCtrl* m_frequencyCtrl;

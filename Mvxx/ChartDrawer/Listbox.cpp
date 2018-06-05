@@ -6,8 +6,7 @@ Listbox::Listbox(wxWindow* parent, int id)
 {
 }
 
-boost::signals2::connection Listbox::DoOnDeselection(
-	boost::signals2::signal<void()>::slot_type callback)
+SignalConnection Listbox::DoOnDeselection(SignalSlot callback)
 {
 	return m_deselectionSignal.connect(callback);
 }

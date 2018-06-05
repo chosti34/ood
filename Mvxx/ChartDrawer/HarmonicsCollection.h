@@ -1,16 +1,14 @@
 #pragma once
 #include "Harmonic.h"
-#include <boost/signals2.hpp>
+#include "SignalAliases.h"
 #include <climits>
 #include <vector>
 
 class HarmonicsCollection
 {
 public:
-	boost::signals2::connection DoOnHarmonicInsertion(
-		boost::signals2::signal<void()>::slot_type slot);
-	boost::signals2::connection DoOnHarmonicDeletion(
-		boost::signals2::signal<void()>::slot_type slot);
+	SignalConnection DoOnHarmonicInsertion(SignalSlot slot);
+	SignalConnection DoOnHarmonicDeletion(SignalSlot slot);
 
 	void InsertHarmonic(const Harmonic& harmonic, size_t index = std::numeric_limits<size_t>::max());
 	void DeleteHarmonic(size_t index = std::numeric_limits<size_t>::max());
@@ -22,6 +20,6 @@ public:
 
 private:
 	std::vector<Harmonic> m_harmonics;
-	boost::signals2::signal<void()> m_insertionSignal;
-	boost::signals2::signal<void()> m_deletionSignal;
+	Signal m_insertionSignal;
+	Signal m_deletionSignal;
 };

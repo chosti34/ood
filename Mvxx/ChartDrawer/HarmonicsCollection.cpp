@@ -1,14 +1,12 @@
 #include "stdafx.h"
 #include "HarmonicsCollection.h"
 
-boost::signals2::connection HarmonicsCollection::DoOnHarmonicInsertion(
-	boost::signals2::signal<void()>::slot_type slot)
+SignalConnection HarmonicsCollection::DoOnHarmonicInsertion(SignalSlot slot)
 {
 	return m_insertionSignal.connect(slot);
 }
 
-boost::signals2::connection HarmonicsCollection::DoOnHarmonicDeletion(
-	boost::signals2::signal<void()>::slot_type slot)
+SignalConnection HarmonicsCollection::DoOnHarmonicDeletion(SignalSlot slot)
 {
 	return m_deletionSignal.connect(slot);
 }

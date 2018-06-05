@@ -1,6 +1,6 @@
 #pragma once
 #include <wx/panel.h>
-#include <boost/signals2.hpp>
+#include "SignalAliases.h"
 #include "Harmonic.h"
 
 class HarmonicPropertiesView : public wxPanel
@@ -8,11 +8,10 @@ class HarmonicPropertiesView : public wxPanel
 public:
 	HarmonicPropertiesView(wxWindow* parent);
 
-	boost::signals2::scoped_connection DoOnHarmonicPropertiesChange(
-		boost::signals2::signal<void()>::slot_type callback);
+	SignalConnection DoOnHarmonicPropertiesChange(SignalSlot callback);
 
 	void SetHarmonicProperties(const Harmonic& harmonic);
-	Harmonic GetHarmonicProperties()const;
+	const Harmonic& GetHarmonicProperties()const;
 
 private:
 	wxDECLARE_EVENT_TABLE();
@@ -23,13 +22,12 @@ private:
 	void OnCosButtonClick(wxCommandEvent&);
 
 private:
-	Harmonic m_harmonic;
-
 	wxTextCtrl* m_amplitudeCtrl;
 	wxTextCtrl* m_phaseCtrl;
 	wxTextCtrl* m_frequencyCtrl;
 	wxRadioButton* m_sinButton;
 	wxRadioButton* m_cosButton;
 
-	boost::signals2::signal<void()> m_propertiesChangedSignal;
+	Signal m_propertiesChangedSignal;
+	Harmonic m_harmonic;
 };

@@ -46,26 +46,22 @@ HarmonicSelectionView::HarmonicSelectionView(wxWindow* parent)
 	SetSizerAndFit(mainSizer);
 }
 
-boost::signals2::connection HarmonicSelectionView::DoOnHarmonicInsertionClick(
-	boost::signals2::signal<void()>::slot_type callback)
+SignalConnection HarmonicSelectionView::DoOnHarmonicInsertionClick(SignalSlot callback)
 {
 	return m_harmonicInsertionSignal.connect(callback);
 }
 
-boost::signals2::connection HarmonicSelectionView::DoOnHarmonicDeletionClick(
-	boost::signals2::signal<void()>::slot_type callback)
+SignalConnection HarmonicSelectionView::DoOnHarmonicDeletionClick(SignalSlot callback)
 {
 	return m_harmonicDeletionSignal.connect(callback);
 }
 
-boost::signals2::connection HarmonicSelectionView::DoOnHarmonicSelectionClick(
-	boost::signals2::signal<void()>::slot_type callback)
+SignalConnection HarmonicSelectionView::DoOnHarmonicSelectionClick(SignalSlot callback)
 {
 	return m_selectionChangeSignal.connect(callback);
 }
 
-boost::signals2::connection HarmonicSelectionView::DoOnHarmonicDeselectionClick(
-	boost::signals2::signal<void()>::slot_type callback)
+SignalConnection HarmonicSelectionView::DoOnHarmonicDeselectionClick(SignalSlot callback)
 {
 	return m_listbox->DoOnDeselection(callback);
 }

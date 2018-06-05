@@ -56,8 +56,7 @@ HarmonicPropertiesView::HarmonicPropertiesView(wxWindow* parent)
 	SetSizerAndFit(mainSizer);
 }
 
-boost::signals2::scoped_connection HarmonicPropertiesView::DoOnHarmonicPropertiesChange(
-	boost::signals2::signal<void()>::slot_type callback)
+SignalConnection HarmonicPropertiesView::DoOnHarmonicPropertiesChange(SignalSlot callback)
 {
 	return m_propertiesChangedSignal.connect(callback);
 }
@@ -72,7 +71,7 @@ void HarmonicPropertiesView::SetHarmonicProperties(const Harmonic& harmonic)
 	m_cosButton->SetValue(m_harmonic.GetType() == HarmonicType::Cos);
 }
 
-Harmonic HarmonicPropertiesView::GetHarmonicProperties()const
+const Harmonic& HarmonicPropertiesView::GetHarmonicProperties()const
 {
 	return m_harmonic;
 }

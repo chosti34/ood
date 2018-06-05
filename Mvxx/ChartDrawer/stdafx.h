@@ -1,9 +1,12 @@
 #pragma once
-#include <functional>
-#include <iostream>
+
+#include <memory>
 #include <string>
 #include <sstream>
 #include <iomanip>
 #include <cassert>
-#include <memory>
+#include <iostream>
+#include <functional>
+
+// wxWidgets
 #include <wx/wx.h>
