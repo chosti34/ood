@@ -20,8 +20,17 @@ std::vector<wxRealPoint> CalculateHarmonicWaveSum(
 	return points;
 }
 
+std::vector<wxRealPoint> ConvertToPixelCoordinates(const std::vector<wxRealPoint>& points)
+{
+	std::vector<wxRealPoint> pixelCoordinates(points.size());
+	std::transform(points.begin(), points.end(), pixelCoordinates.begin(), [&](const wxRealPoint& point) {
+		return wxRealPoint{ point.x / 1.f * 100.f, -point.y / 2.f * 30.f };
+	});
+	return pixelCoordinates;
+}
+
 const float FROM = 0.f;
-const float TO = 20.f;
+const float TO = 8.f;
 const float STEP = 0.01f;
 }
 
@@ -46,6 +55,7 @@ HarmonicsController::HarmonicsController(MainFrame* mainWnd, const std::shared_p
 		std::bind(&HarmonicsController::OnHarmonicPropertiesChange, this)));
 	m_connections.emplace_back(m_selectionView->DoOnHarmonicDeselectionClick(
 		std::bind(&HarmonicsController::OnHarmonicDeselectionClick, this)));
+	m_canvasView->SetDoubleBuffered(true);
 }
 
 void HarmonicsController::OnHarmonicInsertionButtonClick()
@@ -90,19 +100,22 @@ void HarmonicsController::OnHarmonicPropertiesChange()
 	m_selectionView->SetHarmonic(
 		m_propertiesView->GetHarmonicProperties(), static_cast<unsigned>(selection));
 	m_harmonics->SetHarmonic(m_propertiesView->GetHarmonicProperties(), selection);
-	m_canvasView->SetPoints(CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP));
+	m_canvasView->SetPoints(ConvertToPixelCoordinates(
+		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP)));
 	m_canvasView->Refresh(true);
 }
 
 void HarmonicsController::OnHarmonicInsertion()
 {
-	m_canvasView->SetPoints(CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP));
+	m_canvasView->SetPoints(ConvertToPixelCoordinates(
+		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP)));
 	m_canvasView->Refresh(true);
 }
 
 void HarmonicsController::OnHarmonicDeletion()
 {
 	m_propertiesView->Enable(false);
-	m_canvasView->SetPoints(CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP));
+	m_canvasView->SetPoints(ConvertToPixelCoordinates(
+		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP)));
 	m_canvasView->Refresh(true);
 }

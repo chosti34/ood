@@ -5,7 +5,7 @@
 
 namespace
 {
-const wxSize MAIN_FRAME_SIZE = { 640, 480 };
+const wxSize MAIN_FRAME_SIZE = { 920, 720 };
 const wxString MAIN_FRAME_TITLE = "ChartDrawer";
 
 class GdiplusInitializer
