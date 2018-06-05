@@ -7,6 +7,25 @@ namespace
 {
 const wxSize MAIN_FRAME_SIZE = { 640, 480 };
 const wxString MAIN_FRAME_TITLE = "ChartDrawer";
+
+class GdiplusInitializer
+{
+public:
+	GdiplusInitializer()
+	{
+		Gdiplus::Status status = Gdiplus::GdiplusStartup(&m_gdiplusToken, &m_gdiplusStartupInput, nullptr);
+		assert(status == Gdiplus::Status::Ok);
+	}
+
+	~GdiplusInitializer()
+	{
+		Gdiplus::GdiplusShutdown(m_gdiplusToken);
+	}
+
+private:
+	Gdiplus::GdiplusStartupInput m_gdiplusStartupInput;
+	ULONG_PTR m_gdiplusToken;
+};
 }
 
 class MyApp : public wxApp
@@ -25,6 +44,7 @@ private:
 	MainFrame* m_frame;
 	std::shared_ptr<HarmonicsCollection> m_harmonics;
 	std::unique_ptr<HarmonicsController> m_controller;
+	GdiplusInitializer m_gdiplus;
 };
 
 #ifndef _DEBUG
