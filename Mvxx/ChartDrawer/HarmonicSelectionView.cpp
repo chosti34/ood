@@ -2,6 +2,7 @@
 #include "HarmonicSelectionView.h"
 #include "AddHarmonicDialog.h"
 #include <wx/statline.h>
+#include <boost/format.hpp>
 
 namespace
 {
@@ -11,6 +12,15 @@ enum IDs
 	AddHarmonicButton,
 	DeleteHarmonicButton
 };
+
+std::string ToString(const Harmonic& harmonic)
+{
+	return (boost::format("%1%*%2%(%3%*x + %4%)")
+		% harmonic.GetAmplitude()
+		% (harmonic.GetType() == HarmonicType::Sin ? "sin" : "cos")
+		% harmonic.GetFrequency()
+		% harmonic.GetPhase()).str();
+}
 }
 
 HarmonicSelectionView::HarmonicSelectionView(wxWindow* parent)
@@ -62,13 +72,13 @@ boost::signals2::connection HarmonicSelectionView::DoOnHarmonicDeselectionClick(
 
 void HarmonicSelectionView::AppendHarmonic(const Harmonic& harmonic)
 {
-	m_listbox->Append(harmonic.ToString());
+	m_listbox->Append(ToString(harmonic));
 }
 
 void HarmonicSelectionView::SetHarmonic(const Harmonic& harmonic, unsigned index)
 {
 	assert(index != wxNOT_FOUND);
-	m_listbox->SetString(index, harmonic.ToString());
+	m_listbox->SetString(index, ToString(harmonic));
 }
 
 void HarmonicSelectionView::DeleteHarmonic(unsigned index)

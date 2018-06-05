@@ -156,6 +156,7 @@
     <ClInclude Include="HarmonicsCollection.h" />
     <ClInclude Include="HarmonicSelectionView.h" />
     <ClInclude Include="HarmonicCanvasView.h" />
+    <ClInclude Include="HarmonicType.h" />
     <ClInclude Include="Listbox.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="MainPanel.h" />

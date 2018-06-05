@@ -10,6 +10,8 @@ enum IDs
 	SelectSinRadioButton,
 	SelectCosRadioButton
 };
+
+const unsigned FLOAT_PRECISION = 3;
 }
 
 AddHarmonicDialog::AddHarmonicDialog(const wxString& title, const wxSize& size, Harmonic& harmonic)
@@ -22,7 +24,7 @@ AddHarmonicDialog::AddHarmonicDialog(const wxString& title, const wxSize& size, 
 	wxStaticText* amplitudeText = new wxStaticText(panel, wxID_ANY, "Amplitude:");
 	m_amplitudeCtrl = new wxTextCtrl(
 		panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0,
-		wxFloatingPointValidator<float>(3, &m_harmonic.amplitude));
+		wxFloatingPointValidator<float>(3));
 	wxBoxSizer* amplitudeSizer = new wxBoxSizer(wxVERTICAL);
 	amplitudeSizer->Add(amplitudeText, 0, wxALIGN_LEFT);
 	amplitudeSizer->Add(m_amplitudeCtrl, 0, wxALIGN_LEFT | wxTOP, 2);
@@ -30,7 +32,7 @@ AddHarmonicDialog::AddHarmonicDialog(const wxString& title, const wxSize& size, 
 
 	wxStaticText* frequencyText = new wxStaticText(panel, wxID_ANY, "Frequency:");
 	m_frequencyCtrl = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0,
-		wxFloatingPointValidator<float>(3, &m_harmonic.frequency));
+		wxFloatingPointValidator<float>(3));
 	wxBoxSizer* frequencySizer = new wxBoxSizer(wxVERTICAL);
 	frequencySizer->Add(frequencyText, 0, wxALIGN_LEFT);
 	frequencySizer->Add(m_frequencyCtrl, 0, wxALIGN_LEFT | wxTOP, 2);
@@ -38,7 +40,7 @@ AddHarmonicDialog::AddHarmonicDialog(const wxString& title, const wxSize& size, 
 
 	wxStaticText* phaseText = new wxStaticText(panel, wxID_ANY, "Phase:");
 	m_phaseCtrl = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0,
-		wxFloatingPointValidator<float>(3, &m_harmonic.phase));
+		wxFloatingPointValidator<float>(3));
 	wxBoxSizer* phaseSizer = new wxBoxSizer(wxVERTICAL);
 	phaseSizer->Add(phaseText, 0, wxALIGN_LEFT);
 	phaseSizer->Add(m_phaseCtrl, 0, wxALIGN_LEFT | wxTOP, 2);
@@ -52,7 +54,7 @@ AddHarmonicDialog::AddHarmonicDialog(const wxString& title, const wxSize& size, 
 	mainSizer->Add(radioSizer, 0, wxALIGN_CENTER | wxTOP, 10);
 
 	wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxButton* addButton = new wxButton(panel, wxID_OK, wxT("Add"), // OK button will be handled automatically
+	wxButton* addButton = new wxButton(panel, wxID_OK, wxT("Add"),
 		wxDefaultPosition, wxSize(70, 30));
 	wxButton* closeButton = new wxButton(panel, wxID_CANCEL, wxT("Cancel"),
 		wxDefaultPosition, wxSize(70, 30));
@@ -71,10 +73,10 @@ bool AddHarmonicDialog::TransferDataFromWindow()
 		m_phaseCtrl->GetValue().ToDouble(&values[2]) &&
 		(m_sinButton->GetValue() || m_cosButton->GetValue()))
 	{
-		m_harmonic.amplitude = static_cast<float>(values[0]);
-		m_harmonic.frequency = static_cast<float>(values[1]);
-		m_harmonic.phase = static_cast<float>(values[2]);
-		m_harmonic.type = m_sinButton->GetValue() ? Harmonic::Sin : Harmonic::Cos;
+		m_harmonic.SetAmplitude(static_cast<float>(values[0]));
+		m_harmonic.SetFrequency(static_cast<float>(values[1]));
+		m_harmonic.SetPhase(static_cast<float>(values[2]));
+		m_harmonic.SetType(m_sinButton->GetValue() ? HarmonicType::Sin : HarmonicType::Cos);
 		return true;
 	}
 	return false;
@@ -82,10 +84,10 @@ bool AddHarmonicDialog::TransferDataFromWindow()
 
 bool AddHarmonicDialog::TransferDataToWindow()
 {
-	m_amplitudeCtrl->SetValue(StringUtils::FloatToString(m_harmonic.amplitude, 3));
-	m_frequencyCtrl->SetValue(StringUtils::FloatToString(m_harmonic.frequency, 3));
-	m_phaseCtrl->SetValue(StringUtils::FloatToString(m_harmonic.phase, 3));
-	m_sinButton->SetValue(m_harmonic.type == Harmonic::Sin);
-	m_cosButton->SetValue(m_harmonic.type == Harmonic::Cos);
+	m_amplitudeCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetAmplitude(), FLOAT_PRECISION));
+	m_frequencyCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetFrequency(), FLOAT_PRECISION));
+	m_phaseCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetPhase(), FLOAT_PRECISION));
+	m_sinButton->SetValue(m_harmonic.GetType() == HarmonicType::Sin);
+	m_cosButton->SetValue(m_harmonic.GetType() == HarmonicType::Cos);
 	return true;
 }

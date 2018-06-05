@@ -8,8 +8,8 @@ class HarmonicPropertiesView : public wxPanel
 public:
 	HarmonicPropertiesView(wxWindow* parent);
 
-	boost::signals2::scoped_connection
-		DoOnHarmonicPropertiesChange(boost::signals2::signal<void()>::slot_type callback);
+	boost::signals2::scoped_connection DoOnHarmonicPropertiesChange(
+		boost::signals2::signal<void()>::slot_type callback);
 
 	void SetHarmonicProperties(const Harmonic& harmonic);
 	Harmonic GetHarmonicProperties()const;

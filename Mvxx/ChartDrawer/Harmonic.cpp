@@ -1,28 +1,56 @@
 #include "stdafx.h"
 #include "Harmonic.h"
-#include <boost/format.hpp>
-#include <functional>
-#include <cmath>
 
-Harmonic::Harmonic(float amplitude, float frequency, float phase, Type type)
-	: amplitude(amplitude)
-	, frequency(frequency)
-	, phase(phase)
-	, type(type)
+Harmonic::Harmonic(float amplitude, float frequency, float phase, HarmonicType type)
+	: m_amplitude(amplitude)
+	, m_frequency(frequency)
+	, m_phase(phase)
+	, m_type(type)
 {
 }
 
-float Harmonic::GetValue(float x)const
+float Harmonic::CalculateValue(float x) const
 {
-	std::function<float(float)> fn = type == Sin ? std::sinf : std::cosf;
-	return amplitude * fn(frequency * x + phase);
+	std::function<float(float)> fn = (m_type == HarmonicType::Sin) ? std::sinf : std::cosf;
+	return m_amplitude * fn(m_frequency * x + m_phase);
 }
 
-std::string Harmonic::ToString()const
+float Harmonic::GetAmplitude() const
 {
-	return (boost::format("%1%*%2%(%3%*x + %4%)")
-		% amplitude
-		% (type == Sin ? "sin" : "cos")
-		% frequency
-		% phase).str();
+	return m_amplitude;
+}
+
+void Harmonic::SetAmplitude(float amplitude)
+{
+	m_amplitude = amplitude;
+}
+
+float Harmonic::GetFrequency() const
+{
+	return m_frequency;
+}
+
+void Harmonic::SetFrequency(float frequency)
+{
+	m_frequency = frequency;
+}
+
+float Harmonic::GetPhase() const
+{
+	return m_phase;
+}
+
+void Harmonic::SetPhase(float phase)
+{
+	m_phase = phase;
+}
+
+HarmonicType Harmonic::GetType() const
+{
+	return m_type;
+}
+
+void Harmonic::SetType(HarmonicType type)
+{
+	m_type = type;
 }

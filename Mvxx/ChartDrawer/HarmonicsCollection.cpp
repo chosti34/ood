@@ -63,7 +63,7 @@ float HarmonicsCollection::CalculateValue(float x)const
 	float value = 0.f;
 	for (const auto& harmonic : m_harmonics)
 	{
-		value += harmonic.GetValue(x);
+		value += harmonic.CalculateValue(x);
 	}
 	return value;
 }

@@ -1,21 +1,29 @@
 #pragma once
+#include "HarmonicType.h"
 
 class Harmonic
 {
 public:
-	enum Type
-	{
-		Sin,
-		Cos
-	};
+	Harmonic() = default;
+	Harmonic(float amplitude, float frequency, float phase, HarmonicType type);
 
-	Harmonic(float amplitude = 0.f, float frequency = 0.f, float phase = 0.f, Type type = Sin);
+	float CalculateValue(float x)const;
 
-	float GetValue(float x)const;
-	std::string ToString()const;
+	float GetAmplitude()const;
+	void SetAmplitude(float amplitude);
 
-	float amplitude;
-	float frequency;
-	float phase;
-	Type type;
+	float GetFrequency()const;
+	void SetFrequency(float frequency);
+
+	float GetPhase()const;
+	void SetPhase(float phase);
+
+	HarmonicType GetType()const;
+	void SetType(HarmonicType type);
+
+private:
+	float m_amplitude = 0.f;
+	float m_frequency = 0.f;
+	float m_phase = 0.f;
+	HarmonicType m_type = HarmonicType::Sin;
 };
