@@ -20,13 +20,14 @@ std::vector<wxRealPoint> CalculateHarmonicWaveSum(
 	return points;
 }
 
-std::vector<wxRealPoint> ConvertToPixelCoordinates(const std::vector<wxRealPoint>& points)
+std::vector<wxRealPoint> ConvertToPixelPoints(
+	const std::vector<wxRealPoint>& points, const wxRealPoint& pixelsCountPerRealUnit)
 {
-	std::vector<wxRealPoint> pixelCoordinates(points.size());
-	std::transform(points.begin(), points.end(), pixelCoordinates.begin(), [&](const wxRealPoint& point) {
-		return wxRealPoint{ point.x / 1.f * 100.f, -point.y / 2.f * 30.f };
+	std::vector<wxRealPoint> pixelPoints(points.size());
+	std::transform(points.begin(), points.end(), pixelPoints.begin(), [&](const wxRealPoint& point) {
+		return wxRealPoint{ point.x * pixelsCountPerRealUnit.x, -point.y * pixelsCountPerRealUnit.y };
 	});
-	return pixelCoordinates;
+	return pixelPoints;
 }
 
 const float FROM = 0.f;
@@ -100,22 +101,22 @@ void HarmonicsController::OnHarmonicPropertiesChange()
 	m_selectionView->SetHarmonic(
 		m_propertiesView->GetHarmonicProperties(), static_cast<unsigned>(selection));
 	m_harmonics->SetHarmonic(m_propertiesView->GetHarmonicProperties(), selection);
-	m_canvasView->SetPoints(ConvertToPixelCoordinates(
-		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP)));
+	m_canvasView->SetPixelPoints(ConvertToPixelPoints(
+		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP), wxRealPoint(100, 15)));
 	m_canvasView->Refresh(true);
 }
 
 void HarmonicsController::OnHarmonicInsertion()
 {
-	m_canvasView->SetPoints(ConvertToPixelCoordinates(
-		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP)));
+	m_canvasView->SetPixelPoints(ConvertToPixelPoints(
+		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP), wxRealPoint(100, 15)));
 	m_canvasView->Refresh(true);
 }
 
 void HarmonicsController::OnHarmonicDeletion()
 {
 	m_propertiesView->Enable(false);
-	m_canvasView->SetPoints(ConvertToPixelCoordinates(
-		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP)));
+	m_canvasView->SetPixelPoints(ConvertToPixelPoints(
+		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP), wxRealPoint(100, 15)));
 	m_canvasView->Refresh(true);
 }

@@ -6,7 +6,7 @@ class HarmonicCanvasView : public wxPanel
 {
 public:
 	HarmonicCanvasView(wxWindow* parent);
-	void SetPoints(const std::vector<wxRealPoint>& points);
+	void SetPixelPoints(const std::vector<wxRealPoint>& pixelPoints);
 
 private:
 	wxDECLARE_EVENT_TABLE();
@@ -14,5 +14,5 @@ private:
 	void OnResize(wxSizeEvent&);
 
 private:
-	std::vector<wxRealPoint> m_points;
+	std::vector<Gdiplus::PointF> m_pixelPoints;
 };

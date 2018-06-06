@@ -163,7 +163,6 @@
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="MainPanel.h" />
     <ClInclude Include="MinMaxFix.h" />
-    <ClInclude Include="SharedConstants.h" />
     <ClInclude Include="SignalAliases.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StringUtils.h" />
