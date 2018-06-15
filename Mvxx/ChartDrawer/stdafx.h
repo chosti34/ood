@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <functional>
 
+#include <WinSock2.h>
 #include <Windows.h>
 #include "MinMaxFix.h"
 

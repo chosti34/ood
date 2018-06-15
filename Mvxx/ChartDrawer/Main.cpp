@@ -15,6 +15,7 @@ public:
 	{
 		Gdiplus::Status status = Gdiplus::GdiplusStartup(&m_gdiplusToken, &m_gdiplusStartupInput, nullptr);
 		assert(status == Gdiplus::Status::Ok);
+		(void)status;
 	}
 
 	~GdiplusInitializer()

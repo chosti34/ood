@@ -17,7 +17,7 @@ std::string ToString(const Harmonic& harmonic)
 {
 	return (boost::format("%1%*%2%(%3%*x + %4%)")
 		% harmonic.GetAmplitude()
-		% (harmonic.GetType() == HarmonicType::Sin ? "sin" : "cos")
+		% ToString(harmonic.GetType())
 		% harmonic.GetFrequency()
 		% harmonic.GetPhase()).str();
 }

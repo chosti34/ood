@@ -14,10 +14,17 @@ public:
 	const Harmonic& GetHarmonicProperties()const;
 
 private:
+	void UpdateHarmonicProperty(wxTextCtrl* ctrl, std::function<void(float)>&& callback);
+
 	wxDECLARE_EVENT_TABLE();
-	void OnAmplitudeCtrlChange(wxCommandEvent&);
-	void OnFrequencyCtrlChange(wxCommandEvent&);
-	void OnPhaseCtrlChange(wxCommandEvent&);
+	void OnAmplitudeCtrlFocusLost(wxFocusEvent&);
+	void OnFrequencyCtrlFocusLost(wxFocusEvent&);
+	void OnPhaseCtrlFocusLost(wxFocusEvent&);
+
+	void OnAmplitudeCtrlPressEnter(wxCommandEvent&);
+	void OnFrequencyCtrlPressEnter(wxCommandEvent&);
+	void OnPhaseCtrlPressEnter(wxCommandEvent&);
+
 	void OnSinButtonClick(wxCommandEvent&);
 	void OnCosButtonClick(wxCommandEvent&);
 

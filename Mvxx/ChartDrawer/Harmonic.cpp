@@ -11,7 +11,7 @@ Harmonic::Harmonic(float amplitude, float frequency, float phase, HarmonicType t
 
 float Harmonic::CalculateValue(float x) const
 {
-	std::function<float(float)> fn = (m_type == HarmonicType::Sin) ? std::sinf : std::cosf;
+	float(*fn)(float) = (m_type == HarmonicType::Sin) ? std::sinf : std::cosf;
 	return m_amplitude * fn(m_frequency * x + m_phase);
 }
 
