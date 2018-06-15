@@ -63,6 +63,9 @@
     <ClInclude Include="MinMaxFix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SharedUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -105,6 +108,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HarmonicType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

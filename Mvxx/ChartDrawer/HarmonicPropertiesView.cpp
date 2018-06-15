@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "HarmonicPropertiesView.h"
 #include "StringUtils.h"
-#include <wx/valnum.h>
+#include "SharedUI.h"
 #include <wx/statline.h>
 
 namespace
@@ -14,22 +14,7 @@ enum IDs
 	SinRadioButton,
 	CosRadioButton
 };
-
-const unsigned FLOAT_PRECISION = 3;
-
-wxTextCtrl* CreateTextCtrlAndFit(
-	wxWindow* parent, int id, const wxString& label, wxBoxSizer* mainSizer, int topOffset = 0)
-{
-	wxStaticText* text = new wxStaticText(parent, wxID_ANY, label);
-	wxTextCtrl* ctrl = new wxTextCtrl(parent, id, wxEmptyString, wxDefaultPosition,
-		wxDefaultSize, wxTE_PROCESS_ENTER, wxFloatingPointValidator<float>(FLOAT_PRECISION));
-	wxBoxSizer* ctrlSizer = new wxBoxSizer(wxVERTICAL);
-	ctrlSizer->Add(text, 0, wxALIGN_LEFT);
-	ctrlSizer->Add(ctrl, 0, wxALIGN_LEFT | wxTOP, 2);
-	mainSizer->Add(ctrlSizer, 0, wxALIGN_CENTER | wxTOP, topOffset);
-	return ctrl;
 }
-} // namespace
 
 HarmonicPropertiesView::HarmonicPropertiesView(wxWindow* parent)
 	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC)
@@ -41,9 +26,17 @@ HarmonicPropertiesView::HarmonicPropertiesView(wxWindow* parent)
 	mainSizer->Add(title, 0, wxEXPAND | wxLEFT | wxTOP, 5);
 	mainSizer->Add(separator, 0, wxEXPAND | wxLEFT | wxTOP | wxRIGHT, 5);
 
-	m_amplitudeCtrl = CreateTextCtrlAndFit(this, AmplitudeTextCtrl, "Amplitude:", mainSizer, 25);
-	m_frequencyCtrl = CreateTextCtrlAndFit(this, FrequencyTextCtrl, "Frequency:", mainSizer, 15);
-	m_phaseCtrl = CreateTextCtrlAndFit(this, PhaseTextCtrl, "Phase:", mainSizer, 15);
+	auto creator = std::make_unique<SharedUI::FloatingPointTextCtrlCreator>();
+	creator->SetAdjustLayoutCallback([&mainSizer](wxStaticText* text, wxTextCtrl* ctrl, int offset) {
+		wxBoxSizer* ctrlSizer = new wxBoxSizer(wxVERTICAL);
+		ctrlSizer->Add(text, 0, wxALIGN_LEFT);
+		ctrlSizer->Add(ctrl, 0, wxALIGN_LEFT | wxTOP, 2);
+		mainSizer->Add(ctrlSizer, 0, wxALIGN_CENTER | wxTOP, offset);
+	});
+
+	m_amplitudeCtrl = creator->CreateTextCtrl(this, AmplitudeTextCtrl, "Amplitude:", wxTE_PROCESS_ENTER, 25);
+	m_frequencyCtrl = creator->CreateTextCtrl(this, FrequencyTextCtrl, "Frequency:", wxTE_PROCESS_ENTER, 15);
+	m_phaseCtrl = creator->CreateTextCtrl(this, PhaseTextCtrl, "Phase:", wxTE_PROCESS_ENTER, 15);
 
 	m_amplitudeCtrl->Bind(wxEVT_KILL_FOCUS, &HarmonicPropertiesView::OnAmplitudeCtrlFocusLost, this);
 	m_frequencyCtrl->Bind(wxEVT_KILL_FOCUS, &HarmonicPropertiesView::OnFrequencyCtrlFocusLost, this);
@@ -67,9 +60,9 @@ SignalConnection HarmonicPropertiesView::DoOnHarmonicPropertiesChange(SignalSlot
 void HarmonicPropertiesView::SetHarmonicProperties(const Harmonic& harmonic)
 {
 	m_harmonic = harmonic;
-	m_amplitudeCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetAmplitude(), FLOAT_PRECISION));
-	m_frequencyCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetFrequency(), FLOAT_PRECISION));
-	m_phaseCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetPhase(), FLOAT_PRECISION));
+	m_amplitudeCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetAmplitude(), SharedUI::FLOAT_PRECISION));
+	m_frequencyCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetFrequency(), SharedUI::FLOAT_PRECISION));
+	m_phaseCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetPhase(), SharedUI::FLOAT_PRECISION));
 	m_sinButton->SetValue(m_harmonic.GetType() == HarmonicType::Sin);
 	m_cosButton->SetValue(m_harmonic.GetType() == HarmonicType::Cos);
 }
@@ -134,13 +127,13 @@ void HarmonicPropertiesView::OnPhaseCtrlPressEnter(wxCommandEvent&)
 	});
 }
 
-void HarmonicPropertiesView::OnSinButtonClick(wxCommandEvent&)
+void HarmonicPropertiesView::OnSinRadioButtonClick(wxCommandEvent&)
 {
 	m_harmonic.SetType(HarmonicType::Sin);
 	m_propertiesChangedSignal();
 }
 
-void HarmonicPropertiesView::OnCosButtonClick(wxCommandEvent&)
+void HarmonicPropertiesView::OnCosRadioButtonClick(wxCommandEvent&)
 {
 	m_harmonic.SetType(HarmonicType::Cos);
 	m_propertiesChangedSignal();
@@ -150,6 +143,6 @@ wxBEGIN_EVENT_TABLE(HarmonicPropertiesView, wxPanel)
 	EVT_TEXT_ENTER(AmplitudeTextCtrl, HarmonicPropertiesView::OnAmplitudeCtrlPressEnter)
 	EVT_TEXT_ENTER(FrequencyTextCtrl, HarmonicPropertiesView::OnFrequencyCtrlPressEnter)
 	EVT_TEXT_ENTER(PhaseTextCtrl, HarmonicPropertiesView::OnPhaseCtrlPressEnter)
-	EVT_RADIOBUTTON(SinRadioButton, HarmonicPropertiesView::OnSinButtonClick)
-	EVT_RADIOBUTTON(CosRadioButton, HarmonicPropertiesView::OnCosButtonClick)
+	EVT_RADIOBUTTON(SinRadioButton, HarmonicPropertiesView::OnSinRadioButtonClick)
+	EVT_RADIOBUTTON(CosRadioButton, HarmonicPropertiesView::OnCosRadioButtonClick)
 wxEND_EVENT_TABLE()

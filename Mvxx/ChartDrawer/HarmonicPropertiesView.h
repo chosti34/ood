@@ -25,8 +25,8 @@ private:
 	void OnFrequencyCtrlPressEnter(wxCommandEvent&);
 	void OnPhaseCtrlPressEnter(wxCommandEvent&);
 
-	void OnSinButtonClick(wxCommandEvent&);
-	void OnCosButtonClick(wxCommandEvent&);
+	void OnSinRadioButtonClick(wxCommandEvent&);
+	void OnCosRadioButtonClick(wxCommandEvent&);
 
 private:
 	wxTextCtrl* m_amplitudeCtrl;
@@ -34,7 +34,6 @@ private:
 	wxTextCtrl* m_frequencyCtrl;
 	wxRadioButton* m_sinButton;
 	wxRadioButton* m_cosButton;
-
-	Signal m_propertiesChangedSignal;
 	Harmonic m_harmonic;
+	Signal m_propertiesChangedSignal;
 };
