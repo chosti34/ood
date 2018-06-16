@@ -51,7 +51,7 @@ void HarmonicsCollection::SetHarmonic(const Harmonic& harmonic, size_t index)
 {
 	if (index >= m_harmonics.size())
 	{
-		throw std::out_of_range("index must be les than items count");
+		throw std::out_of_range("index must be less than items count");
 	}
 	m_harmonics[index] = harmonic;
 	m_propertiesChangeSignal(index);

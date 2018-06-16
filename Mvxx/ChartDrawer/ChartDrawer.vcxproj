@@ -159,7 +159,6 @@
     <ClInclude Include="HarmonicSelectionView.h" />
     <ClInclude Include="HarmonicCanvasView.h" />
     <ClInclude Include="HarmonicType.h" />
-    <ClInclude Include="Listbox.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="MainPanel.h" />
     <ClInclude Include="MinMaxFix.h" />
@@ -178,7 +177,6 @@
     <ClCompile Include="HarmonicSelectionView.cpp" />
     <ClCompile Include="HarmonicCanvasView.cpp" />
     <ClCompile Include="HarmonicType.cpp" />
-    <ClCompile Include="Listbox.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="MainPanel.cpp" />

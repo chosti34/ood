@@ -51,9 +51,6 @@
     <ClInclude Include="HarmonicSelectionView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Listbox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="HarmonicType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -102,9 +99,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HarmonicSelectionView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Listbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HarmonicType.cpp">

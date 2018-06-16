@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "HarmonicSelectionView.h"
 #include "AddHarmonicDialog.h"
-#include <wx/statline.h>
 #include <boost/format.hpp>
+#include <wx/statline.h>
 
 namespace
 {
@@ -30,7 +30,8 @@ HarmonicSelectionView::HarmonicSelectionView(wxWindow* parent)
 
 	wxStaticText* title = new wxStaticText(this, wxID_ANY, "Harmonics");
 	wxStaticLine* line = new wxStaticLine(this);
-	m_listbox = new Listbox(this, ListBoxCtrl);
+	m_listbox = new wxListBox(this, ListBoxCtrl, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxLB_ALWAYS_SB);
+	m_listbox->Bind(wxEVT_LEFT_DOWN, &HarmonicSelectionView::OnListboxMouseLeftDownClick, this);
 	m_addButton = new wxButton(this, AddHarmonicButton, "Add new");
 	m_deleteButton = new wxButton(this, DeleteHarmonicButton, "Delete selected");
 
@@ -63,7 +64,7 @@ SignalConnection HarmonicSelectionView::DoOnHarmonicSelectionClick(SelectionSign
 
 SignalConnection HarmonicSelectionView::DoOnHarmonicDeselectionClick(DeselectionSignal::slot_type callback)
 {
-	return m_listbox->DoOnDeselection(callback);
+	return m_deselectionSignal.connect(callback);
 }
 
 void HarmonicSelectionView::AppendHarmonic(const Harmonic& harmonic)
@@ -107,6 +108,18 @@ void HarmonicSelectionView::OnDeleteHarmonicButtonClick(wxCommandEvent&)
 	{
 		m_harmonicDeletionSignal(selection);
 	}
+}
+
+void HarmonicSelectionView::OnListboxMouseLeftDownClick(wxMouseEvent& event)
+{
+	wxArrayInt selections;
+	if (m_listbox->GetSelections(selections) != 0 &&
+		m_listbox->HitTest(event.GetPosition()) == wxNOT_FOUND)
+	{
+		m_listbox->Deselect(wxNOT_FOUND);
+		m_deselectionSignal();
+	}
+	event.Skip();
 }
 
 wxBEGIN_EVENT_TABLE(HarmonicSelectionView, wxPanel)

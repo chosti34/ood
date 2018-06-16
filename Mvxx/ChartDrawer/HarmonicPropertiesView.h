@@ -5,15 +5,13 @@
 
 class HarmonicPropertiesView : public wxPanel
 {
-	using PropertiesChangeSignal = Signal<void()>;
+	using PropertiesChangeSignal = Signal<void(const Harmonic&)>;
 
 public:
 	HarmonicPropertiesView(wxWindow* parent);
 
 	SignalConnection DoOnHarmonicPropertiesChange(PropertiesChangeSignal::slot_type callback);
-
 	void SetHarmonicProperties(const Harmonic& harmonic);
-	const Harmonic& GetHarmonicProperties()const;
 
 private:
 	void UpdateHarmonicProperty(wxTextCtrl* ctrl, std::function<void(float)>&& callback);

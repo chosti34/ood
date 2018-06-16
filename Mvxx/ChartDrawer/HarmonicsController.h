@@ -8,13 +8,17 @@ public:
 	HarmonicsController(MainFrame* mainWnd, const std::shared_ptr<HarmonicsCollection>& harmonics);
 
 private:
+	// View callbacks
 	void OnHarmonicInsertionButtonClick();
 	void OnHarmonicDeletionButtonClick(int selection);
 	void OnHarmonicSelectionClick(int selection);
 	void OnHarmonicDeselectionClick();
-	void OnHarmonicPropertiesChange();
+	void OnHarmonicPropertiesChangeClick(const Harmonic& harmonic);
+
+	// Model callbacks
 	void OnHarmonicInsertion();
 	void OnHarmonicDeletion();
+	void OnHarmonicPropertiesChange();
 
 private:
 	MainFrame* m_mainWnd;

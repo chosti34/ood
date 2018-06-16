@@ -2,7 +2,6 @@
 #include <wx/panel.h>
 #include "Signals.h"
 #include "Harmonic.h"
-#include "Listbox.h"
 
 class HarmonicSelectionView : public wxPanel
 {
@@ -29,12 +28,14 @@ private:
 	void OnSelectionChange(wxCommandEvent&);
 	void OnAddHarmonicButtonClick(wxCommandEvent&);
 	void OnDeleteHarmonicButtonClick(wxCommandEvent&);
+	void OnListboxMouseLeftDownClick(wxMouseEvent&);
 
 private:
-	Listbox* m_listbox;
+	wxListBox* m_listbox;
 	wxButton* m_addButton;
 	wxButton* m_deleteButton;
 	InsertionClickSignal m_harmonicInsertionSignal;
 	DeletionClickSignal m_harmonicDeletionSignal;
 	SelectionSignal m_selectionChangeSignal;
+	DeselectionSignal m_deselectionSignal;
 };

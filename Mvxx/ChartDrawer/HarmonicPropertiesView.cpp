@@ -67,18 +67,13 @@ void HarmonicPropertiesView::SetHarmonicProperties(const Harmonic& harmonic)
 	m_cosButton->SetValue(m_harmonic.GetType() == HarmonicType::Cos);
 }
 
-const Harmonic& HarmonicPropertiesView::GetHarmonicProperties()const
-{
-	return m_harmonic;
-}
-
 void HarmonicPropertiesView::UpdateHarmonicProperty(wxTextCtrl* ctrl, std::function<void(float)>&& callback)
 {
 	double value = 0;
 	if (ctrl->GetValue().ToDouble(&value))
 	{
 		callback(static_cast<float>(value));
-		m_propertiesChangeSignal();
+		m_propertiesChangeSignal(m_harmonic);
 	}
 }
 
@@ -130,13 +125,13 @@ void HarmonicPropertiesView::OnPhaseCtrlPressEnter(wxCommandEvent&)
 void HarmonicPropertiesView::OnSinRadioButtonClick(wxCommandEvent&)
 {
 	m_harmonic.SetType(HarmonicType::Sin);
-	m_propertiesChangeSignal();
+	m_propertiesChangeSignal(m_harmonic);
 }
 
 void HarmonicPropertiesView::OnCosRadioButtonClick(wxCommandEvent&)
 {
 	m_harmonic.SetType(HarmonicType::Cos);
-	m_propertiesChangeSignal();
+	m_propertiesChangeSignal(m_harmonic);
 }
 
 wxBEGIN_EVENT_TABLE(HarmonicPropertiesView, wxPanel)
