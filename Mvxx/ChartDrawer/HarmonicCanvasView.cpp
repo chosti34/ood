@@ -77,6 +77,7 @@ void HarmonicCanvasView::SetPixelPoints(const std::vector<wxRealPoint>& points)
 	std::transform(m_pixelPoints.begin(), m_pixelPoints.end(), m_pixelPoints.begin(), [](const PointF& point) {
 		return PointF{ CHART_OFFSET_HORIZONTAL + point.X, CHART_CENTER_VERTICAL + point.Y };
 	});
+	Refresh(true);
 }
 
 void HarmonicCanvasView::OnPaint(wxPaintEvent&)

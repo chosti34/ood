@@ -159,6 +159,9 @@
     <ClInclude Include="HarmonicSelectionView.h" />
     <ClInclude Include="HarmonicCanvasView.h" />
     <ClInclude Include="HarmonicType.h" />
+    <ClInclude Include="ICanvasView.h" />
+    <ClInclude Include="IPropertiesView.h" />
+    <ClInclude Include="ISelectionView.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="MainPanel.h" />
     <ClInclude Include="MinMaxFix.h" />

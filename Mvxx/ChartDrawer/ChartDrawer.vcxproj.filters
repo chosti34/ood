@@ -63,6 +63,15 @@
     <ClInclude Include="Signals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ISelectionView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPropertiesView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ICanvasView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">

@@ -35,28 +35,27 @@ const float TO = 8.f;
 const float STEP = 0.01f;
 }
 
-HarmonicsController::HarmonicsController(MainFrame* mainWnd, const std::shared_ptr<HarmonicsCollection>& harmonics)
+HarmonicsController::HarmonicsController(
+	const std::shared_ptr<HarmonicsCollection>& harmonics,
+	ISelectionView<Harmonic>* selectionView,
+	IPropertiesView<Harmonic>* propertiesView,
+	ICanvasView* canvasView)
 	: m_harmonics(harmonics)
-	, m_mainWnd(mainWnd)
-	, m_selectionView(mainWnd->GetMainPanel()->GetSelectionView())
-	, m_propertiesView(mainWnd->GetMainPanel()->GetPropertiesView())
-	, m_canvasView(mainWnd->GetMainPanel()->GetCanvasView())
+	, m_selectionView(selectionView)
+	, m_propertiesView(propertiesView)
+	, m_canvasView(canvasView)
 {
 	namespace ph = std::placeholders;
-
-	// Register view callbacks
-	m_connections.emplace_back(m_selectionView->DoOnHarmonicInsertionClick(
-		std::bind(&HarmonicsController::OnHarmonicInsertionButtonClick, this)));
-	m_connections.emplace_back(m_selectionView->DoOnHarmonicDeletionClick(
-		std::bind(&HarmonicsController::OnHarmonicDeletionButtonClick, this, ph::_1)));
-	m_connections.emplace_back(m_selectionView->DoOnHarmonicSelectionClick(
-		std::bind(&HarmonicsController::OnHarmonicSelectionClick, this, ph::_1)));
-	m_connections.emplace_back(m_selectionView->DoOnHarmonicDeselectionClick(
-		std::bind(&HarmonicsController::OnHarmonicDeselectionClick, this)));
-	m_connections.emplace_back(m_propertiesView->DoOnHarmonicPropertiesChange(
-		std::bind(&HarmonicsController::OnHarmonicPropertiesChangeClick, this, ph::_1)));
-
-	// Register model callbacks
+	m_connections.emplace_back(m_selectionView->DoOnAppend(std::bind(
+		&HarmonicsController::OnHarmonicInsertionButtonClick, this)));
+	m_connections.emplace_back(m_selectionView->DoOnDeletion(std::bind(
+		&HarmonicsController::OnHarmonicDeletionButtonClick, this, ph::_1)));
+	m_connections.emplace_back(m_selectionView->DoOnSelection(std::bind(
+		&HarmonicsController::OnHarmonicSelectionClick, this, ph::_1)));
+	m_connections.emplace_back(m_selectionView->DoOnDeselection(std::bind(
+		&HarmonicsController::OnHarmonicDeselectionClick, this)));
+	m_connections.emplace_back(m_propertiesView->DoOnPropertiesChange(std::bind(
+		&HarmonicsController::OnHarmonicPropertiesChangeClick, this, ph::_1, ph::_2)));
 	m_connections.emplace_back(m_harmonics->DoOnHarmonicInsertion(
 		std::bind(&HarmonicsController::OnHarmonicInsertion, this)));
 	m_connections.emplace_back(m_harmonics->DoOnHarmonicDeletion(
@@ -71,7 +70,7 @@ void HarmonicsController::OnHarmonicInsertionButtonClick()
 	AddHarmonicDialog* dlg = new AddHarmonicDialog("Add New Harmonic", wxSize(280, 270), harmonic);
 	if (dlg->ShowModal() == wxID_OK)
 	{
-		m_selectionView->AppendHarmonic(harmonic);
+		m_selectionView->Append(harmonic);
 		m_harmonics->InsertHarmonic(harmonic);
 	}
 	dlg->Destroy();
@@ -79,47 +78,43 @@ void HarmonicsController::OnHarmonicInsertionButtonClick()
 
 void HarmonicsController::OnHarmonicDeletionButtonClick(int selection)
 {
-	m_selectionView->DeleteHarmonic(selection);
+	m_selectionView->DeleteElementAt(selection);
 	m_harmonics->DeleteHarmonic(static_cast<size_t>(selection));
-	m_propertiesView->Enable(false);
+	m_propertiesView->Activate(false);
 }
 
 void HarmonicsController::OnHarmonicSelectionClick(int selection)
 {
-	m_propertiesView->Enable(true);
-	m_propertiesView->SetHarmonicProperties(m_harmonics->GetHarmonic(selection));
+	m_propertiesView->Activate(true);
+	m_propertiesView->SetProperties(m_harmonics->GetHarmonic(selection), selection);
 }
 
 void HarmonicsController::OnHarmonicDeselectionClick()
 {
-	m_propertiesView->Enable(false);
+	m_propertiesView->Activate(false);
 }
 
-void HarmonicsController::OnHarmonicPropertiesChangeClick(const Harmonic& harmonic)
+void HarmonicsController::OnHarmonicPropertiesChangeClick(const Harmonic& harmonic, int index)
 {
-	const int selection = m_selectionView->GetSelection();
-	assert(selection != wxNOT_FOUND);
-	m_selectionView->SetHarmonic(harmonic, static_cast<unsigned>(selection));
-	m_harmonics->SetHarmonic(harmonic, selection);
+	assert(index >= 0 && index < m_harmonics->GetCount());
+	m_selectionView->SetElementAt(harmonic, static_cast<size_t>(index));
+	m_harmonics->SetHarmonic(harmonic, static_cast<size_t>(index));
 }
 
 void HarmonicsController::OnHarmonicInsertion()
 {
 	m_canvasView->SetPixelPoints(ConvertToPixelPoints(
 		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP), wxRealPoint(100, 15)));
-	m_canvasView->Refresh(true);
 }
 
 void HarmonicsController::OnHarmonicDeletion()
 {
 	m_canvasView->SetPixelPoints(ConvertToPixelPoints(
 		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP), wxRealPoint(100, 15)));
-	m_canvasView->Refresh(true);
 }
 
 void HarmonicsController::OnHarmonicPropertiesChange()
 {
 	m_canvasView->SetPixelPoints(ConvertToPixelPoints(
 		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP), wxRealPoint(100, 15)));
-	m_canvasView->Refresh(true);
 }

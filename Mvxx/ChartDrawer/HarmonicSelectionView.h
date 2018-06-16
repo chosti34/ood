@@ -1,27 +1,24 @@
 #pragma once
-#include <wx/panel.h>
-#include "Signals.h"
+#include "ISelectionView.h"
 #include "Harmonic.h"
+#include <wx/panel.h>
 
-class HarmonicSelectionView : public wxPanel
+class HarmonicSelectionView
+	: public wxPanel
+	, public ISelectionView<Harmonic>
 {
-	using InsertionClickSignal = Signal<void()>;
-	using DeletionClickSignal = Signal<void(int)>;
-	using SelectionSignal = Signal<void(int)>;
-	using DeselectionSignal = Signal<void()>;
-
 public:
 	HarmonicSelectionView(wxWindow* parent);
 
-	SignalConnection DoOnHarmonicInsertionClick(InsertionClickSignal::slot_type callback);
-	SignalConnection DoOnHarmonicDeletionClick(DeletionClickSignal::slot_type callback);
-	SignalConnection DoOnHarmonicSelectionClick(SelectionSignal::slot_type callback);
-	SignalConnection DoOnHarmonicDeselectionClick(DeselectionSignal::slot_type callback);
+	SignalConnection DoOnAppend(AppendSignal::slot_type callback) override;
+	SignalConnection DoOnDeletion(DeletionSignal::slot_type callback) override;
+	SignalConnection DoOnSelection(SelectionSignal::slot_type callback) override;
+	SignalConnection DoOnDeselection(DeselectionSignal::slot_type callback) override;
 
-	void AppendHarmonic(const Harmonic& harmonic);
-	void SetHarmonic(const Harmonic& harmonic, unsigned index);
-	void DeleteHarmonic(unsigned index);
-	int GetSelection()const;
+	void Append(const Harmonic& harmonic) override;
+	void SetElementAt(const Harmonic& harmonic, size_t index) override;
+	void DeleteElementAt(size_t index) override;
+	int GetSelection()const override;
 
 private:
 	wxDECLARE_EVENT_TABLE();
@@ -34,8 +31,8 @@ private:
 	wxListBox* m_listbox;
 	wxButton* m_addButton;
 	wxButton* m_deleteButton;
-	InsertionClickSignal m_harmonicInsertionSignal;
-	DeletionClickSignal m_harmonicDeletionSignal;
-	SelectionSignal m_selectionChangeSignal;
+	AppendSignal m_appendSignal;
+	DeletionSignal m_deletionSignal;
+	SelectionSignal m_selectionSignal;
 	DeselectionSignal m_deselectionSignal;
 };

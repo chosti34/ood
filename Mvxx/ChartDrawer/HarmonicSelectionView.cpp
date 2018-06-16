@@ -47,44 +47,44 @@ HarmonicSelectionView::HarmonicSelectionView(wxWindow* parent)
 	SetSizerAndFit(mainSizer);
 }
 
-SignalConnection HarmonicSelectionView::DoOnHarmonicInsertionClick(InsertionClickSignal::slot_type callback)
+SignalConnection HarmonicSelectionView::DoOnAppend(AppendSignal::slot_type callback)
 {
-	return m_harmonicInsertionSignal.connect(callback);
+	return m_appendSignal.connect(callback);
 }
 
-SignalConnection HarmonicSelectionView::DoOnHarmonicDeletionClick(DeletionClickSignal::slot_type callback)
+SignalConnection HarmonicSelectionView::DoOnDeletion(DeletionSignal::slot_type callback)
 {
-	return m_harmonicDeletionSignal.connect(callback);
+	return m_deletionSignal.connect(callback);
 }
 
-SignalConnection HarmonicSelectionView::DoOnHarmonicSelectionClick(SelectionSignal::slot_type callback)
+SignalConnection HarmonicSelectionView::DoOnSelection(SelectionSignal::slot_type callback)
 {
-	return m_selectionChangeSignal.connect(callback);
+	return m_selectionSignal.connect(callback);
 }
 
-SignalConnection HarmonicSelectionView::DoOnHarmonicDeselectionClick(DeselectionSignal::slot_type callback)
+SignalConnection HarmonicSelectionView::DoOnDeselection(DeselectionSignal::slot_type callback)
 {
 	return m_deselectionSignal.connect(callback);
 }
 
-void HarmonicSelectionView::AppendHarmonic(const Harmonic& harmonic)
+void HarmonicSelectionView::Append(const Harmonic& harmonic)
 {
 	m_listbox->Append(ToString(harmonic));
 }
 
-void HarmonicSelectionView::SetHarmonic(const Harmonic& harmonic, unsigned index)
+void HarmonicSelectionView::SetElementAt(const Harmonic& harmonic, size_t index)
 {
-	assert(index != wxNOT_FOUND);
+	assert(index < m_listbox->GetCount());
 	m_listbox->SetString(index, ToString(harmonic));
 }
 
-void HarmonicSelectionView::DeleteHarmonic(unsigned index)
+void HarmonicSelectionView::DeleteElementAt(size_t index)
 {
-	assert(index != wxNOT_FOUND);
+	assert(index < m_listbox->GetCount());
 	m_listbox->Delete(index);
 }
 
-int HarmonicSelectionView::GetSelection() const
+int HarmonicSelectionView::GetSelection()const
 {
 	return m_listbox->GetSelection();
 }
@@ -93,12 +93,12 @@ void HarmonicSelectionView::OnSelectionChange(wxCommandEvent&)
 {
 	const int selection = m_listbox->GetSelection();
 	assert(selection != wxNOT_FOUND);
-	m_selectionChangeSignal(selection);
+	m_selectionSignal(selection);
 }
 
 void HarmonicSelectionView::OnAddHarmonicButtonClick(wxCommandEvent&)
 {
-	m_harmonicInsertionSignal();
+	m_appendSignal();
 }
 
 void HarmonicSelectionView::OnDeleteHarmonicButtonClick(wxCommandEvent&)
@@ -106,7 +106,7 @@ void HarmonicSelectionView::OnDeleteHarmonicButtonClick(wxCommandEvent&)
 	const int selection = m_listbox->GetSelection();
 	if (selection != wxNOT_FOUND)
 	{
-		m_harmonicDeletionSignal(selection);
+		m_deletionSignal(selection);
 	}
 }
 

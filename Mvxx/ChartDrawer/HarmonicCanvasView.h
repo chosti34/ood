@@ -1,12 +1,12 @@
 #pragma once
 #include <wx/panel.h>
-#include <vector>
+#include "ICanvasView.h"
 
-class HarmonicCanvasView : public wxPanel
+class HarmonicCanvasView : public wxPanel , public ICanvasView
 {
 public:
 	HarmonicCanvasView(wxWindow* parent);
-	void SetPixelPoints(const std::vector<wxRealPoint>& pixelPoints);
+	void SetPixelPoints(const std::vector<wxRealPoint>& points) override;
 
 private:
 	wxDECLARE_EVENT_TABLE();

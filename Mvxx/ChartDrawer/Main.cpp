@@ -36,7 +36,11 @@ public:
 	{
 		m_frame = new MainFrame(MAIN_FRAME_TITLE, MAIN_FRAME_SIZE);
 		m_harmonics = std::make_shared<HarmonicsCollection>();
-		m_controller = std::make_unique<HarmonicsController>(m_frame, m_harmonics);
+		m_controller = std::make_unique<HarmonicsController>(
+			m_harmonics,
+			m_frame->GetMainPanel()->GetSelectionView(),
+			m_frame->GetMainPanel()->GetPropertiesView(),
+			m_frame->GetMainPanel()->GetCanvasView());
 		m_frame->Show(true);
 		return true;
 	}

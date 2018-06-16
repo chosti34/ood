@@ -1,17 +1,19 @@
 #pragma once
-#include <wx/panel.h>
-#include "Signals.h"
 #include "Harmonic.h"
+#include "IPropertiesView.h"
+#include <wx/panel.h>
 
-class HarmonicPropertiesView : public wxPanel
+class HarmonicPropertiesView
+	: public wxPanel
+	, public IPropertiesView<Harmonic>
 {
-	using PropertiesChangeSignal = Signal<void(const Harmonic&)>;
-
 public:
 	HarmonicPropertiesView(wxWindow* parent);
 
-	SignalConnection DoOnHarmonicPropertiesChange(PropertiesChangeSignal::slot_type callback);
-	void SetHarmonicProperties(const Harmonic& harmonic);
+	SignalConnection DoOnPropertiesChange(PropertiesChangeSignal::slot_type callback) override;
+	void SetProperties(const Harmonic& harmonic, int index) override;
+
+	void Activate(bool activate) override;
 
 private:
 	void UpdateHarmonicProperty(wxTextCtrl* ctrl, std::function<void(float)>&& callback);
@@ -34,6 +36,7 @@ private:
 	wxTextCtrl* m_frequencyCtrl;
 	wxRadioButton* m_sinButton;
 	wxRadioButton* m_cosButton;
+	PropertiesChangeSignal m_changeSignal;
 	Harmonic m_harmonic;
-	PropertiesChangeSignal m_propertiesChangeSignal;
+	int m_selectionIndex;
 };

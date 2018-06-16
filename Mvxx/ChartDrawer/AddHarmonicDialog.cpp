@@ -2,6 +2,7 @@
 #include "AddHarmonicDialog.h"
 #include "StringUtils.h"
 #include "SharedUI.h"
+#include <wx/valnum.h>
 
 namespace
 {
@@ -29,6 +30,8 @@ bool AnyOfHasValue(const std::initializer_list<wxRadioButton*> && buttons)
 }
 }
 
+using namespace SharedUI;
+
 AddHarmonicDialog::AddHarmonicDialog(const wxString& title, const wxSize& size, Harmonic& harmonic)
 	: wxDialog(nullptr, wxID_ANY, title, wxDefaultPosition, size, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 	, m_harmonic(harmonic)
@@ -36,17 +39,20 @@ AddHarmonicDialog::AddHarmonicDialog(const wxString& title, const wxSize& size, 
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	wxPanel* panel = new wxPanel(this);
 
-	auto creator = std::make_unique<SharedUI::FloatingPointTextCtrlCreator>();
-	creator->SetAdjustLayoutCallback([&mainSizer](wxStaticText* text, wxTextCtrl* ctrl, int offset) {
-		wxBoxSizer* ctrlSizer = new wxBoxSizer(wxVERTICAL);
-		ctrlSizer->Add(text, 0, wxALIGN_LEFT);
-		ctrlSizer->Add(ctrl, 0, wxALIGN_LEFT | wxTOP, 2);
-		mainSizer->Add(ctrlSizer, 0, wxALIGN_CENTER | wxTOP, offset);
-	});
+	m_amplitudeCtrl = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition,
+		wxDefaultSize, 0, wxFloatingPointValidator<float>(FLOAT_PRECISION));
+	m_frequencyCtrl = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition,
+		wxDefaultSize, 0, wxFloatingPointValidator<float>(FLOAT_PRECISION));
+	m_phaseCtrl = new wxTextCtrl(panel, wxID_ANY, wxEmptyString, wxDefaultPosition,
+		wxDefaultSize, 0, wxFloatingPointValidator<float>(FLOAT_PRECISION));
 
-	m_amplitudeCtrl = creator->CreateTextCtrl(panel, wxID_ANY, "Amplitude:", 0, 10);
-	m_frequencyCtrl = creator->CreateTextCtrl(panel, wxID_ANY, "Frequency:", 0, 10);
-	m_phaseCtrl = creator->CreateTextCtrl(panel, wxID_ANY, "Phase:", 0, 10);
+	wxStaticText* m_amplitudeText = new wxStaticText(panel, wxID_ANY, "Amplitude:");
+	wxStaticText* m_frequencyText = new wxStaticText(panel, wxID_ANY, "Frequency:");
+	wxStaticText* m_phaseText = new wxStaticText(panel, wxID_ANY, "Phase:");
+
+	mainSizer->Add(AlignElements({ m_amplitudeText, m_amplitudeCtrl }, 2), 0, wxALIGN_CENTER | wxTOP, 10);
+	mainSizer->Add(AlignElements({ m_frequencyText, m_frequencyCtrl }, 2), 0, wxALIGN_CENTER | wxTOP, 10);
+	mainSizer->Add(AlignElements({ m_phaseText, m_phaseCtrl }, 2), 0, wxALIGN_CENTER | wxTOP, 10);
 
 	wxBoxSizer* radioSizer = new wxBoxSizer(wxHORIZONTAL);
 	m_sinButton = new wxRadioButton(panel, SelectSinRadioButton, wxT("Sin"));
@@ -84,9 +90,9 @@ bool AddHarmonicDialog::TransferDataFromWindow()
 
 bool AddHarmonicDialog::TransferDataToWindow()
 {
-	m_amplitudeCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetAmplitude(), SharedUI::FLOAT_PRECISION));
-	m_frequencyCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetFrequency(), SharedUI::FLOAT_PRECISION));
-	m_phaseCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetPhase(), SharedUI::FLOAT_PRECISION));
+	m_amplitudeCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetAmplitude(), FLOAT_PRECISION));
+	m_frequencyCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetFrequency(), FLOAT_PRECISION));
+	m_phaseCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetPhase(), FLOAT_PRECISION));
 	m_sinButton->SetValue(m_harmonic.GetType() == HarmonicType::Sin);
 	m_cosButton->SetValue(m_harmonic.GetType() == HarmonicType::Cos);
 	return true;

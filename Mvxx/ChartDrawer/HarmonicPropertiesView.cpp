@@ -3,6 +3,7 @@
 #include "StringUtils.h"
 #include "SharedUI.h"
 #include <wx/statline.h>
+#include <wx/valnum.h>
 
 namespace
 {
@@ -16,6 +17,8 @@ enum IDs
 };
 }
 
+using namespace SharedUI;
+
 HarmonicPropertiesView::HarmonicPropertiesView(wxWindow* parent)
 	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC)
 {
@@ -26,17 +29,20 @@ HarmonicPropertiesView::HarmonicPropertiesView(wxWindow* parent)
 	mainSizer->Add(title, 0, wxEXPAND | wxLEFT | wxTOP, 5);
 	mainSizer->Add(separator, 0, wxEXPAND | wxLEFT | wxTOP | wxRIGHT, 5);
 
-	auto creator = std::make_unique<SharedUI::FloatingPointTextCtrlCreator>();
-	creator->SetAdjustLayoutCallback([&mainSizer](wxStaticText* text, wxTextCtrl* ctrl, int offset) {
-		wxBoxSizer* ctrlSizer = new wxBoxSizer(wxVERTICAL);
-		ctrlSizer->Add(text, 0, wxALIGN_LEFT);
-		ctrlSizer->Add(ctrl, 0, wxALIGN_LEFT | wxTOP, 2);
-		mainSizer->Add(ctrlSizer, 0, wxALIGN_CENTER | wxTOP, offset);
-	});
+	m_amplitudeCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
+		wxDefaultSize, 0, wxFloatingPointValidator<float>(FLOAT_PRECISION));
+	m_frequencyCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
+		wxDefaultSize, 0, wxFloatingPointValidator<float>(FLOAT_PRECISION));
+	m_phaseCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
+		wxDefaultSize, 0, wxFloatingPointValidator<float>(FLOAT_PRECISION));
 
-	m_amplitudeCtrl = creator->CreateTextCtrl(this, AmplitudeTextCtrl, "Amplitude:", wxTE_PROCESS_ENTER, 25);
-	m_frequencyCtrl = creator->CreateTextCtrl(this, FrequencyTextCtrl, "Frequency:", wxTE_PROCESS_ENTER, 15);
-	m_phaseCtrl = creator->CreateTextCtrl(this, PhaseTextCtrl, "Phase:", wxTE_PROCESS_ENTER, 15);
+	wxStaticText* m_amplitudeText = new wxStaticText(this, wxID_ANY, "Amplitude:");
+	wxStaticText* m_frequencyText = new wxStaticText(this, wxID_ANY, "Frequency:");
+	wxStaticText* m_phaseText = new wxStaticText(this, wxID_ANY, "Phase:");
+
+	mainSizer->Add(AlignElements({ m_amplitudeText, m_amplitudeCtrl }, 2), 0, wxALIGN_CENTER | wxTOP, 25);
+	mainSizer->Add(AlignElements({ m_frequencyText, m_frequencyCtrl }, 2), 0, wxALIGN_CENTER | wxTOP, 15);
+	mainSizer->Add(AlignElements({ m_phaseText, m_phaseCtrl }, 2), 0, wxALIGN_CENTER | wxTOP, 15);
 
 	m_amplitudeCtrl->Bind(wxEVT_KILL_FOCUS, &HarmonicPropertiesView::OnAmplitudeCtrlFocusLost, this);
 	m_frequencyCtrl->Bind(wxEVT_KILL_FOCUS, &HarmonicPropertiesView::OnFrequencyCtrlFocusLost, this);
@@ -52,19 +58,25 @@ HarmonicPropertiesView::HarmonicPropertiesView(wxWindow* parent)
 	SetSizerAndFit(mainSizer);
 }
 
-SignalConnection HarmonicPropertiesView::DoOnHarmonicPropertiesChange(PropertiesChangeSignal::slot_type callback)
+SignalConnection HarmonicPropertiesView::DoOnPropertiesChange(PropertiesChangeSignal::slot_type callback)
 {
-	return m_propertiesChangeSignal.connect(callback);
+	return m_changeSignal.connect(callback);
 }
 
-void HarmonicPropertiesView::SetHarmonicProperties(const Harmonic& harmonic)
+void HarmonicPropertiesView::SetProperties(const Harmonic& harmonic, int index)
 {
 	m_harmonic = harmonic;
-	m_amplitudeCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetAmplitude(), SharedUI::FLOAT_PRECISION));
-	m_frequencyCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetFrequency(), SharedUI::FLOAT_PRECISION));
-	m_phaseCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetPhase(), SharedUI::FLOAT_PRECISION));
+	m_selectionIndex = index;
+	m_amplitudeCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetAmplitude(), FLOAT_PRECISION));
+	m_frequencyCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetFrequency(), FLOAT_PRECISION));
+	m_phaseCtrl->SetValue(StringUtils::FloatToString(m_harmonic.GetPhase(), FLOAT_PRECISION));
 	m_sinButton->SetValue(m_harmonic.GetType() == HarmonicType::Sin);
 	m_cosButton->SetValue(m_harmonic.GetType() == HarmonicType::Cos);
+}
+
+void HarmonicPropertiesView::Activate(bool activate)
+{
+	Enable(activate);
 }
 
 void HarmonicPropertiesView::UpdateHarmonicProperty(wxTextCtrl* ctrl, std::function<void(float)>&& callback)
@@ -73,7 +85,7 @@ void HarmonicPropertiesView::UpdateHarmonicProperty(wxTextCtrl* ctrl, std::funct
 	if (ctrl->GetValue().ToDouble(&value))
 	{
 		callback(static_cast<float>(value));
-		m_propertiesChangeSignal(m_harmonic);
+		m_changeSignal(m_harmonic, m_selectionIndex);
 	}
 }
 
@@ -125,13 +137,13 @@ void HarmonicPropertiesView::OnPhaseCtrlPressEnter(wxCommandEvent&)
 void HarmonicPropertiesView::OnSinRadioButtonClick(wxCommandEvent&)
 {
 	m_harmonic.SetType(HarmonicType::Sin);
-	m_propertiesChangeSignal(m_harmonic);
+	m_changeSignal(m_harmonic, m_selectionIndex);
 }
 
 void HarmonicPropertiesView::OnCosRadioButtonClick(wxCommandEvent&)
 {
 	m_harmonic.SetType(HarmonicType::Cos);
-	m_propertiesChangeSignal(m_harmonic);
+	m_changeSignal(m_harmonic, m_selectionIndex);
 }
 
 wxBEGIN_EVENT_TABLE(HarmonicPropertiesView, wxPanel)
