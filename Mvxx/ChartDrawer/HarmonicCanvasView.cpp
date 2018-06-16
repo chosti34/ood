@@ -65,7 +65,7 @@ const float CHART_CENTER_VERTICAL = (CHART_LINES_COUNT / 2 + 1) * CHART_OFFSET_V
 }
 
 HarmonicCanvasView::HarmonicCanvasView(wxWindow* parent)
-	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_STATIC)
+	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
 {
 	SetBackgroundColour(*wxWHITE);
 }

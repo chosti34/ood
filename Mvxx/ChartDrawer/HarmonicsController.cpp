@@ -39,11 +39,13 @@ HarmonicsController::HarmonicsController(
 	const std::shared_ptr<HarmonicsCollection>& harmonics,
 	ISelectionView<Harmonic>* selectionView,
 	IPropertiesView<Harmonic>* propertiesView,
-	ICanvasView* canvasView)
+	ICanvasView* canvasView,
+	ITableView* tableView)
 	: m_harmonics(harmonics)
 	, m_selectionView(selectionView)
 	, m_propertiesView(propertiesView)
 	, m_canvasView(canvasView)
+	, m_tableView(tableView)
 {
 	namespace ph = std::placeholders;
 	m_connections.emplace_back(m_selectionView->DoOnAppend(std::bind(

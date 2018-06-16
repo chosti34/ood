@@ -2,6 +2,7 @@
 #include "ISelectionView.h"
 #include "IPropertiesView.h"
 #include "ICanvasView.h"
+#include "ITableView.h"
 #include "HarmonicsCollection.h"
 
 class HarmonicsController
@@ -11,7 +12,8 @@ public:
 		const std::shared_ptr<HarmonicsCollection>& harmonics,
 		ISelectionView<Harmonic>* selectionView,
 		IPropertiesView<Harmonic>* propertiesView,
-		ICanvasView* canvasView);
+		ICanvasView* canvasView,
+		ITableView* tableView);
 
 private:
 	void OnHarmonicInsertionButtonClick();
@@ -28,6 +30,7 @@ private:
 	ISelectionView<Harmonic>* m_selectionView;
 	IPropertiesView<Harmonic>* m_propertiesView;
 	ICanvasView* m_canvasView;
+	ITableView* m_tableView;
 	std::shared_ptr<HarmonicsCollection> m_harmonics;
 	std::vector<SignalScopedConnection> m_connections;
 };

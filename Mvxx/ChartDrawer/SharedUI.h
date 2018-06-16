@@ -1,6 +1,4 @@
 #pragma once
-#include <wx/textctrl.h>
-#include <wx/string.h>
 #include <wx/window.h>
 #include <vector>
 

@@ -40,7 +40,8 @@ public:
 			m_harmonics,
 			m_frame->GetMainPanel()->GetSelectionView(),
 			m_frame->GetMainPanel()->GetPropertiesView(),
-			m_frame->GetMainPanel()->GetCanvasView());
+			m_frame->GetMainPanel()->GetCanvasView(),
+			m_frame->GetMainPanel()->GetTableView());
 		m_frame->Show(true);
 		return true;
 	}

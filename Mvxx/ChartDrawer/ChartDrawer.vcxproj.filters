@@ -72,6 +72,12 @@
     <ClInclude Include="ICanvasView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HarmonicTableView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ITableView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -114,6 +120,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SharedUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HarmonicTableView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
