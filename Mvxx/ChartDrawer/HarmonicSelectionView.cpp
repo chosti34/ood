@@ -46,22 +46,22 @@ HarmonicSelectionView::HarmonicSelectionView(wxWindow* parent)
 	SetSizerAndFit(mainSizer);
 }
 
-SignalConnection HarmonicSelectionView::DoOnHarmonicInsertionClick(SignalSlot callback)
+SignalConnection HarmonicSelectionView::DoOnHarmonicInsertionClick(InsertionClickSignal::slot_type callback)
 {
 	return m_harmonicInsertionSignal.connect(callback);
 }
 
-SignalConnection HarmonicSelectionView::DoOnHarmonicDeletionClick(SignalSlot callback)
+SignalConnection HarmonicSelectionView::DoOnHarmonicDeletionClick(DeletionClickSignal::slot_type callback)
 {
 	return m_harmonicDeletionSignal.connect(callback);
 }
 
-SignalConnection HarmonicSelectionView::DoOnHarmonicSelectionClick(SignalSlot callback)
+SignalConnection HarmonicSelectionView::DoOnHarmonicSelectionClick(SelectionSignal::slot_type callback)
 {
 	return m_selectionChangeSignal.connect(callback);
 }
 
-SignalConnection HarmonicSelectionView::DoOnHarmonicDeselectionClick(SignalSlot callback)
+SignalConnection HarmonicSelectionView::DoOnHarmonicDeselectionClick(DeselectionSignal::slot_type callback)
 {
 	return m_listbox->DoOnDeselection(callback);
 }
@@ -90,7 +90,9 @@ int HarmonicSelectionView::GetSelection() const
 
 void HarmonicSelectionView::OnSelectionChange(wxCommandEvent&)
 {
-	m_selectionChangeSignal();
+	const int selection = m_listbox->GetSelection();
+	assert(selection != wxNOT_FOUND);
+	m_selectionChangeSignal(selection);
 }
 
 void HarmonicSelectionView::OnAddHarmonicButtonClick(wxCommandEvent&)
@@ -100,7 +102,11 @@ void HarmonicSelectionView::OnAddHarmonicButtonClick(wxCommandEvent&)
 
 void HarmonicSelectionView::OnDeleteHarmonicButtonClick(wxCommandEvent&)
 {
-	m_harmonicDeletionSignal();
+	const int selection = m_listbox->GetSelection();
+	if (selection != wxNOT_FOUND)
+	{
+		m_harmonicDeletionSignal(selection);
+	}
 }
 
 wxBEGIN_EVENT_TABLE(HarmonicSelectionView, wxPanel)

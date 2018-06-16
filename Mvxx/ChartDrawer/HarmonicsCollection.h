@@ -1,14 +1,19 @@
 #pragma once
 #include "Harmonic.h"
-#include "SignalAliases.h"
+#include "Signals.h"
 #include <climits>
 #include <vector>
 
 class HarmonicsCollection
 {
+	using InsertionSignal = Signal<void()>;
+	using DeletionSignal = Signal<void()>;
+	using PropertiesChangeSignal = Signal<void(size_t)>;
+
 public:
-	SignalConnection DoOnHarmonicInsertion(SignalSlot slot);
-	SignalConnection DoOnHarmonicDeletion(SignalSlot slot);
+	SignalConnection DoOnHarmonicInsertion(InsertionSignal::slot_type slot);
+	SignalConnection DoOnHarmonicDeletion(DeletionSignal::slot_type slot);
+	SignalConnection DoOnHarmonicPropertiesChange(PropertiesChangeSignal::slot_type slot);
 
 	void InsertHarmonic(const Harmonic& harmonic, size_t index = std::numeric_limits<size_t>::max());
 	void DeleteHarmonic(size_t index = std::numeric_limits<size_t>::max());
@@ -20,6 +25,7 @@ public:
 
 private:
 	std::vector<Harmonic> m_harmonics;
-	Signal m_insertionSignal;
-	Signal m_deletionSignal;
+	InsertionSignal m_insertionSignal;
+	DeletionSignal m_deletionSignal;
+	PropertiesChangeSignal m_propertiesChangeSignal;
 };

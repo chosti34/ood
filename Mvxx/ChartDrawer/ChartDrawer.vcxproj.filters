@@ -57,13 +57,13 @@
     <ClInclude Include="HarmonicType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SignalAliases.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MinMaxFix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SharedUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Signals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

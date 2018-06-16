@@ -1,14 +1,19 @@
 #include "stdafx.h"
 #include "HarmonicsCollection.h"
 
-SignalConnection HarmonicsCollection::DoOnHarmonicInsertion(SignalSlot slot)
+SignalConnection HarmonicsCollection::DoOnHarmonicInsertion(InsertionSignal::slot_type slot)
 {
 	return m_insertionSignal.connect(slot);
 }
 
-SignalConnection HarmonicsCollection::DoOnHarmonicDeletion(SignalSlot slot)
+SignalConnection HarmonicsCollection::DoOnHarmonicDeletion(DeletionSignal::slot_type slot)
 {
 	return m_deletionSignal.connect(slot);
+}
+
+SignalConnection HarmonicsCollection::DoOnHarmonicPropertiesChange(PropertiesChangeSignal::slot_type slot)
+{
+	return m_propertiesChangeSignal.connect(slot);
 }
 
 void HarmonicsCollection::InsertHarmonic(const Harmonic& harmonic, size_t index)
@@ -49,6 +54,7 @@ void HarmonicsCollection::SetHarmonic(const Harmonic& harmonic, size_t index)
 		throw std::out_of_range("index must be les than items count");
 	}
 	m_harmonics[index] = harmonic;
+	m_propertiesChangeSignal(index);
 }
 
 float HarmonicsCollection::CalculateValue(float x)const

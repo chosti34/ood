@@ -6,7 +6,7 @@ Listbox::Listbox(wxWindow* parent, int id)
 {
 }
 
-SignalConnection Listbox::DoOnDeselection(SignalSlot callback)
+SignalConnection Listbox::DoOnDeselection(DeselectionSignal::slot_type callback)
 {
 	return m_deselectionSignal.connect(callback);
 }

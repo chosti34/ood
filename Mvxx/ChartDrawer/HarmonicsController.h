@@ -9,8 +9,8 @@ public:
 
 private:
 	void OnHarmonicInsertionButtonClick();
-	void OnHarmonicDeletionButtonClick();
-	void OnHarmonicSelectionClick();
+	void OnHarmonicDeletionButtonClick(int selection);
+	void OnHarmonicSelectionClick(int selection);
 	void OnHarmonicDeselectionClick();
 	void OnHarmonicPropertiesChange();
 	void OnHarmonicInsertion();
@@ -21,7 +21,6 @@ private:
 	HarmonicSelectionView* m_selectionView;
 	HarmonicPropertiesView* m_propertiesView;
 	HarmonicCanvasView* m_canvasView;
-
 	std::shared_ptr<HarmonicsCollection> m_harmonics;
-	std::vector<ScopedSignalConnection> m_connections;
+	std::vector<SignalScopedConnection> m_connections;
 };

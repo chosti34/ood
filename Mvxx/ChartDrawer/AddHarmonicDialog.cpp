@@ -13,7 +13,20 @@ enum IDs
 
 const wxSize BUTTON_SIZE = { 70, 30 };
 
+bool GetValue(wxTextCtrl* ctrl, double& value)
+{
+	return ctrl->GetValue().ToDouble(&value);
+}
 
+bool AnyOfHasValue(const std::initializer_list<wxRadioButton*> && buttons)
+{
+	bool value = false;
+	for (const auto& button : buttons)
+	{
+		value |= button->GetValue();
+	}
+	return value;
+}
 }
 
 AddHarmonicDialog::AddHarmonicDialog(const wxString& title, const wxSize& size, Harmonic& harmonic)
@@ -55,10 +68,10 @@ AddHarmonicDialog::AddHarmonicDialog(const wxString& title, const wxSize& size, 
 bool AddHarmonicDialog::TransferDataFromWindow()
 {
 	double values[3];
-	if (m_amplitudeCtrl->GetValue().ToDouble(&values[0]) &&
-		m_frequencyCtrl->GetValue().ToDouble(&values[1]) &&
-		m_phaseCtrl->GetValue().ToDouble(&values[2]) &&
-		(m_sinButton->GetValue() || m_cosButton->GetValue()))
+	if (GetValue(m_amplitudeCtrl, values[0]) &&
+		GetValue(m_frequencyCtrl, values[1]) &&
+		GetValue(m_phaseCtrl, values[2]) &&
+		AnyOfHasValue({ m_sinButton, m_cosButton }))
 	{
 		m_harmonic.SetAmplitude(static_cast<float>(values[0]));
 		m_harmonic.SetFrequency(static_cast<float>(values[1]));

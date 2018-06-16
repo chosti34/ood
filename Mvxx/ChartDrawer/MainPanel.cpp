@@ -16,6 +16,7 @@ MainPanel::MainPanel(wxFrame* frame)
 
 	mainSizer->Add(upperSizer, 1, wxEXPAND, 0);
 	m_canvasView = new HarmonicCanvasView(this);
+	m_canvasView->SetDoubleBuffered(true);
 	mainSizer->Add(m_canvasView, 1, wxEXPAND | wxALL, 5);
 
 	SetSizerAndFit(mainSizer);

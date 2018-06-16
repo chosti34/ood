@@ -52,9 +52,9 @@ HarmonicPropertiesView::HarmonicPropertiesView(wxWindow* parent)
 	SetSizerAndFit(mainSizer);
 }
 
-SignalConnection HarmonicPropertiesView::DoOnHarmonicPropertiesChange(SignalSlot callback)
+SignalConnection HarmonicPropertiesView::DoOnHarmonicPropertiesChange(PropertiesChangeSignal::slot_type callback)
 {
-	return m_propertiesChangedSignal.connect(callback);
+	return m_propertiesChangeSignal.connect(callback);
 }
 
 void HarmonicPropertiesView::SetHarmonicProperties(const Harmonic& harmonic)
@@ -78,7 +78,7 @@ void HarmonicPropertiesView::UpdateHarmonicProperty(wxTextCtrl* ctrl, std::funct
 	if (ctrl->GetValue().ToDouble(&value))
 	{
 		callback(static_cast<float>(value));
-		m_propertiesChangedSignal();
+		m_propertiesChangeSignal();
 	}
 }
 
@@ -130,13 +130,13 @@ void HarmonicPropertiesView::OnPhaseCtrlPressEnter(wxCommandEvent&)
 void HarmonicPropertiesView::OnSinRadioButtonClick(wxCommandEvent&)
 {
 	m_harmonic.SetType(HarmonicType::Sin);
-	m_propertiesChangedSignal();
+	m_propertiesChangeSignal();
 }
 
 void HarmonicPropertiesView::OnCosRadioButtonClick(wxCommandEvent&)
 {
 	m_harmonic.SetType(HarmonicType::Cos);
-	m_propertiesChangedSignal();
+	m_propertiesChangeSignal();
 }
 
 wxBEGIN_EVENT_TABLE(HarmonicPropertiesView, wxPanel)

@@ -1,18 +1,23 @@
 #pragma once
 #include <wx/panel.h>
-#include "SignalAliases.h"
+#include "Signals.h"
 #include "Harmonic.h"
 #include "Listbox.h"
 
 class HarmonicSelectionView : public wxPanel
 {
+	using InsertionClickSignal = Signal<void()>;
+	using DeletionClickSignal = Signal<void(int)>;
+	using SelectionSignal = Signal<void(int)>;
+	using DeselectionSignal = Signal<void()>;
+
 public:
 	HarmonicSelectionView(wxWindow* parent);
 
-	SignalConnection DoOnHarmonicInsertionClick(SignalSlot callback);
-	SignalConnection DoOnHarmonicDeletionClick(SignalSlot callback);
-	SignalConnection DoOnHarmonicSelectionClick(SignalSlot callback);
-	SignalConnection DoOnHarmonicDeselectionClick(SignalSlot callback);
+	SignalConnection DoOnHarmonicInsertionClick(InsertionClickSignal::slot_type callback);
+	SignalConnection DoOnHarmonicDeletionClick(DeletionClickSignal::slot_type callback);
+	SignalConnection DoOnHarmonicSelectionClick(SelectionSignal::slot_type callback);
+	SignalConnection DoOnHarmonicDeselectionClick(DeselectionSignal::slot_type callback);
 
 	void AppendHarmonic(const Harmonic& harmonic);
 	void SetHarmonic(const Harmonic& harmonic, unsigned index);
@@ -29,8 +34,7 @@ private:
 	Listbox* m_listbox;
 	wxButton* m_addButton;
 	wxButton* m_deleteButton;
-
-	Signal m_harmonicInsertionSignal;
-	Signal m_harmonicDeletionSignal;
-	Signal m_selectionChangeSignal;
+	InsertionClickSignal m_harmonicInsertionSignal;
+	DeletionClickSignal m_harmonicDeletionSignal;
+	SelectionSignal m_selectionChangeSignal;
 };

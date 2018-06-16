@@ -14,6 +14,6 @@ public:
 	wxTextCtrl* CreateTextCtrl(wxWindow* parent, int id, const wxString& label, long style = 0, int offset = 0);
 
 private:
-	std::function<void(wxStaticText*, wxTextCtrl*, int)> m_adjustLayout;
+	std::function<void(wxStaticText*, wxTextCtrl*, int)> m_adjustLayoutCallback;
 };
 }
