@@ -8,13 +8,13 @@ HarmonicTableView::HarmonicTableView(wxWindow* parent)
 	AppendColumn("y");
 }
 
-void HarmonicTableView::AddRowValues(const std::vector<std::string>& values)
+void HarmonicTableView::SetPoints(const std::vector<wxRealPoint>& points)
 {
-	assert(values.size() == GetColumnCount());
-	const long index = InsertItem(0, values.front());
-	for (int i = 1; i < values.size(); ++i)
+	DeleteAllItems();
+	for (const auto& point : points)
 	{
-		SetItem(index, i, values[i]);
+		long index = InsertItem(GetItemCount() + 1, std::to_string(point.x));
+		SetItem(index, 1, std::to_string(point.y));
 	}
 }
 

@@ -105,18 +105,21 @@ void HarmonicsController::OnHarmonicPropertiesChangeClick(const Harmonic& harmon
 
 void HarmonicsController::OnHarmonicInsertion()
 {
-	m_canvasView->SetPixelPoints(ConvertToPixelPoints(
-		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP), wxRealPoint(100, 15)));
+	auto points = CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP);
+	m_canvasView->SetPixelPoints(ConvertToPixelPoints(points, wxRealPoint(100, 15)));
+	m_tableView->SetPoints(points);
 }
 
 void HarmonicsController::OnHarmonicDeletion()
 {
-	m_canvasView->SetPixelPoints(ConvertToPixelPoints(
-		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP), wxRealPoint(100, 15)));
+	auto points = CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP);
+	m_canvasView->SetPixelPoints(ConvertToPixelPoints(points, wxRealPoint(100, 15)));
+	m_tableView->SetPoints(points);
 }
 
 void HarmonicsController::OnHarmonicPropertiesChange()
 {
-	m_canvasView->SetPixelPoints(ConvertToPixelPoints(
-		CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP), wxRealPoint(100, 15)));
+	auto points = CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP);
+	m_canvasView->SetPixelPoints(ConvertToPixelPoints(points, wxRealPoint(100, 15)));
+	m_tableView->SetPoints(points);
 }
