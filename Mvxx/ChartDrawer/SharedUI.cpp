@@ -4,6 +4,7 @@
 namespace SharedUI
 {
 const unsigned FLOAT_PRECISION = 3;
+const wxRealPoint PIXELS_PER_UNIT = { 100.f, 15.f };
 
 wxBoxSizer* AlignElements(const std::vector<wxWindow*>&& elements, int topOffset)
 {

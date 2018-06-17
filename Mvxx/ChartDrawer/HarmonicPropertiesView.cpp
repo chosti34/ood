@@ -29,12 +29,12 @@ HarmonicPropertiesView::HarmonicPropertiesView(wxWindow* parent)
 	mainSizer->Add(title, 0, wxEXPAND | wxLEFT | wxTOP, 5);
 	mainSizer->Add(separator, 0, wxEXPAND | wxLEFT | wxTOP | wxRIGHT, 5);
 
-	m_amplitudeCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-		wxDefaultSize, 0, wxFloatingPointValidator<float>(FLOAT_PRECISION));
-	m_frequencyCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-		wxDefaultSize, 0, wxFloatingPointValidator<float>(FLOAT_PRECISION));
-	m_phaseCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-		wxDefaultSize, 0, wxFloatingPointValidator<float>(FLOAT_PRECISION));
+	m_amplitudeCtrl = new wxTextCtrl(this, AmplitudeTextCtrl, wxEmptyString, wxDefaultPosition,
+		wxDefaultSize, wxTE_PROCESS_ENTER, wxFloatingPointValidator<float>(FLOAT_PRECISION));
+	m_frequencyCtrl = new wxTextCtrl(this, FrequencyTextCtrl, wxEmptyString, wxDefaultPosition,
+		wxDefaultSize, wxTE_PROCESS_ENTER, wxFloatingPointValidator<float>(FLOAT_PRECISION));
+	m_phaseCtrl = new wxTextCtrl(this, PhaseTextCtrl, wxEmptyString, wxDefaultPosition,
+		wxDefaultSize, wxTE_PROCESS_ENTER, wxFloatingPointValidator<float>(FLOAT_PRECISION));
 
 	wxStaticText* m_amplitudeText = new wxStaticText(this, wxID_ANY, "Amplitude:");
 	wxStaticText* m_frequencyText = new wxStaticText(this, wxID_ANY, "Frequency:");

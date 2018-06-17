@@ -2,7 +2,6 @@
 #include "MainPanel.h"
 #include <wx/notebook.h>
 #include <wx/dataview.h>
-#include "HarmonicTableView.h"
 
 MainPanel::MainPanel(wxFrame* frame)
 	: wxPanel(frame)

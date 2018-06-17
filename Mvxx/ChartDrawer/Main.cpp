@@ -43,6 +43,8 @@ public:
 			m_frame->GetMainPanel()->GetCanvasView(),
 			m_frame->GetMainPanel()->GetTableView());
 		m_frame->Show(true);
+		m_frame->Centre();
+		m_frame->GetMainPanel()->GetCanvasView()->UpdateDrawingAreaSize();
 		return true;
 	}
 

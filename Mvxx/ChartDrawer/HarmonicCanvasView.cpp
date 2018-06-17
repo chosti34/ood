@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "HarmonicCanvasView.h"
 #include "StringUtils.h"
+#include "SharedUI.h"
 #include <wx/dcgraph.h>
 
 using namespace Gdiplus;
@@ -57,11 +58,8 @@ std::vector<PointF> ToGdiplusPoints(const std::vector<wxRealPoint>& points)
 	return gdiplusPoints;
 }
 
-const unsigned CHART_LINES_COUNT = 9;
-const float CHART_WIDTH = 800.f;
 const float CHART_OFFSET_HORIZONTAL = 50.f;
 const float CHART_OFFSET_VERTICAL = 30.f;
-const float CHART_CENTER_VERTICAL = (CHART_LINES_COUNT / 2 + 1) * CHART_OFFSET_VERTICAL;
 }
 
 HarmonicCanvasView::HarmonicCanvasView(wxWindow* parent)
@@ -72,11 +70,27 @@ HarmonicCanvasView::HarmonicCanvasView(wxWindow* parent)
 
 void HarmonicCanvasView::SetPixelPoints(const std::vector<wxRealPoint>& points)
 {
+	UpdateDrawingAreaSize();
 	m_pixelPoints = ToGdiplusPoints(points);
-	// Adjust for our view offset
-	std::transform(m_pixelPoints.begin(), m_pixelPoints.end(), m_pixelPoints.begin(), [](const PointF& point) {
-		return PointF{ CHART_OFFSET_HORIZONTAL + point.X, CHART_CENTER_VERTICAL + point.Y };
+	std::transform(m_pixelPoints.begin(), m_pixelPoints.end(), m_pixelPoints.begin(), [&](const PointF& point) {
+		return PointF{ CHART_OFFSET_HORIZONTAL + point.X, (m_chartLinesCount / 2 + 1) * CHART_OFFSET_VERTICAL + point.Y };
 	});
+	Refresh(true);
+}
+
+wxSize HarmonicCanvasView::GetDrawingAreaSize()const
+{
+	return
+	{
+		static_cast<int>(GetSize().x - 2 * CHART_OFFSET_HORIZONTAL),
+		static_cast<int>(GetSize().y - 2 * CHART_OFFSET_VERTICAL)
+	};
+}
+
+void HarmonicCanvasView::UpdateDrawingAreaSize()
+{
+	m_chartLinesCount = GetSize().y / CHART_OFFSET_VERTICAL - 1;
+	m_chartWidth = GetSize().x - 2 * CHART_OFFSET_HORIZONTAL;
 	Refresh(true);
 }
 
@@ -91,24 +105,26 @@ void HarmonicCanvasView::OnPaint(wxPaintEvent&)
 	FontFamily fontFamily(L"Consolas");
 	Font font(&fontFamily, 10, FontStyleRegular, UnitPixel);
 
-	for (int i = 0; i < CHART_LINES_COUNT; ++i)
+	for (int i = 0; i < int(m_chartLinesCount); ++i)
 	{
 		Pen pen(Color(170, 170, 170), 1.f);
 		pen.SetDashStyle(DashStyleDash);
-		gfx.DrawLine(&pen, CHART_OFFSET_HORIZONTAL,
-			(i + 1) * CHART_OFFSET_VERTICAL,
-			CHART_OFFSET_HORIZONTAL + CHART_WIDTH,
-			(i + 1) * CHART_OFFSET_VERTICAL);
+		gfx.DrawLine(&pen,
+			Point(CHART_OFFSET_HORIZONTAL, (i + 1) * CHART_OFFSET_VERTICAL),
+			Point(CHART_OFFSET_HORIZONTAL + m_chartWidth, (i + 1) * CHART_OFFSET_VERTICAL));
 
-		const std::wstring label = std::to_wstring(8 - 2 * i);
-		const PointF origin = { 40.f - (10 * label.length()) / 2, (i + 1) * 30.f - 5.f };
+		const std::wstring label = std::to_wstring(2 * int(m_chartLinesCount / 2) - 2 * i);
+		const PointF origin = {
+			CHART_OFFSET_HORIZONTAL - (10 * label.length()) / 2 - 10,
+			(i + 1) * CHART_OFFSET_VERTICAL - 5.f };
 		gfx.DrawString(label.c_str(), -1, &font, origin, &brush);
 	}
 
-	for (float x = 50; x <= CHART_WIDTH; x += 80)
+	for (float x = CHART_OFFSET_HORIZONTAL; x <= m_chartWidth; x += 80.f)
 	{
-		const std::wstring label = StringUtils::FloatToWideString((x - 50) / 100 * 1, 1);
-		gfx.DrawString(label.c_str(), -1, &font, PointF(x, 5 * 30 + 5), &brush);
+		const std::wstring label = StringUtils::FloatToWideString(
+			static_cast<float>((x - CHART_OFFSET_HORIZONTAL) / SharedUI::PIXELS_PER_UNIT.x), 2);
+		gfx.DrawString(label.c_str(), -1, &font, PointF(x, (m_chartLinesCount / 2 + 1) * CHART_OFFSET_VERTICAL + 5), &brush);
 	}
 
 	Gdiplus::Pen pen(Gdiplus::Color(0, 0, 255), 1.5f);

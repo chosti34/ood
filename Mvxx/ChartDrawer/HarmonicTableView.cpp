@@ -16,6 +16,7 @@ void HarmonicTableView::SetPoints(const std::vector<wxRealPoint>& points)
 		long index = InsertItem(GetItemCount() + 1, std::to_string(point.x));
 		SetItem(index, 1, std::to_string(point.y));
 	}
+	Refresh(true);
 }
 
 void HarmonicTableView::AdjustColumnsWidth()

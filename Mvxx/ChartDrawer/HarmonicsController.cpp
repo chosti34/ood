@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "HarmonicsController.h"
 #include "AddHarmonicDialog.h"
+#include "SharedUI.h"
 
 namespace
 {
@@ -29,10 +30,6 @@ std::vector<wxRealPoint> ConvertToPixelPoints(
 	});
 	return pixelPoints;
 }
-
-const float FROM = 0.f;
-const float TO = 8.f;
-const float STEP = 0.01f;
 }
 
 HarmonicsController::HarmonicsController(
@@ -105,21 +102,26 @@ void HarmonicsController::OnHarmonicPropertiesChangeClick(const Harmonic& harmon
 
 void HarmonicsController::OnHarmonicInsertion()
 {
-	auto points = CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP);
-	m_canvasView->SetPixelPoints(ConvertToPixelPoints(points, wxRealPoint(100, 15)));
-	m_tableView->SetPoints(points);
+	RecalculateHarmonics();
 }
 
 void HarmonicsController::OnHarmonicDeletion()
 {
-	auto points = CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP);
-	m_canvasView->SetPixelPoints(ConvertToPixelPoints(points, wxRealPoint(100, 15)));
-	m_tableView->SetPoints(points);
+	RecalculateHarmonics();
 }
 
 void HarmonicsController::OnHarmonicPropertiesChange()
 {
-	auto points = CalculateHarmonicWaveSum(*m_harmonics, FROM, TO, STEP);
-	m_canvasView->SetPixelPoints(ConvertToPixelPoints(points, wxRealPoint(100, 15)));
+	RecalculateHarmonics();
+}
+
+void HarmonicsController::RecalculateHarmonics()
+{
+	const float step = 0.01f;
+	const float from = 0.f;
+	const float to = m_canvasView->GetDrawingAreaSize().x / SharedUI::PIXELS_PER_UNIT.x;
+
+	const auto points = CalculateHarmonicWaveSum(*m_harmonics, from, to, step);
+	m_canvasView->SetPixelPoints(ConvertToPixelPoints(points, SharedUI::PIXELS_PER_UNIT));
 	m_tableView->SetPoints(points);
 }

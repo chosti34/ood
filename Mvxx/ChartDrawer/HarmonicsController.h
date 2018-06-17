@@ -21,10 +21,11 @@ private:
 	void OnHarmonicSelectionClick(int selection);
 	void OnHarmonicDeselectionClick();
 	void OnHarmonicPropertiesChangeClick(const Harmonic& harmonic, int index);
-
 	void OnHarmonicInsertion();
 	void OnHarmonicDeletion();
 	void OnHarmonicPropertiesChange();
+
+	void RecalculateHarmonics();
 
 private:
 	ISelectionView<Harmonic>* m_selectionView;
