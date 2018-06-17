@@ -1,6 +1,7 @@
 #pragma once
 #include <wx/panel.h>
 #include "ICanvasView.h"
+#include <gdiplustypes.h>
 
 class HarmonicCanvasView : public wxPanel , public ICanvasView
 {
@@ -19,4 +20,6 @@ private:
 	std::vector<Gdiplus::PointF> m_pixelPoints;
 	unsigned m_chartLinesCount;
 	float m_chartWidth;
+	std::unique_ptr<Gdiplus::FontFamily> m_fontFamily;
+	std::unique_ptr<Gdiplus::Font> m_font;
 };

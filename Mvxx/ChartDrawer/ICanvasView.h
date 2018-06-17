@@ -1,5 +1,4 @@
 #pragma once
-#include "Signals.h"
 #include <wx/utils.h>
 #include <vector>
 

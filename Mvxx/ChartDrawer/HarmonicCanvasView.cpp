@@ -60,12 +60,20 @@ std::vector<PointF> ToGdiplusPoints(const std::vector<wxRealPoint>& points)
 
 const float CHART_OFFSET_HORIZONTAL = 50.f;
 const float CHART_OFFSET_VERTICAL = 30.f;
+
+const Color FONT_COLOR(140, 140, 140);
+const Color GRID_COLOR(170, 170, 170);
+const Color CHART_COLOR(0, 0, 255);
 }
 
 HarmonicCanvasView::HarmonicCanvasView(wxWindow* parent)
 	: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
+	, m_chartLinesCount(0)
+	, m_chartWidth(0.f)
 {
 	SetBackgroundColour(*wxWHITE);
+	m_fontFamily = std::make_unique<FontFamily>(L"Consolas");
+	m_font = std::make_unique<Font>(m_fontFamily.get(), 10.f, FontStyleRegular, UnitPixel);
 }
 
 void HarmonicCanvasView::SetPixelPoints(const std::vector<wxRealPoint>& points)
@@ -101,13 +109,10 @@ void HarmonicCanvasView::OnPaint(wxPaintEvent&)
 	Graphics gfx(acquirer.Acquire());
 	gfx.SetSmoothingMode(SmoothingModeAntiAlias);
 
-	SolidBrush brush(Color(140, 140, 140));
-	FontFamily fontFamily(L"Consolas");
-	Font font(&fontFamily, 10, FontStyleRegular, UnitPixel);
-
+	SolidBrush brush(FONT_COLOR);
 	for (int i = 0; i < int(m_chartLinesCount); ++i)
 	{
-		Pen pen(Color(170, 170, 170), 1.f);
+		Pen pen(GRID_COLOR, 1.f);
 		pen.SetDashStyle(DashStyleDash);
 		gfx.DrawLine(&pen,
 			Point(CHART_OFFSET_HORIZONTAL, (i + 1) * CHART_OFFSET_VERTICAL),
@@ -117,17 +122,18 @@ void HarmonicCanvasView::OnPaint(wxPaintEvent&)
 		const PointF origin = {
 			CHART_OFFSET_HORIZONTAL - (10 * label.length()) / 2 - 10,
 			(i + 1) * CHART_OFFSET_VERTICAL - 5.f };
-		gfx.DrawString(label.c_str(), -1, &font, origin, &brush);
+		gfx.DrawString(label.c_str(), -1, m_font.get(), origin, &brush);
 	}
 
 	for (float x = CHART_OFFSET_HORIZONTAL; x <= m_chartWidth; x += 80.f)
 	{
 		const std::wstring label = StringUtils::FloatToWideString(
 			static_cast<float>((x - CHART_OFFSET_HORIZONTAL) / SharedUI::PIXELS_PER_UNIT.x), 2);
-		gfx.DrawString(label.c_str(), -1, &font, PointF(x, (m_chartLinesCount / 2 + 1) * CHART_OFFSET_VERTICAL + 5), &brush);
+		gfx.DrawString(label.c_str(), -1, m_font.get(),
+			PointF(x, (m_chartLinesCount / 2 + 1) * CHART_OFFSET_VERTICAL + 5), &brush);
 	}
 
-	Gdiplus::Pen pen(Gdiplus::Color(0, 0, 255), 1.5f);
+	Pen pen(CHART_COLOR, 1.5f);
 	gfx.DrawCurve(&pen, m_pixelPoints.data(), m_pixelPoints.size());
 }
 

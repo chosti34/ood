@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChartDrawer", "ChartDrawer\ChartDrawer.vcxproj", "{C0CBDF0B-7BB4-4A46-83D9-D9D3FA27BA47}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChartDrawerTests", "ChartDrawer\ChartDrawerTests\ChartDrawerTests.vcxproj", "{F0C0087F-58D2-4CD7-87C1-14EBFB79EB57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{C0CBDF0B-7BB4-4A46-83D9-D9D3FA27BA47}.Release|x64.Build.0 = Release|x64
 		{C0CBDF0B-7BB4-4A46-83D9-D9D3FA27BA47}.Release|x86.ActiveCfg = Release|Win32
 		{C0CBDF0B-7BB4-4A46-83D9-D9D3FA27BA47}.Release|x86.Build.0 = Release|Win32
+		{F0C0087F-58D2-4CD7-87C1-14EBFB79EB57}.Debug|x64.ActiveCfg = Debug|x64
+		{F0C0087F-58D2-4CD7-87C1-14EBFB79EB57}.Debug|x64.Build.0 = Debug|x64
+		{F0C0087F-58D2-4CD7-87C1-14EBFB79EB57}.Debug|x86.ActiveCfg = Debug|Win32
+		{F0C0087F-58D2-4CD7-87C1-14EBFB79EB57}.Debug|x86.Build.0 = Debug|Win32
+		{F0C0087F-58D2-4CD7-87C1-14EBFB79EB57}.Release|x64.ActiveCfg = Release|x64
+		{F0C0087F-58D2-4CD7-87C1-14EBFB79EB57}.Release|x64.Build.0 = Release|x64
+		{F0C0087F-58D2-4CD7-87C1-14EBFB79EB57}.Release|x86.ActiveCfg = Release|Win32
+		{F0C0087F-58D2-4CD7-87C1-14EBFB79EB57}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
